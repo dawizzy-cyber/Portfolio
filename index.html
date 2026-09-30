@@ -6,254 +6,183 @@
   <title>CyberSec Academy | Interactive Cloud & Security Labs</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              50: '#ecfdf5',
-              100: '#d1fae5',
-              400: '#34d399',
-              500: '#10b981',
-              600: '#059669',
-              700: '#047857',
-              900: '#064e3b',
-              950: '#022c22',
-            }
-          }
-        }
-      }
-    }
-  </script>
-  <style>
-    /* Custom Scrollbar for matrix/cyber feel */
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #030712;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #064e3b;
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #10b981;
-    }
-    .emerald-glow {
-      box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.25);
-    }
-    .emerald-border-glow:focus-within {
-      box-shadow: 0 0 15px 0px rgba(16, 185, 129, 0.3);
-    }
-  </style>
 </head>
-<body class="bg-gray-950 text-gray-100 min-h-screen font-sans selection:bg-emerald-500 selection:text-gray-950">
+<body class="bg-gray-950 text-gray-100 min-h-screen font-sans">
 
   <!-- Navigation Bar -->
-  <header class="border-b border-emerald-900/40 bg-gray-950/90 sticky top-0 z-50 backdrop-blur-md">
+  <header class="border-b border-gray-800 bg-gray-900/90 sticky top-0 z-50 backdrop-blur">
     <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-      <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-xl bg-emerald-950 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold shadow-lg shadow-emerald-900/30">
-          <i class="fa-solid fa-shield-halved text-lg"></i>
-        </div>
-        <h1 class="text-xl font-black tracking-tight text-white">
-          Cyber<span class="text-emerald-400">Academy</span>
-        </h1>
+      <div class="flex items-center gap-2">
+        <span class="text-emerald-500 font-black text-2xl">⚡</span>
+        <h1 class="text-xl font-bold tracking-tight text-white">Cyber<span class="text-emerald-500">Academy</span></h1>
       </div>
       
-      <nav class="hidden md:flex space-x-8 text-sm text-gray-400 font-medium">
-        <a href="#curriculum" class="hover:text-emerald-400 transition-colors duration-200 flex items-center gap-2">
-          <i class="fa-solid fa-graduation-cap text-xs"></i> Curriculum
-        </a>
-        <a href="#labs" class="hover:text-emerald-400 transition-colors duration-200 flex items-center gap-2">
-          <i class="fa-solid fa-terminal text-xs"></i> Interactive Labs
-        </a>
-        <a href="#portal" class="hover:text-emerald-400 transition-colors duration-200 flex items-center gap-2">
-          <i class="fa-solid fa-user-shield text-xs"></i> Student Portal
-        </a>
-        <a href="#certifications" class="hover:text-emerald-400 transition-colors duration-200 flex items-center gap-2">
-          <i class="fa-solid fa-certificate text-xs"></i> Certificates
-        </a>
+      <nav class="hidden md:flex space-x-6 text-sm text-gray-400 font-medium">
+        <a href="#curriculum" class="hover:text-emerald-400 transition">Curriculum</a>
+        <a href="#labs" class="hover:text-emerald-400 transition">Interactive Labs</a>
+        <a href="#portal" class="hover:text-emerald-400 transition">Student Portal</a>
+        <a href="#certifications" class="hover:text-emerald-400 transition">Certificates</a>
       </nav>
 
-      <div id="header-auth-status">
-        <a href="#portal" class="bg-emerald-600 hover:bg-emerald-500 text-gray-950 font-bold px-4 py-2 rounded-xl text-sm transition shadow-lg shadow-emerald-600/20 flex items-center gap-2">
-          <i class="fa-solid fa-right-to-bracket"></i> Student Access
+      <div class="flex items-center gap-4">
+        <!-- Social Link: X (Twitter) -->
+        <a href="https://x.com/bush_bean__" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-emerald-400 transition flex items-center gap-1.5 text-sm font-medium">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+          </svg>
+          <span class="hidden sm:inline">@bush_bean__</span>
         </a>
+
+        <div id="header-auth-status">
+          <a href="#portal" class="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-4 py-2 rounded-lg text-sm transition shadow-lg shadow-emerald-600/20">
+            Student Portal
+          </a>
+        </div>
       </div>
     </div>
   </header>
 
   <!-- Hero / Platform Banner -->
-  <section class="py-20 text-center border-b border-emerald-950 bg-gradient-to-b from-gray-950 via-emerald-950/20 to-gray-950 px-6 relative overflow-hidden">
-    <div class="absolute inset-0 bg-[linear-gradient(to_right,#052e1615_1px,transparent_1px),linear-gradient(to_bottom,#052e1615_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
-    <div class="max-w-4xl mx-auto relative z-10">
-      <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-emerald-400 bg-emerald-950/80 border border-emerald-700/50 px-4 py-1.5 rounded-full shadow-inner">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-        Hands-On Security & Cloud Learning Academy
-      </span>
-      <h2 class="text-4xl sm:text-6xl font-extrabold text-white tracking-tight mt-6 mb-6 leading-tight">
-        Master Offensive Security & <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-emerald-500">Cloud Systems</span>
+  <section class="py-20 text-center border-b border-gray-800/80 bg-gradient-to-b from-gray-900 via-gray-900 to-gray-950 px-6">
+    <div class="max-w-4xl mx-auto">
+      <span class="text-xs font-bold uppercase tracking-widest text-emerald-400 bg-emerald-950/80 border border-emerald-800 px-3.5 py-1.5 rounded-full">Hands-On Cyber Security & Cloud Lab Platform</span>
+      <h2 class="text-4xl sm:text-6xl font-extrabold text-white tracking-tight mt-6 mb-4">
+        Master Offensive Security & Cloud Infrastructure
       </h2>
-      <p class="text-gray-400 text-lg max-w-2xl mx-auto mb-10 leading-relaxed">
-        An interactive learning platform for cyber defense and cloud engineering. Solve live security scenarios, capture system flags, and log verified achievements.
+      <p class="text-gray-400 text-lg max-w-2xl mx-auto mb-8 leading-relaxed">
+        An interactive learning platform designed for hands-on technical training. Solve real-world security scenarios, capture flags, and track live module achievements.
       </p>
-      <div class="flex flex-wrap justify-center gap-4">
-        <a href="#labs" class="bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-extrabold px-7 py-3.5 rounded-xl text-sm transition shadow-lg shadow-emerald-500/25 flex items-center gap-2">
-          <i class="fa-solid fa-play"></i> Start Cyber Labs
-        </a>
-        <a href="#curriculum" class="bg-gray-900 hover:bg-gray-800 text-gray-300 border border-emerald-900/60 font-semibold px-7 py-3.5 rounded-xl text-sm transition flex items-center gap-2">
-          <i class="fa-solid fa-list-check"></i> View Curriculum
-        </a>
+      <div class="flex justify-center gap-4">
+        <a href="#labs" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold px-6 py-3 rounded-lg text-sm transition shadow-lg shadow-emerald-600/20">Start Practical Labs</a>
+        <a href="#curriculum" class="bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-700 font-semibold px-6 py-3 rounded-lg text-sm transition">View Modules</a>
       </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="py-16 px-6 max-w-7xl mx-auto border-b border-gray-800/80">
+    <h2 class="text-3xl font-bold mb-6 text-white">About the Platform</h2>
+    <div class="bg-gray-900/80 border border-gray-800 rounded-2xl p-8">
+      <p class="text-gray-300 leading-relaxed mb-4">
+        Welcome to our interactive cybersecurity research and educational platform. We specialize in offensive security training, directory enumeration techniques, network traffic analysis, and cloud security configuration auditing.
+      </p>
+      <p class="text-gray-400 text-sm leading-relaxed">
+        This platform serves as a hands-on environment for interactive security modules, capture-the-flag (CTF) challenges, and serverless cloud infrastructure labs.
+      </p>
     </div>
   </section>
 
   <!-- Learning Path & Curriculum Section -->
-  <section id="curriculum" class="py-16 px-6 max-w-7xl mx-auto border-b border-gray-900">
-    <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
-      <div>
-        <h2 class="text-3xl font-bold text-white flex items-center gap-3">
-          <i class="fa-solid fa-layer-group text-emerald-400"></i> Curriculum Tracks
-        </h2>
-        <p class="text-gray-400 mt-1">Structured practical tracks tailored for cloud security engineers and penetration testers.</p>
-      </div>
-      <span class="text-xs text-emerald-400 bg-emerald-950/60 border border-emerald-800/40 px-3 py-1.5 rounded-lg font-mono">
-        Status: Live Content
-      </span>
-    </div>
+  <section id="curriculum" class="py-16 px-6 max-w-7xl mx-auto border-b border-gray-800/80">
+    <h2 class="text-3xl font-bold mb-2 text-white">Educational Track Focus</h2>
+    <p class="text-gray-400 mb-8">Structured learning paths covering offensive operations, cloud security engineering, and intelligent systems.</p>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div class="bg-gray-900/90 border border-emerald-900/40 p-6 rounded-2xl hover:border-emerald-500/40 transition-all duration-300 hover:-translate-y-1">
-        <div class="w-12 h-12 rounded-xl bg-emerald-950 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-black text-lg mb-5 shadow-inner">
-          01
-        </div>
+      <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl hover:border-emerald-800/60 transition">
+        <div class="w-10 h-10 rounded-lg bg-emerald-950/80 border border-emerald-800 flex items-center justify-center text-emerald-400 font-bold mb-4">01</div>
         <h3 class="text-xl font-bold text-white mb-2">Ethical Hacking & Recon</h3>
-        <p class="text-gray-400 text-sm leading-relaxed">Directory brute-forcing, terminal navigation, network enumerations, and offensive security scenarios.</p>
+        <p class="text-gray-400 text-sm leading-relaxed">Directory searching, terminal navigation, network enumerations, and offensive security labs inspired by TryHackMe methodologies.</p>
       </div>
 
-      <div class="bg-gray-900/90 border border-emerald-900/40 p-6 rounded-2xl hover:border-emerald-500/40 transition-all duration-300 hover:-translate-y-1">
-        <div class="w-12 h-12 rounded-xl bg-emerald-950 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-black text-lg mb-5 shadow-inner">
-          02
-        </div>
-        <h3 class="text-xl font-bold text-white mb-2">Cloud Security Engineering</h3>
-        <p class="text-gray-400 text-sm leading-relaxed">IAM policies, cloud infrastructure deployment, database security controls, and Supabase integration.</p>
+      <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl hover:border-emerald-800/60 transition">
+        <div class="w-10 h-10 rounded-lg bg-emerald-950/80 border border-emerald-800 flex items-center justify-center text-emerald-400 font-bold mb-4">02</div>
+        <h3 class="text-xl font-bold text-white mb-2">Cloud Infrastructure & Security</h3>
+        <p class="text-gray-400 text-sm leading-relaxed">Cloud security policies, backend infrastructure deployment, and serverless database integrations using Supabase and cloud hosting.</p>
       </div>
 
-      <div class="bg-gray-900/90 border border-emerald-900/40 p-6 rounded-2xl hover:border-emerald-500/40 transition-all duration-300 hover:-translate-y-1">
-        <div class="w-12 h-12 rounded-xl bg-emerald-950 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-black text-lg mb-5 shadow-inner">
-          03
-        </div>
-        <h3 class="text-xl font-bold text-white mb-2">Machine Learning & Defense</h3>
-        <p class="text-gray-400 text-sm leading-relaxed">Applied security automation, log parsing scripts, anomaly identification, and data defense mechanisms.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Interactive Security Labs Section -->
-  <section id="labs" class="py-16 px-6 max-w-7xl mx-auto border-b border-gray-900">
-    <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
-      <div>
-        <h2 class="text-3xl font-bold text-white flex items-center gap-3">
-          <i class="fa-solid fa-vial text-emerald-400"></i> Interactive Security Labs
-        </h2>
-        <p class="text-gray-400 mt-1">Analyze system scenarios, capture target flags, and submit solutions to record progress.</p>
-      </div>
-
-      <!-- Filter Controls -->
-      <div class="flex gap-2 bg-gray-900 p-1.5 rounded-xl border border-emerald-900/40 self-start">
-        <button onclick="filterLabs('All')" id="filter-all" class="bg-emerald-500 text-gray-950 px-4 py-1.5 rounded-lg font-bold text-xs transition">All Modules</button>
-        <button onclick="filterLabs('Cloud Security')" id="filter-cloud" class="bg-transparent text-gray-400 px-4 py-1.5 rounded-lg font-bold text-xs hover:text-emerald-400 transition">Cloud Security</button>
-        <button onclick="filterLabs('Cybersecurity')" id="filter-cyber" class="bg-transparent text-gray-400 px-4 py-1.5 rounded-lg font-bold text-xs hover:text-emerald-400 transition">Cybersecurity</button>
-      </div>
-    </div>
-
-    <!-- Dynamic Labs Grid -->
-    <div id="labs-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div class="text-gray-400 text-sm bg-gray-900/80 p-6 rounded-2xl border border-emerald-900/30 flex items-center gap-3">
-        <i class="fa-solid fa-spinner animate-spin text-emerald-400 text-lg"></i>
-        <span>Loading live lab modules from Supabase database...</span>
+      <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl hover:border-emerald-800/60 transition">
+        <div class="w-10 h-10 rounded-lg bg-emerald-950/80 border border-emerald-800 flex items-center justify-center text-emerald-400 font-bold mb-4">03</div>
+        <h3 class="text-xl font-bold text-white mb-2">Machine Learning & Systems</h3>
+        <p class="text-gray-400 text-sm leading-relaxed">Applied machine learning fundamentals, security data analysis, automated log parsing, and secure script execution.</p>
       </div>
     </div>
   </section>
 
   <!-- Dedicated Student Account Portal -->
-  <section id="portal" class="py-16 px-6 max-w-xl mx-auto border-b border-gray-900">
-    <div class="bg-gray-900/90 border border-emerald-900/50 rounded-2xl p-8 shadow-2xl emerald-glow">
-      <div class="text-center mb-6">
-        <div class="w-12 h-12 rounded-xl bg-emerald-950 border border-emerald-500/40 text-emerald-400 flex items-center justify-center mx-auto mb-3 text-xl">
-          <i class="fa-solid fa-user-lock"></i>
-        </div>
-        <h2 class="text-2xl font-bold text-white">Student Account Portal</h2>
-        <p class="text-gray-400 text-sm mt-1">Authenticate to save completed flags and log lab points.</p>
-      </div>
+  <section id="portal" class="py-16 px-6 max-w-2xl mx-auto border-b border-gray-800/80">
+    <div class="bg-gray-900 border border-gray-800 rounded-2xl p-8 shadow-2xl">
+      <h2 class="text-2xl font-bold text-white mb-2 text-center" id="portal-heading">Student Portal</h2>
+      <p class="text-gray-400 text-sm text-center mb-6" id="portal-subheading">Sign in or register an account to log completed lab modules and track points.</p>
       
-      <!-- Tab Switcher -->
-      <div class="flex border-b border-emerald-900/50 mb-6">
-        <button id="tab-login" onclick="switchAuthTab('login')" class="flex-1 py-2.5 font-bold text-emerald-400 border-b-2 border-emerald-500 text-sm flex items-center justify-center gap-2">
-          <i class="fa-solid fa-right-to-bracket text-xs"></i> Sign In
-        </button>
-        <button id="tab-signup" onclick="switchAuthTab('signup')" class="flex-1 py-2.5 font-bold text-gray-400 border-b-2 border-transparent text-sm flex items-center justify-center gap-2 hover:text-emerald-300">
-          <i class="fa-solid fa-user-plus text-xs"></i> Create Account
-        </button>
+      <!-- Tab Controls -->
+      <div class="flex border-b border-gray-800 mb-6">
+        <button id="tab-login" type="button" onclick="switchAuthTab('login')" class="flex-1 py-2 font-semibold text-emerald-400 border-b-2 border-emerald-500 text-sm">Sign In</button>
+        <button id="tab-signup" type="button" onclick="switchAuthTab('signup')" class="flex-1 py-2 font-semibold text-gray-400 border-b-2 border-transparent text-sm">Create Account</button>
       </div>
 
       <!-- Auth Form -->
       <form id="auth-form" onsubmit="handleAuthSubmit(event)">
         <div class="mb-4">
-          <label class="block text-xs uppercase tracking-wider text-emerald-400 font-bold mb-1.5">Email Address</label>
-          <div class="relative emerald-border-glow rounded-xl">
-            <input type="email" id="auth-email" required class="w-full bg-gray-950 border border-emerald-900/60 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500 text-sm pl-10" placeholder="student@academy.com" />
-            <i class="fa-solid fa-envelope absolute left-3.5 top-3.5 text-gray-500 text-sm"></i>
-          </div>
+          <label class="block text-xs uppercase tracking-wider text-gray-400 font-semibold mb-1">Email Address</label>
+          <input type="email" id="auth-email" required class="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-emerald-500 text-sm" placeholder="student@domain.com" />
         </div>
         <div class="mb-6">
-          <label class="block text-xs uppercase tracking-wider text-emerald-400 font-bold mb-1.5">Password</label>
-          <div class="relative emerald-border-glow rounded-xl">
-            <input type="password" id="auth-password" required class="w-full bg-gray-950 border border-emerald-900/60 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500 text-sm pl-10" placeholder="••••••••" />
-            <i class="fa-solid fa-key absolute left-3.5 top-3.5 text-gray-500 text-sm"></i>
-          </div>
+          <label class="block text-xs uppercase tracking-wider text-gray-400 font-semibold mb-1">Password</label>
+          <input type="password" id="auth-password" required class="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-emerald-500 text-sm" placeholder="••••••••" />
         </div>
         
-        <button type="submit" id="auth-submit-btn" class="w-full bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-extrabold py-3.5 rounded-xl text-sm transition shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2">
-          <i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In
+        <button type="submit" id="auth-submit-btn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 rounded-lg text-sm transition shadow-lg shadow-emerald-600/20">
+          Sign In
         </button>
       </form>
 
-      <div id="auth-message" class="mt-4 text-center text-xs font-semibold"></div>
+      <div id="auth-message" class="mt-4 text-center text-xs"></div>
+    </div>
+  </section>
+
+  <!-- Interactive Security Labs Section -->
+  <section id="labs" class="py-16 px-6 max-w-7xl mx-auto border-b border-gray-800/80">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+      <div>
+        <h2 class="text-3xl font-bold text-white">Interactive Practical Labs</h2>
+        <p class="text-gray-400 mt-1">Analyze scenario logs, capture system flags, and submit answers to save progress to your profile.</p>
+      </div>
+
+      <!-- Filter Controls -->
+      <div class="flex gap-2 bg-gray-900 p-1.5 rounded-xl border border-gray-800 self-start">
+        <button onclick="filterLabs('All')" class="bg-emerald-600 px-3.5 py-1.5 rounded-lg font-semibold text-xs text-white hover:bg-emerald-500 transition">All Modules</button>
+        <button onclick="filterLabs('Cloud Security')" class="bg-transparent text-gray-400 px-3.5 py-1.5 rounded-lg font-semibold text-xs hover:text-white transition">Cloud Security</button>
+        <button onclick="filterLabs('Cybersecurity')" class="bg-transparent text-gray-400 px-3.5 py-1.5 rounded-lg font-semibold text-xs hover:text-white transition">Cybersecurity</button>
+      </div>
+    </div>
+
+    <!-- Dynamic Labs Grid -->
+    <div id="labs-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="text-gray-400 text-sm bg-gray-900 p-6 rounded-xl border border-gray-800">Connecting to database and fetching published modules...</div>
     </div>
   </section>
 
   <!-- Educational Accreditations Section -->
   <section id="certifications" class="py-16 px-6 max-w-7xl mx-auto">
-    <h2 class="text-3xl font-bold mb-6 text-white flex items-center gap-3">
-      <i class="fa-solid fa-award text-emerald-400"></i> Verified Certifications
-    </h2>
-    <div class="bg-gray-900/90 border border-emerald-900/40 rounded-2xl p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl">
+    <h2 class="text-3xl font-bold mb-6 text-white">Verified Certifications</h2>
+    <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
       <div>
-        <h3 class="text-lg font-bold text-white flex items-center gap-2">
-          <i class="fa-solid fa-certificate text-emerald-400"></i> Cloud Security & Ethical Hacking Credential
-        </h3>
-        <p class="text-gray-400 text-sm mt-1">Verified competency in cloud security architecture, flag capturing, and penetration testing methodologies.</p>
+        <h3 class="text-lg font-bold text-white">Machine Learning, Cloud Computing & Ethical Hacking Certificate</h3>
+        <p class="text-gray-400 text-sm mt-1">Verified competency in cloud security architectures, serverless deployment, machine learning algorithms, and penetration testing fundamentals.</p>
       </div>
-      <span class="text-xs bg-emerald-950 text-emerald-400 border border-emerald-700/60 px-4 py-1.5 rounded-full font-bold uppercase tracking-wider flex items-center gap-1.5 shrink-0">
-        <i class="fa-solid fa-check-double"></i> Verified Official
-      </span>
+      <span class="text-xs bg-emerald-950 text-emerald-400 border border-emerald-800 px-3 py-1 rounded-full font-semibold">Official Credential</span>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer class="border-t border-emerald-950/60 py-8 text-center text-gray-500 text-sm bg-gray-950">
-    <p>© 2026 CyberSec Learning Academy. Powered by Supabase Backend.</p>
+  <footer class="border-t border-gray-800 py-8 text-center text-gray-500 text-sm">
+    <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p>© 2026 CyberSec Academy Platform. All rights reserved.</p>
+      <div class="flex items-center gap-4">
+        <a href="https://x.com/bush_bean__" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-emerald-400 transition text-xs flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+          </svg>
+          @bush_bean__
+        </a>
+      </div>
+    </div>
   </footer>
 
   <!-- Supabase JS Client Library -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+  <!-- Application Logic -->
   <script>
     const SUPABASE_URL = 'https://oamprfzytergokcuwvkx.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im94bnZwc2Z6eXRrcmdva2N1d2t2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2OTI1NDksImV4cCI6MjEwNjI2ODU0OX0.AhzL3LgELbcK_qhnFlnNYWbaXdNUjVyX0-TGT-u9Ot8';
@@ -268,15 +197,18 @@
       const loginTab = document.getElementById('tab-login');
       const signupTab = document.getElementById('tab-signup');
       const submitBtn = document.getElementById('auth-submit-btn');
+      const heading = document.getElementById('portal-heading');
 
       if (mode === 'login') {
-        loginTab.className = 'flex-1 py-2.5 font-bold text-emerald-400 border-b-2 border-emerald-500 text-sm flex items-center justify-center gap-2';
-        signupTab.className = 'flex-1 py-2.5 font-bold text-gray-400 border-b-2 border-transparent text-sm flex items-center justify-center gap-2 hover:text-emerald-300';
-        submitBtn.innerHTML = '<i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In';
+        loginTab.className = 'flex-1 py-2 font-semibold text-emerald-400 border-b-2 border-emerald-500 text-sm';
+        signupTab.className = 'flex-1 py-2 font-semibold text-gray-400 border-b-2 border-transparent text-sm';
+        submitBtn.innerText = 'Sign In';
+        if (heading) heading.innerText = 'Sign In to Student Portal';
       } else {
-        signupTab.className = 'flex-1 py-2.5 font-bold text-emerald-400 border-b-2 border-emerald-500 text-sm flex items-center justify-center gap-2';
-        loginTab.className = 'flex-1 py-2.5 font-bold text-gray-400 border-b-2 border-transparent text-sm flex items-center justify-center gap-2 hover:text-emerald-300';
-        submitBtn.innerHTML = '<i class="fa-solid fa-user-plus"></i> Create Account';
+        signupTab.className = 'flex-1 py-2 font-semibold text-emerald-400 border-b-2 border-emerald-500 text-sm';
+        loginTab.className = 'flex-1 py-2 font-semibold text-gray-400 border-b-2 border-transparent text-sm';
+        submitBtn.innerText = 'Create Account';
+        if (heading) heading.innerText = 'Create Student Account';
       }
       document.getElementById('auth-message').innerText = '';
     }
@@ -288,15 +220,15 @@
       const msgEl = document.getElementById('auth-message');
 
       msgEl.className = 'mt-4 text-center text-xs text-emerald-400 font-semibold';
-      msgEl.innerText = 'Connecting to authentication server...';
+      msgEl.innerText = authMode === 'login' ? 'Signing in...' : 'Registering account...';
 
       if (authMode === 'login') {
         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) {
-          msgEl.className = 'mt-4 text-center text-xs text-red-400 font-medium';
+          msgEl.className = 'mt-4 text-center text-xs text-red-400';
           msgEl.innerText = error.message;
         } else {
-          msgEl.className = 'mt-4 text-center text-xs text-emerald-400 font-bold';
+          msgEl.className = 'mt-4 text-center text-xs text-emerald-400 font-semibold';
           msgEl.innerText = 'Signed in successfully!';
           updateAuthUI();
           loadLabsAndProgress();
@@ -304,11 +236,12 @@
       } else {
         const { data, error } = await supabase.auth.signUp({ email, password });
         if (error) {
-          msgEl.className = 'mt-4 text-center text-xs text-red-400 font-medium';
+          msgEl.className = 'mt-4 text-center text-xs text-red-400';
           msgEl.innerText = error.message;
         } else {
-          msgEl.className = 'mt-4 text-center text-xs text-emerald-400 font-bold';
-          msgEl.innerText = 'Account created successfully! You can now log in.';
+          msgEl.className = 'mt-4 text-center text-xs text-emerald-400 font-semibold';
+          msgEl.innerText = 'Account created successfully! You can now sign in.';
+          setTimeout(() => switchAuthTab('login'), 1500);
           updateAuthUI();
         }
       }
@@ -329,32 +262,28 @@
       if (user) {
         headerAuth.innerHTML = `
           <div class="flex items-center gap-3">
-            <span class="text-xs text-emerald-400 font-mono bg-emerald-950/80 border border-emerald-800/60 px-3 py-1.5 rounded-xl hidden sm:inline flex items-center gap-1.5">
-              <i class="fa-solid fa-user"></i> ${user.email}
-            </span>
-            <button onclick="handleSignOut()" class="bg-gray-900 hover:bg-gray-800 text-gray-300 border border-emerald-900/60 font-semibold px-3.5 py-1.5 rounded-xl text-xs transition flex items-center gap-1.5">
-              <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+            <span class="text-xs text-gray-300 font-mono bg-gray-900 border border-gray-800 px-3 py-1.5 rounded-lg hidden sm:inline">${user.email}</span>
+            <button onclick="handleSignOut()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-700 font-medium px-3.5 py-1.5 rounded-lg text-xs transition">
+              Sign Out
             </button>
           </div>
         `;
         if (portalSection) {
           portalSection.innerHTML = `
-            <div class="bg-gray-900/90 border border-emerald-900/50 rounded-2xl p-8 text-center shadow-2xl emerald-glow">
-              <span class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-emerald-400 bg-emerald-950/90 border border-emerald-800 px-3.5 py-1 rounded-full mb-4">
-                <i class="fa-solid fa-circle-check"></i> Active Student Session
-              </span>
-              <h3 class="text-xl font-bold text-white mb-1">${user.email}</h3>
-              <p class="text-gray-400 text-xs mb-6">Completed lab flags and progress points are synced to your account ID.</p>
-              <button onclick="handleSignOut()" class="bg-red-950/80 hover:bg-red-900 text-red-300 border border-red-800 font-bold px-5 py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2 mx-auto">
-                <i class="fa-solid fa-right-from-bracket"></i> Sign Out Account
+            <div class="bg-gray-900 border border-gray-800 rounded-2xl p-8 text-center shadow-2xl">
+              <span class="text-xs font-bold uppercase tracking-widest text-emerald-400 bg-emerald-950/80 border border-emerald-800 px-3 py-1 rounded-full">Active Session</span>
+              <h3 class="text-xl font-bold text-white mt-4 mb-2">${user.email}</h3>
+              <p class="text-gray-400 text-xs mb-6">Your progress and completed security flag submissions are synced with your user ID.</p>
+              <button onclick="handleSignOut()" class="bg-red-950/80 hover:bg-red-900 text-red-300 border border-red-800 font-medium px-4 py-2 rounded-lg text-xs transition">
+                Sign Out
               </button>
             </div>
           `;
         }
       } else {
         headerAuth.innerHTML = `
-          <a href="#portal" class="bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-bold px-4 py-2 rounded-xl text-sm transition shadow-lg shadow-emerald-500/20 flex items-center gap-2">
-            <i class="fa-solid fa-right-to-bracket"></i> Student Access
+          <a href="#portal" class="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-4 py-2 rounded-lg text-sm transition shadow-lg shadow-emerald-600/20">
+            Student Portal
           </a>
         `;
       }
@@ -365,4 +294,68 @@
         const { data: { user } } = await supabase.auth.getUser();
 
         const { data: labs, error: labsErr } = await supabase
-          .from(
+          .from('labs')
+          .select('*');
+
+        if (labsErr) throw labsErr;
+        allLabs = labs || [];
+
+        if (user) {
+          const { data: progress } = await supabase
+            .from('user_progress')
+            .select('module_name')
+            .eq('user_email', user.email);
+
+          if (progress) {
+            progress.forEach(item => userCompletedLabs.add(item.module_name));
+          }
+        }
+
+        renderLabs(allLabs);
+      } catch (err) {
+        console.error('Error loading labs:', err.message);
+        document.getElementById('labs-grid').innerHTML = `
+          <div class="bg-gray-900 border border-gray-800 p-6 rounded-xl text-gray-400 text-sm">
+            No active lab modules currently published in the database table.
+          </div>
+        `;
+      }
+    }
+
+    function renderLabs(labsToRender) {
+      const container = document.getElementById('labs-grid');
+      if (!container) return;
+      container.innerHTML = '';
+
+      if (labsToRender.length === 0) {
+        container.innerHTML = `
+          <div class="bg-gray-900 border border-gray-800 p-6 rounded-xl text-gray-400 text-sm">
+            No lab modules match the selected filter.
+          </div>
+        `;
+        return;
+      }
+
+      labsToRender.forEach(lab => {
+        const isCompleted = userCompletedLabs.has(lab.id);
+
+        const cardHtml = `
+          <div class="bg-gray-900 rounded-2xl p-6 border ${isCompleted ? 'border-emerald-500/50' : 'border-gray-800'} flex flex-col justify-between shadow-xl">
+            <div>
+              <div class="flex justify-between items-center mb-3">
+                <span class="text-xs font-semibold px-2.5 py-1 rounded-md ${lab.category === 'Cloud Security' ? 'bg-emerald-950 text-emerald-300 border border-emerald-800' : 'bg-red-950 text-red-300 border border-red-800'}">${lab.category}</span>
+                <span class="text-xs text-gray-400 font-mono">${lab.difficulty} • ${lab.points} pts</span>
+              </div>
+              <h3 class="text-xl font-bold mb-2 text-white">${lab.title}</h3>
+              <p class="text-gray-400 text-sm mb-4 leading-relaxed">${lab.description}</p>
+              
+              <details class="bg-gray-950 p-3.5 rounded-xl border border-gray-800/80 text-xs font-mono text-gray-300 mb-4 cursor-pointer">
+                <summary class="font-bold text-emerald-400">View Lab Log & Scenario Data</summary>
+                <pre class="mt-2.5 whitespace-pre-wrap text-gray-300 font-mono bg-gray-900/80 p-3 rounded-lg border border-gray-800">${lab.scenario_details}</pre>
+              </details>
+            </div>
+
+            <div>
+              ${isCompleted ? `
+                <div class="flex items-center text-emerald-400 font-semibold text-sm bg-emerald-950/40 border border-emerald-800/50 p-2.5 rounded-lg">
+                  <svg class="w-5 h-5 mr-1.5" fill="currentColor" viewBox="0 0 20 20"><path 
