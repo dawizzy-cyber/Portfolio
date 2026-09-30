@@ -17,3 +17,132 @@
     </div>
   </div>
 </section>
+<!-- Supabase CDN -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- JavaScript Logic -->
+<script>
+  let allLabs = [];
+  let userCompletedLabs = new Set();
+
+  async function loadLabsAndProgress() {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+
+      const { data: labs, error: labsErr } = await supabase
+        .from('labs')
+        .select('*');
+
+      if (labsErr) throw labsErr;
+      allLabs = labs;
+
+      if (user) {
+        const { data: progress } = await supabase
+          .from('user_progress')
+          .select('module_name')
+          .eq('user_email', user.email);
+
+        if (progress) {
+          progress.forEach(item => userCompletedLabs.add(item.module_name));
+        }
+      }
+
+      renderLabs(allLabs);
+    } catch (err) {
+      console.error('Error loading labs:', err.message);
+    }
+  }
+
+  function renderLabs(labsToRender) {
+    const container = document.getElementById('labs-grid');
+    if (!container) return;
+    container.innerHTML = '';
+
+    labsToRender.forEach(lab => {
+      const isCompleted = userCompletedLabs.has(lab.id);
+
+      const cardHtml = `
+        <div class="bg-gray-800 rounded-xl p-6 border ${isCompleted ? 'border-green-500/50' : 'border-gray-700'} flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-center mb-3">
+              <span class="text-xs font-semibold px-2.5 py-1 rounded ${lab.category === 'Cloud Security' ? 'bg-indigo-900 text-indigo-300' : 'bg-red-900 text-red-300'}">${lab.category}</span>
+              <span class="text-xs text-gray-400">${lab.difficulty} • ${lab.points} pts</span>
+            </div>
+            <h3 class="text-xl font-bold mb-2">${lab.title}</h3>
+            <p class="text-gray-300 text-sm mb-4">${lab.description}</p>
+            
+            <details class="bg-gray-900/60 p-3 rounded text-xs font-mono text-gray-300 mb-4 cursor-pointer">
+              <summary class="font-bold text-blue-400">View Lab Scenario & Logs</summary>
+              <pre class="mt-2 whitespace-pre-wrap">${lab.scenario_details}</pre>
+            </details>
+          </div>
+
+          <div>
+            ${isCompleted ? `
+              <div class="flex items-center text-green-400 font-semibold text-sm">
+                <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>
+                Completed
+              </div>
+            ` : `
+              <form onsubmit="submitFlag(event, '${lab.id}', '${lab.flag_hash}')" class="flex gap-2">
+                <input type="text" id="flag-input-${lab.id}" placeholder="WIZZY{...}" required class="bg-gray-900 border border-gray-700 text-white rounded px-3 py-2 text-sm flex-1 focus:outline-none focus:border-blue-500" />
+                <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white font-medium px-4 py-2 rounded text-sm transition">Submit</button>
+              </form>
+            `}
+            <div id="feedback-${lab.id}" class="mt-2 text-xs"></div>
+          </div>
+        </div>
+      `;
+      container.innerHTML += cardHtml;
+    });
+  }
+
+  function filterLabs(category) {
+    if (category === 'All') {
+      renderLabs(allLabs);
+    } else {
+      renderLabs(allLabs.filter(l => l.category === category));
+    }
+  }
+
+  async function submitFlag(event, labId, expectedFlag) {
+    event.preventDefault();
+    
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      alert('Please sign in to submit flags and save your progress!');
+      return;
+    }
+
+    const inputEl = document.getElementById(`flag-input-${labId}`);
+    const feedbackEl = document.getElementById(`feedback-${labId}`);
+    const submittedFlag = inputEl.value.trim();
+
+    if (submittedFlag === expectedFlag) {
+      feedbackEl.className = 'mt-2 text-xs text-green-400 font-semibold';
+      feedbackEl.innerText = 'Correct flag! Saving progress...';
+
+      const { error } = await supabase
+        .from('user_progress')
+        .insert([{
+          user_email: user.email,
+          module_name: labId,
+          status: 'Completed'
+        }]);
+
+      if (!error) {
+        userCompletedLabs.add(labId);
+        setTimeout(() => renderLabs(allLabs), 1000);
+      } else {
+        feedbackEl.className = 'mt-2 text-xs text-yellow-400';
+        feedbackEl.innerText = 'Flag correct! (Progress already logged)';
+      }
+    } else {
+      feedbackEl.className = 'mt-2 text-xs text-red-400';
+      feedbackEl.innerText = 'Incorrect flag. Inspect scenario details and try again!';
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', loadLabsAndProgress);
+        </script>
+
