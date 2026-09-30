@@ -3,14 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CyberSec Academy | Interactive Cloud & Security Labs</title>
-  <!-- Tailwind CSS CDN -->
+  <title>CyberSec Academy | Interactive Platform</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-950 text-gray-100 min-h-screen font-sans">
+<body class="bg-gray-950 text-gray-100 min-h-screen font-sans relative overflow-x-hidden">
 
-  <!-- Navigation Bar -->
-  <header class="border-b border-gray-800 bg-gray-900/90 sticky top-0 z-50 backdrop-blur">
+  <!-- Background Canvas: Dark Emerald Theme with White Tech Lines -->
+  <div class="fixed inset-0 bg-gradient-to-br from-emerald-950 via-gray-950 to-gray-950 -z-10"></div>
+  <div class="fixed inset-0 opacity-10 pointer-events-none -z-10" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'100\' viewBox=\'0 0 100 100\' stroke=\'%23ffffff\' stroke-width=\'0.5\' fill=\'none\'><path d=\'M 10 10 L 90 10 L 90 90 L 10 90 Z M 30 30 L 70 30 M 50 30 L 50 70 M 30 70 L 70 70\' /><circle cx=\'50\' cy=\'50\' r=\'10\' /><circle cx=\'10\' cy=\'10\' r=\'3\' fill=\'%23ffffff\' /><circle cx=\'90\' cy=\'90\' r=\'3\' fill=\'%23ffffff\' /></svg>');"></div>
+
+  <!-- Header Navigation -->
+  <header class="border-b border-gray-800/80 bg-gray-900/90 sticky top-0 z-50 backdrop-blur">
     <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
       <div class="flex items-center gap-2">
         <span class="text-emerald-500 font-black text-2xl">⚡</span>
@@ -19,13 +22,12 @@
       
       <nav class="hidden md:flex space-x-6 text-sm text-gray-400 font-medium">
         <a href="#curriculum" class="hover:text-emerald-400 transition">Curriculum</a>
-        <a href="#labs" class="hover:text-emerald-400 transition">Interactive Labs</a>
+        <a href="#about" class="hover:text-emerald-400 transition">About</a>
         <a href="#portal" class="hover:text-emerald-400 transition">Student Portal</a>
         <a href="#certifications" class="hover:text-emerald-400 transition">Certificates</a>
       </nav>
 
       <div class="flex items-center gap-4">
-        <!-- Social Link: X (Twitter) -->
         <a href="https://x.com/bush_bean__" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-emerald-400 transition flex items-center gap-1.5 text-sm font-medium">
           <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
             <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
@@ -34,27 +36,117 @@
         </a>
 
         <div id="header-auth-status">
-          <a href="#portal" class="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-4 py-2 rounded-lg text-sm transition shadow-lg shadow-emerald-600/20">
+          <button onclick="scrollToPortal()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-4 py-2 rounded-lg text-sm transition shadow-lg shadow-emerald-600/20">
             Student Portal
-          </a>
+          </button>
         </div>
       </div>
     </div>
   </header>
 
-  <!-- Hero / Platform Banner -->
-  <section class="py-20 text-center border-b border-gray-800/80 bg-gradient-to-b from-gray-900 via-gray-900 to-gray-950 px-6">
+  <!-- Hero Section -->
+  <section class="py-16 text-center border-b border-gray-800/80 bg-gradient-to-b from-gray-900/60 to-transparent px-6">
     <div class="max-w-4xl mx-auto">
-      <span class="text-xs font-bold uppercase tracking-widest text-emerald-400 bg-emerald-950/80 border border-emerald-800 px-3.5 py-1.5 rounded-full">Hands-On Cyber Security & Cloud Lab Platform</span>
+      <span class="text-xs font-bold uppercase tracking-widest text-emerald-400 bg-emerald-950/80 border border-emerald-800 px-3.5 py-1.5 rounded-full">Interactive Cyber Security Platform</span>
       <h2 class="text-4xl sm:text-6xl font-extrabold text-white tracking-tight mt-6 mb-4">
         Master Offensive Security & Cloud Infrastructure
       </h2>
       <p class="text-gray-400 text-lg max-w-2xl mx-auto mb-8 leading-relaxed">
-        An interactive learning platform designed for hands-on technical training. Solve real-world security scenarios, capture flags, and track live module achievements.
+        Sign in or register an account in the Student Portal below to unlock hands-on labs, analyze scenario logs, and track live scoreboard progress.
       </p>
       <div class="flex justify-center gap-4">
-        <a href="#labs" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold px-6 py-3 rounded-lg text-sm transition shadow-lg shadow-emerald-600/20">Start Practical Labs</a>
+        <button onclick="scrollToPortal()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold px-6 py-3 rounded-lg text-sm transition shadow-lg shadow-emerald-600/20">Go to Student Portal</button>
         <a href="#curriculum" class="bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-700 font-semibold px-6 py-3 rounded-lg text-sm transition">View Modules</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dynamic Authentication Hub -->
+  <section id="portal" class="py-16 px-6 max-w-md mx-auto border-b border-gray-800/80">
+    <div class="bg-gray-900/90 border border-gray-800 rounded-2xl p-8 shadow-2xl backdrop-blur" id="portal-container">
+      <!-- Auth Content Dynamic Injection -->
+    </div>
+  </section>
+
+  <!-- PROTECTED AREA: Practical Labs & Leaderboard (Only shown when logged in) -->
+  <div id="protected-student-area" class="hidden">
+    
+    <!-- Dynamic Labs Section -->
+    <section id="labs" class="py-16 px-6 max-w-7xl mx-auto border-b border-gray-800/80">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-widest text-emerald-400 bg-emerald-950/80 border border-emerald-800 px-3 py-1 rounded-full">Unlocked Student Environment</span>
+          <h2 class="text-3xl font-bold text-white mt-3">Practical Labs & Flag Submissions</h2>
+          <p class="text-gray-400 mt-1">Analyze live scenario logs and submit flags to record progress in your database profile.</p>
+        </div>
+
+        <div class="flex gap-2 bg-gray-900 p-1.5 rounded-xl border border-gray-800 self-start">
+          <button onclick="filterLabs('All')" class="bg-emerald-600 px-3.5 py-1.5 rounded-lg font-semibold text-xs text-white hover:bg-emerald-500 transition">All Modules</button>
+          <button onclick="filterLabs('Cloud Security')" class="bg-transparent text-gray-400 px-3.5 py-1.5 rounded-lg font-semibold text-xs hover:text-white transition">Cloud Security</button>
+          <button onclick="filterLabs('Cybersecurity')" class="bg-transparent text-gray-400 px-3.5 py-1.5 rounded-lg font-semibold text-xs hover:text-white transition">Cybersecurity</button>
+        </div>
+      </div>
+
+      <div id="labs-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Labs dynamically loaded from Supabase -->
+      </div>
+    </section>
+
+    <!-- Live Leaderboard Section -->
+    <section id="leaderboard" class="py-16 px-6 max-w-7xl mx-auto border-b border-gray-800/80">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+        <div>
+          <h2 class="text-3xl font-bold text-white">Live Student Leaderboard</h2>
+          <p class="text-gray-400 mt-1">Real-time dynamic point scoring synced from Supabase user completions.</p>
+        </div>
+        <div class="bg-gray-900 border border-gray-800 px-4 py-2 rounded-xl text-xs font-mono text-emerald-400">
+          ⚡ Live Sync Active
+        </div>
+      </div>
+
+      <div class="bg-gray-900/90 border border-gray-800 rounded-2xl overflow-hidden shadow-2xl backdrop-blur">
+        <table class="w-full text-left text-sm text-gray-300">
+          <thead class="bg-gray-950 text-xs uppercase text-gray-400 font-semibold border-b border-gray-800">
+            <tr>
+              <th class="px-6 py-4">Rank</th>
+              <th class="px-6 py-4">Student Email</th>
+              <th class="px-6 py-4 text-center">Labs Solved</th>
+              <th class="px-6 py-4 text-right">Total Score</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboard-body" class="divide-y divide-gray-800/60">
+            <tr>
+              <td colspan="4" class="px-6 py-8 text-center text-gray-400">Loading student rankings from backend...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Educational Tracks -->
+  <section id="curriculum" class="py-16 px-6 max-w-7xl mx-auto border-b border-gray-800/80">
+    <h2 class="text-3xl font-bold mb-2 text-white">Educational Tracks</h2>
+    <p class="text-gray-400 mb-8">Structured focus areas in security engineering and systems.</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="bg-gray-900/80 border border-gray-800 p-6 rounded-2xl hover:border-emerald-800/60 transition backdrop-blur">
+        <div class="w-10 h-10 rounded-lg bg-emerald-950/80 border border-emerald-800 flex items-center justify-center text-emerald-400 font-bold mb-4">01</div>
+        <h3 class="text-xl font-bold text-white mb-2">Ethical Hacking & Recon</h3>
+        <p class="text-gray-400 text-sm leading-relaxed">Directory searching, terminal navigation, network enumeration, and offensive security analysis.</p>
+      </div>
+
+      <div class="bg-gray-900/80 border border-gray-800 p-6 rounded-2xl hover:border-emerald-800/60 transition backdrop-blur">
+        <div class="w-10 h-10 rounded-lg bg-emerald-950/80 border border-emerald-800 flex items-center justify-center text-emerald-400 font-bold mb-4">02</div>
+        <h3 class="text-xl font-bold text-white mb-2">Cloud Infrastructure</h3>
+        <p class="text-gray-400 text-sm leading-relaxed">Cloud security policies, database integrations, and serverless architecture implementation.</p>
+      </div>
+
+      <div class="bg-gray-900/80 border border-gray-800 p-6 rounded-2xl hover:border-emerald-800/60 transition backdrop-blur">
+        <div class="w-10 h-10 rounded-lg bg-emerald-950/80 border border-emerald-800 flex items-center justify-center text-emerald-400 font-bold mb-4">03</div>
+        <h3 class="text-xl font-bold text-white mb-2">Machine Learning & Systems</h3>
+        <p class="text-gray-400 text-sm leading-relaxed">Applied machine learning fundamentals, automated log analysis, and secure script execution.</p>
       </div>
     </div>
   </section>
@@ -62,103 +154,20 @@
   <!-- About Section -->
   <section id="about" class="py-16 px-6 max-w-7xl mx-auto border-b border-gray-800/80">
     <h2 class="text-3xl font-bold mb-6 text-white">About the Platform</h2>
-    <div class="bg-gray-900/80 border border-gray-800 rounded-2xl p-8">
+    <div class="bg-gray-900/80 border border-gray-800 rounded-2xl p-8 backdrop-blur">
       <p class="text-gray-300 leading-relaxed mb-4">
-        Welcome to our interactive cybersecurity research and educational platform. We specialize in offensive security training, directory enumeration techniques, network traffic analysis, and cloud security configuration auditing.
-      </p>
-      <p class="text-gray-400 text-sm leading-relaxed">
-        This platform serves as a hands-on environment for interactive security modules, capture-the-flag (CTF) challenges, and serverless cloud infrastructure labs.
+        This platform serves as an interactive environment for cybersecurity research, CTF lab execution, and dynamic cloud database synchronization.
       </p>
     </div>
   </section>
 
-  <!-- Learning Path & Curriculum Section -->
-  <section id="curriculum" class="py-16 px-6 max-w-7xl mx-auto border-b border-gray-800/80">
-    <h2 class="text-3xl font-bold mb-2 text-white">Educational Track Focus</h2>
-    <p class="text-gray-400 mb-8">Structured learning paths covering offensive operations, cloud security engineering, and intelligent systems.</p>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl hover:border-emerald-800/60 transition">
-        <div class="w-10 h-10 rounded-lg bg-emerald-950/80 border border-emerald-800 flex items-center justify-center text-emerald-400 font-bold mb-4">01</div>
-        <h3 class="text-xl font-bold text-white mb-2">Ethical Hacking & Recon</h3>
-        <p class="text-gray-400 text-sm leading-relaxed">Directory searching, terminal navigation, network enumerations, and offensive security labs inspired by TryHackMe methodologies.</p>
-      </div>
-
-      <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl hover:border-emerald-800/60 transition">
-        <div class="w-10 h-10 rounded-lg bg-emerald-950/80 border border-emerald-800 flex items-center justify-center text-emerald-400 font-bold mb-4">02</div>
-        <h3 class="text-xl font-bold text-white mb-2">Cloud Infrastructure & Security</h3>
-        <p class="text-gray-400 text-sm leading-relaxed">Cloud security policies, backend infrastructure deployment, and serverless database integrations using Supabase and cloud hosting.</p>
-      </div>
-
-      <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl hover:border-emerald-800/60 transition">
-        <div class="w-10 h-10 rounded-lg bg-emerald-950/80 border border-emerald-800 flex items-center justify-center text-emerald-400 font-bold mb-4">03</div>
-        <h3 class="text-xl font-bold text-white mb-2">Machine Learning & Systems</h3>
-        <p class="text-gray-400 text-sm leading-relaxed">Applied machine learning fundamentals, security data analysis, automated log parsing, and secure script execution.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Dedicated Student Account Portal -->
-  <section id="portal" class="py-16 px-6 max-w-2xl mx-auto border-b border-gray-800/80">
-    <div class="bg-gray-900 border border-gray-800 rounded-2xl p-8 shadow-2xl">
-      <h2 class="text-2xl font-bold text-white mb-2 text-center" id="portal-heading">Student Portal</h2>
-      <p class="text-gray-400 text-sm text-center mb-6" id="portal-subheading">Sign in or register an account to log completed lab modules and track points.</p>
-      
-      <!-- Tab Controls -->
-      <div class="flex border-b border-gray-800 mb-6">
-        <button id="tab-login" type="button" onclick="switchAuthTab('login')" class="flex-1 py-2 font-semibold text-emerald-400 border-b-2 border-emerald-500 text-sm">Sign In</button>
-        <button id="tab-signup" type="button" onclick="switchAuthTab('signup')" class="flex-1 py-2 font-semibold text-gray-400 border-b-2 border-transparent text-sm">Create Account</button>
-      </div>
-
-      <!-- Auth Form -->
-      <form id="auth-form" onsubmit="handleAuthSubmit(event)">
-        <div class="mb-4">
-          <label class="block text-xs uppercase tracking-wider text-gray-400 font-semibold mb-1">Email Address</label>
-          <input type="email" id="auth-email" required class="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-emerald-500 text-sm" placeholder="student@domain.com" />
-        </div>
-        <div class="mb-6">
-          <label class="block text-xs uppercase tracking-wider text-gray-400 font-semibold mb-1">Password</label>
-          <input type="password" id="auth-password" required class="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-emerald-500 text-sm" placeholder="••••••••" />
-        </div>
-        
-        <button type="submit" id="auth-submit-btn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 rounded-lg text-sm transition shadow-lg shadow-emerald-600/20">
-          Sign In
-        </button>
-      </form>
-
-      <div id="auth-message" class="mt-4 text-center text-xs"></div>
-    </div>
-  </section>
-
-  <!-- Interactive Security Labs Section -->
-  <section id="labs" class="py-16 px-6 max-w-7xl mx-auto border-b border-gray-800/80">
-    <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
-      <div>
-        <h2 class="text-3xl font-bold text-white">Interactive Practical Labs</h2>
-        <p class="text-gray-400 mt-1">Analyze scenario logs, capture system flags, and submit answers to save progress to your profile.</p>
-      </div>
-
-      <!-- Filter Controls -->
-      <div class="flex gap-2 bg-gray-900 p-1.5 rounded-xl border border-gray-800 self-start">
-        <button onclick="filterLabs('All')" class="bg-emerald-600 px-3.5 py-1.5 rounded-lg font-semibold text-xs text-white hover:bg-emerald-500 transition">All Modules</button>
-        <button onclick="filterLabs('Cloud Security')" class="bg-transparent text-gray-400 px-3.5 py-1.5 rounded-lg font-semibold text-xs hover:text-white transition">Cloud Security</button>
-        <button onclick="filterLabs('Cybersecurity')" class="bg-transparent text-gray-400 px-3.5 py-1.5 rounded-lg font-semibold text-xs hover:text-white transition">Cybersecurity</button>
-      </div>
-    </div>
-
-    <!-- Dynamic Labs Grid -->
-    <div id="labs-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div class="text-gray-400 text-sm bg-gray-900 p-6 rounded-xl border border-gray-800">Connecting to database and fetching published modules...</div>
-    </div>
-  </section>
-
-  <!-- Educational Accreditations Section -->
+  <!-- Certifications Section -->
   <section id="certifications" class="py-16 px-6 max-w-7xl mx-auto">
     <h2 class="text-3xl font-bold mb-6 text-white">Verified Certifications</h2>
-    <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+    <div class="bg-gray-900/80 border border-gray-800 rounded-2xl p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 backdrop-blur">
       <div>
         <h3 class="text-lg font-bold text-white">Machine Learning, Cloud Computing & Ethical Hacking Certificate</h3>
-        <p class="text-gray-400 text-sm mt-1">Verified competency in cloud security architectures, serverless deployment, machine learning algorithms, and penetration testing fundamentals.</p>
+        <p class="text-gray-400 text-sm mt-1">Verified competency in cloud security architectures, serverless deployment, machine learning, and penetration testing.</p>
       </div>
       <span class="text-xs bg-emerald-950 text-emerald-400 border border-emerald-800 px-3 py-1 rounded-full font-semibold">Official Credential</span>
     </div>
@@ -168,98 +177,41 @@
   <footer class="border-t border-gray-800 py-8 text-center text-gray-500 text-sm">
     <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
       <p>© 2026 CyberSec Academy Platform. All rights reserved.</p>
-      <div class="flex items-center gap-4">
-        <a href="https://x.com/bush_bean__" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-emerald-400 transition text-xs flex items-center gap-1.5">
-          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
-            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-          </svg>
-          @bush_bean__
-        </a>
-      </div>
+      <a href="https://x.com/bush_bean__" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-emerald-400 transition text-xs flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+        </svg>
+        @bush_bean__
+      </a>
     </div>
   </footer>
 
-  <!-- Supabase JS Client Library -->
+  <!-- Supabase Client Library -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <!-- Application Logic -->
   <script>
     const SUPABASE_URL = 'https://oamprfzytergokcuwvkx.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im94bnZwc2Z6eXRrcmdva2N1d2t2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2OTI1NDksImV4cCI6MjEwNjI2ODU0OX0.AhzL3LgELbcK_qhnFlnNYWbaXdNUjVyX0-TGT-u9Ot8';
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    let authMode = 'login';
+    let activeAuthTab = 'signup'; // Default to Create Account for new students
     let allLabs = [];
     let userCompletedLabs = new Set();
 
-    function switchAuthTab(mode) {
-      authMode = mode;
-      const loginTab = document.getElementById('tab-login');
-      const signupTab = document.getElementById('tab-signup');
-      const submitBtn = document.getElementById('auth-submit-btn');
-      const heading = document.getElementById('portal-heading');
-
-      if (mode === 'login') {
-        loginTab.className = 'flex-1 py-2 font-semibold text-emerald-400 border-b-2 border-emerald-500 text-sm';
-        signupTab.className = 'flex-1 py-2 font-semibold text-gray-400 border-b-2 border-transparent text-sm';
-        submitBtn.innerText = 'Sign In';
-        if (heading) heading.innerText = 'Sign In to Student Portal';
-      } else {
-        signupTab.className = 'flex-1 py-2 font-semibold text-emerald-400 border-b-2 border-emerald-500 text-sm';
-        loginTab.className = 'flex-1 py-2 font-semibold text-gray-400 border-b-2 border-transparent text-sm';
-        submitBtn.innerText = 'Create Account';
-        if (heading) heading.innerText = 'Create Student Account';
-      }
-      document.getElementById('auth-message').innerText = '';
+    function scrollToPortal() {
+      document.getElementById('portal').scrollIntoView({ behavior: 'smooth' });
     }
 
-    async function handleAuthSubmit(e) {
-      e.preventDefault();
-      const email = document.getElementById('auth-email').value;
-      const password = document.getElementById('auth-password').value;
-      const msgEl = document.getElementById('auth-message');
-
-      msgEl.className = 'mt-4 text-center text-xs text-emerald-400 font-semibold';
-      msgEl.innerText = authMode === 'login' ? 'Signing in...' : 'Registering account...';
-
-      if (authMode === 'login') {
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) {
-          msgEl.className = 'mt-4 text-center text-xs text-red-400';
-          msgEl.innerText = error.message;
-        } else {
-          msgEl.className = 'mt-4 text-center text-xs text-emerald-400 font-semibold';
-          msgEl.innerText = 'Signed in successfully!';
-          updateAuthUI();
-          loadLabsAndProgress();
-        }
-      } else {
-        const { data, error } = await supabase.auth.signUp({ email, password });
-        if (error) {
-          msgEl.className = 'mt-4 text-center text-xs text-red-400';
-          msgEl.innerText = error.message;
-        } else {
-          msgEl.className = 'mt-4 text-center text-xs text-emerald-400 font-semibold';
-          msgEl.innerText = 'Account created successfully! You can now sign in.';
-          setTimeout(() => switchAuthTab('login'), 1500);
-          updateAuthUI();
-        }
-      }
-    }
-
-    async function handleSignOut() {
-      await supabase.auth.signOut();
-      userCompletedLabs.clear();
-      updateAuthUI();
-      renderLabs(allLabs);
-    }
-
-    async function updateAuthUI() {
+    function renderAuthUI(user) {
+      const container = document.getElementById('portal-container');
       const headerAuth = document.getElementById('header-auth-status');
-      const portalSection = document.getElementById('portal');
-      const { data: { user } } = await supabase.auth.getUser();
+      const protectedArea = document.getElementById('protected-student-area');
 
       if (user) {
+        // Show protected labs and leaderboard
+        protectedArea.classList.remove('hidden');
+
+        // Header User Email & Logout
         headerAuth.innerHTML = `
           <div class="flex items-center gap-3">
             <span class="text-xs text-gray-300 font-mono bg-gray-900 border border-gray-800 px-3 py-1.5 rounded-lg hidden sm:inline">${user.email}</span>
@@ -268,94 +220,139 @@
             </button>
           </div>
         `;
-        if (portalSection) {
-          portalSection.innerHTML = `
-            <div class="bg-gray-900 border border-gray-800 rounded-2xl p-8 text-center shadow-2xl">
-              <span class="text-xs font-bold uppercase tracking-widest text-emerald-400 bg-emerald-950/80 border border-emerald-800 px-3 py-1 rounded-full">Active Session</span>
-              <h3 class="text-xl font-bold text-white mt-4 mb-2">${user.email}</h3>
-              <p class="text-gray-400 text-xs mb-6">Your progress and completed security flag submissions are synced with your user ID.</p>
+
+        // Calculate user score
+        let totalScore = 0;
+        allLabs.forEach(l => {
+          if (userCompletedLabs.has(l.id)) totalScore += Number(l.points || 0);
+        });
+
+        // Signed In Profile Card
+        container.innerHTML = `
+          <div class="text-center">
+            <span class="text-xs font-bold uppercase tracking-widest text-emerald-400 bg-emerald-950/80 border border-emerald-800 px-3 py-1 rounded-full">Active Session</span>
+            <h3 class="text-xl font-bold text-white mt-4 mb-1">${user.email}</h3>
+            <p class="text-xs text-gray-400">Welcome back! Your lab access and leaderboard status are active below.</p>
+            
+            <div class="grid grid-cols-2 gap-4 my-6 bg-gray-950/80 p-4 rounded-xl border border-gray-800">
+              <div>
+                <div class="text-2xl font-black text-emerald-400">${userCompletedLabs.size}</div>
+                <div class="text-xs text-gray-400 uppercase font-medium mt-1">Labs Solved</div>
+              </div>
+              <div>
+                <div class="text-2xl font-black text-emerald-400">${totalScore}</div>
+                <div class="text-xs text-gray-400 uppercase font-medium mt-1">Total Points</div>
+              </div>
+            </div>
+
+            <div class="flex justify-center gap-3">
+              <a href="#labs" class="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-4 py-2 rounded-lg text-xs transition shadow-lg shadow-emerald-600/20">Go to Practical Labs</a>
               <button onclick="handleSignOut()" class="bg-red-950/80 hover:bg-red-900 text-red-300 border border-red-800 font-medium px-4 py-2 rounded-lg text-xs transition">
                 Sign Out
               </button>
             </div>
-          `;
-        }
+          </div>
+        `;
       } else {
+        // Hide protected labs/leaderboard when logged out
+        protectedArea.classList.add('hidden');
+
         headerAuth.innerHTML = `
-          <a href="#portal" class="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-4 py-2 rounded-lg text-sm transition shadow-lg shadow-emerald-600/20">
+          <button onclick="scrollToPortal()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-4 py-2 rounded-lg text-sm transition shadow-lg shadow-emerald-600/20">
             Student Portal
-          </a>
+          </button>
+        `;
+
+        // Render Dynamic Auth Form with working tabs
+        container.innerHTML = `
+          <h2 class="text-2xl font-bold text-white mb-2 text-center">Student Portal</h2>
+          <p class="text-gray-400 text-sm text-center mb-6">Create a new account or sign in to access practical labs.</p>
+          
+          <div class="flex border-b border-gray-800 mb-6">
+            <button type="button" onclick="setAuthTab('signup')" class="flex-1 py-2 font-semibold text-sm ${activeAuthTab === 'signup' ? 'text-emerald-400 border-b-2 border-emerald-500' : 'text-gray-400 border-b-2 border-transparent'}">Create Account</button>
+            <button type="button" onclick="setAuthTab('login')" class="flex-1 py-2 font-semibold text-sm ${activeAuthTab === 'login' ? 'text-emerald-400 border-b-2 border-emerald-500' : 'text-gray-400 border-b-2 border-transparent'}">Sign In</button>
+          </div>
+
+          <form onsubmit="handleAuthSubmit(event)">
+            <div class="mb-4">
+              <label class="block text-xs uppercase tracking-wider text-gray-400 font-semibold mb-1">Email Address</label>
+              <input type="email" id="auth-email" required class="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-emerald-500 text-sm" placeholder="student@example.com" />
+            </div>
+            <div class="mb-6">
+              <label class="block text-xs uppercase tracking-wider text-gray-400 font-semibold mb-1">Password</label>
+              <input type="password" id="auth-password" required class="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-emerald-500 text-sm" placeholder="••••••••" />
+            </div>
+            
+            <button type="submit" id="auth-btn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 rounded-lg text-sm transition shadow-lg shadow-emerald-600/20">
+              ${activeAuthTab === 'signup' ? 'Create Account' : 'Sign In'}
+            </button>
+          </form>
+
+          <div id="auth-msg" class="mt-4 text-center text-xs font-medium"></div>
         `;
       }
     }
 
-    async function loadLabsAndProgress() {
+    function setAuthTab(tab) {
+      activeAuthTab = tab;
+      supabase.auth.getUser().then(({ data: { user } }) => renderAuthUI(user));
+    }
+
+    async function handleAuthSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('auth-email').value;
+      const password = document.getElementById('auth-password').value;
+      const msg = document.getElementById('auth-msg');
+
+      msg.className = 'mt-4 text-center text-xs text-emerald-400 font-semibold';
+      msg.innerText = activeAuthTab === 'signup' ? 'Creating account in Supabase...' : 'Signing in...';
+
+      if (activeAuthTab === 'signup') {
+        const { data, error } = await supabase.auth.signUp({ email, password });
+        if (error) {
+          msg.className = 'mt-4 text-center text-xs text-red-400';
+          msg.innerText = error.message;
+        } else {
+          msg.className = 'mt-4 text-center text-xs text-emerald-400 font-semibold';
+          msg.innerText = 'Account registered! Signing you in...';
+          // Auto sign-in on creation
+          const { error: signInErr } = await supabase.auth.signInWithPassword({ email, password });
+          if (!signInErr) {
+            await refreshAppState();
+          } else {
+            msg.innerText = 'Account registered! Please click "Sign In" tab to log in.';
+          }
+        }
+      } else {
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) {
+          msg.className = 'mt-4 text-center text-xs text-red-400';
+          msg.innerText = error.message;
+        } else {
+          await refreshAppState();
+        }
+      }
+    }
+
+    async function handleSignOut() {
+      await supabase.auth.signOut();
+      userCompletedLabs.clear();
+      await refreshAppState();
+    }
+
+    async function refreshAppState() {
+      const { data: { user } } = await supabase.auth.getUser();
+      await loadLabsAndProgress(user);
+      renderAuthUI(user);
+    }
+
+    async function loadLabsAndProgress(user) {
       try {
-        const { data: { user } } = await supabase.auth.getUser();
-
-        const { data: labs, error: labsErr } = await supabase
-          .from('labs')
-          .select('*');
-
+        const { data: labs, error: labsErr } = await supabase.from('labs').select('*');
         if (labsErr) throw labsErr;
         allLabs = labs || [];
 
         if (user) {
           const { data: progress } = await supabase
             .from('user_progress')
-            .select('module_name')
-            .eq('user_email', user.email);
-
-          if (progress) {
-            progress.forEach(item => userCompletedLabs.add(item.module_name));
-          }
-        }
-
-        renderLabs(allLabs);
-      } catch (err) {
-        console.error('Error loading labs:', err.message);
-        document.getElementById('labs-grid').innerHTML = `
-          <div class="bg-gray-900 border border-gray-800 p-6 rounded-xl text-gray-400 text-sm">
-            No active lab modules currently published in the database table.
-          </div>
-        `;
-      }
-    }
-
-    function renderLabs(labsToRender) {
-      const container = document.getElementById('labs-grid');
-      if (!container) return;
-      container.innerHTML = '';
-
-      if (labsToRender.length === 0) {
-        container.innerHTML = `
-          <div class="bg-gray-900 border border-gray-800 p-6 rounded-xl text-gray-400 text-sm">
-            No lab modules match the selected filter.
-          </div>
-        `;
-        return;
-      }
-
-      labsToRender.forEach(lab => {
-        const isCompleted = userCompletedLabs.has(lab.id);
-
-        const cardHtml = `
-          <div class="bg-gray-900 rounded-2xl p-6 border ${isCompleted ? 'border-emerald-500/50' : 'border-gray-800'} flex flex-col justify-between shadow-xl">
-            <div>
-              <div class="flex justify-between items-center mb-3">
-                <span class="text-xs font-semibold px-2.5 py-1 rounded-md ${lab.category === 'Cloud Security' ? 'bg-emerald-950 text-emerald-300 border border-emerald-800' : 'bg-red-950 text-red-300 border border-red-800'}">${lab.category}</span>
-                <span class="text-xs text-gray-400 font-mono">${lab.difficulty} • ${lab.points} pts</span>
-              </div>
-              <h3 class="text-xl font-bold mb-2 text-white">${lab.title}</h3>
-              <p class="text-gray-400 text-sm mb-4 leading-relaxed">${lab.description}</p>
-              
-              <details class="bg-gray-950 p-3.5 rounded-xl border border-gray-800/80 text-xs font-mono text-gray-300 mb-4 cursor-pointer">
-                <summary class="font-bold text-emerald-400">View Lab Log & Scenario Data</summary>
-                <pre class="mt-2.5 whitespace-pre-wrap text-gray-300 font-mono bg-gray-900/80 p-3 rounded-lg border border-gray-800">${lab.scenario_details}</pre>
-              </details>
-            </div>
-
-            <div>
-              ${isCompleted ? `
-                <div class="flex items-center text-emerald-400 font-semibold text-sm bg-emerald-950/40 border border-emerald-800/50 p-2.5 rounded-lg">
-                  <svg class="w-5 h-5 mr-1.5" fill="currentColor" viewBox="0 0 20 20"><path 
+            .select('module_name'
