@@ -16,10 +16,11 @@
       <nav class="hidden md:flex space-x-6 text-sm text-gray-400 font-medium">
         <a href="#about" class="hover:text-white transition">About</a>
         <a href="#skills" class="hover:text-white transition">Skills</a>
+        <a href="#auth-section" class="hover:text-white transition">Account</a>
         <a href="#labs" class="hover:text-white transition">Labs</a>
         <a href="#certifications" class="hover:text-white transition">Certifications</a>
       </nav>
-      <div id="auth-button-container">
+      <div id="header-auth-status">
         <button onclick="toggleAuthModal()" class="bg-blue-600 hover:bg-blue-500 text-white font-medium px-4 py-2 rounded-lg text-sm transition">
           Account Access
         </button>
@@ -76,6 +77,36 @@
     </div>
   </section>
 
+  <!-- Dedicated Authentication Portal Section -->
+  <section id="auth-section" class="py-16 px-6 max-w-2xl mx-auto border-b border-gray-800">
+    <div class="bg-gray-800 border border-gray-700 rounded-2xl p-8 shadow-2xl">
+      <h2 class="text-2xl font-bold text-white mb-2 text-center">Account Portal</h2>
+      <p class="text-gray-400 text-sm text-center mb-6">Sign in or create an account to record your lab progress and submit flags.</p>
+      
+      <div class="flex border-b border-gray-700 mb-6">
+        <button id="tab-login" onclick="switchAuthTab('login')" class="flex-1 py-2 font-semibold text-blue-400 border-b-2 border-blue-500">Sign In</button>
+        <button id="tab-signup" onclick="switchAuthTab('signup')" class="flex-1 py-2 font-semibold text-gray-400 border-b-2 border-transparent">Create Account</button>
+      </div>
+
+      <form id="auth-form" onsubmit="handleAuthSubmit(event)">
+        <div class="mb-4">
+          <label class="block text-xs uppercase tracking-wider text-gray-400 font-semibold mb-1">Email Address</label>
+          <input type="email" id="auth-email" required class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500 text-sm" placeholder="user@domain.com" />
+        </div>
+        <div class="mb-6">
+          <label class="block text-xs uppercase tracking-wider text-gray-400 font-semibold mb-1">Password</label>
+          <input type="password" id="auth-password" required class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500 text-sm" placeholder="••••••••" />
+        </div>
+        
+        <button type="submit" id="auth-submit-btn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-lg text-sm transition">
+          Sign In
+        </button>
+      </form>
+
+      <div id="auth-message" class="mt-4 text-center text-xs"></div>
+    </div>
+  </section>
+
   <!-- Interactive Labs Section -->
   <section id="labs" class="py-16 px-6 max-w-6xl mx-auto border-b border-gray-800">
     <h2 class="text-3xl font-bold mb-2 text-white">Interactive Security Labs</h2>
@@ -111,32 +142,32 @@
     <p>© 2026 Dawizzy. Built with GitHub Pages & Supabase.</p>
   </footer>
 
-  <!-- Authentication Modal -->
+  <!-- Popup Authentication Modal -->
   <div id="auth-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
     <div class="bg-gray-800 border border-gray-700 rounded-2xl w-full max-w-md p-6 relative shadow-2xl">
       <button onclick="toggleAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white font-bold text-lg">&times;</button>
       
       <div class="flex border-b border-gray-700 mb-6">
-        <button id="tab-login" onclick="switchAuthTab('login')" class="flex-1 py-2 font-semibold text-blue-400 border-b-2 border-blue-500">Sign In</button>
-        <button id="tab-signup" onclick="switchAuthTab('signup')" class="flex-1 py-2 font-semibold text-gray-400 border-b-2 border-transparent">Sign Up</button>
+        <button id="modal-tab-login" onclick="switchAuthTab('login')" class="flex-1 py-2 font-semibold text-blue-400 border-b-2 border-blue-500">Sign In</button>
+        <button id="modal-tab-signup" onclick="switchAuthTab('signup')" class="flex-1 py-2 font-semibold text-gray-400 border-b-2 border-transparent">Create Account</button>
       </div>
 
-      <form id="auth-form" onsubmit="handleAuthSubmit(event)">
+      <form onsubmit="handleModalAuthSubmit(event)">
         <div class="mb-4">
           <label class="block text-xs uppercase tracking-wider text-gray-400 font-semibold mb-1">Email Address</label>
-          <input type="email" id="auth-email" required class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500 text-sm" placeholder="user@domain.com" />
+          <input type="email" id="modal-auth-email" required class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500 text-sm" placeholder="user@domain.com" />
         </div>
         <div class="mb-6">
           <label class="block text-xs uppercase tracking-wider text-gray-400 font-semibold mb-1">Password</label>
-          <input type="password" id="auth-password" required class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500 text-sm" placeholder="••••••••" />
+          <input type="password" id="modal-auth-password" required class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500 text-sm" placeholder="••••••••" />
         </div>
         
-        <button type="submit" id="auth-submit-btn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2.5 rounded-lg text-sm transition">
+        <button type="submit" id="modal-auth-submit-btn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2.5 rounded-lg text-sm transition">
           Sign In
         </button>
       </form>
 
-      <div id="auth-message" class="mt-4 text-center text-xs"></div>
+      <div id="modal-auth-message" class="mt-4 text-center text-xs"></div>
     </div>
   </div>
 
@@ -156,25 +187,44 @@
     function toggleAuthModal() {
       const modal = document.getElementById('auth-modal');
       modal.classList.toggle('hidden');
-      document.getElementById('auth-message').innerText = '';
+      document.getElementById('modal-auth-message').innerText = '';
     }
 
     function switchAuthTab(mode) {
       authMode = mode;
+      
+      // Inline Section Tabs
       const loginTab = document.getElementById('tab-login');
       const signupTab = document.getElementById('tab-signup');
       const submitBtn = document.getElementById('auth-submit-btn');
 
+      // Modal Tabs
+      const modalLoginTab = document.getElementById('modal-tab-login');
+      const modalSignupTab = document.getElementById('modal-tab-signup');
+      const modalSubmitBtn = document.getElementById('modal-auth-submit-btn');
+
       if (mode === 'login') {
-        loginTab.className = 'flex-1 py-2 font-semibold text-blue-400 border-b-2 border-blue-500';
-        signupTab.className = 'flex-1 py-2 font-semibold text-gray-400 border-b-2 border-transparent';
-        submitBtn.innerText = 'Sign In';
+        if (loginTab) loginTab.className = 'flex-1 py-2 font-semibold text-blue-400 border-b-2 border-blue-500';
+        if (signupTab) signupTab.className = 'flex-1 py-2 font-semibold text-gray-400 border-b-2 border-transparent';
+        if (submitBtn) submitBtn.innerText = 'Sign In';
+
+        if (modalLoginTab) modalLoginTab.className = 'flex-1 py-2 font-semibold text-blue-400 border-b-2 border-blue-500';
+        if (modalSignupTab) modalSignupTab.className = 'flex-1 py-2 font-semibold text-gray-400 border-b-2 border-transparent';
+        if (modalSubmitBtn) modalSubmitBtn.innerText = 'Sign In';
       } else {
-        signupTab.className = 'flex-1 py-2 font-semibold text-blue-400 border-b-2 border-blue-500';
-        loginTab.className = 'flex-1 py-2 font-semibold text-gray-400 border-b-2 border-transparent';
-        submitBtn.innerText = 'Create Account';
+        if (signupTab) signupTab.className = 'flex-1 py-2 font-semibold text-blue-400 border-b-2 border-blue-500';
+        if (loginTab) loginTab.className = 'flex-1 py-2 font-semibold text-gray-400 border-b-2 border-transparent';
+        if (submitBtn) submitBtn.innerText = 'Create Account';
+
+        if (modalSignupTab) modalSignupTab.className = 'flex-1 py-2 font-semibold text-blue-400 border-b-2 border-blue-500';
+        if (modalLoginTab) modalLoginTab.className = 'flex-1 py-2 font-semibold text-gray-400 border-b-2 border-transparent';
+        if (modalSubmitBtn) modalSubmitBtn.innerText = 'Create Account';
       }
-      document.getElementById('auth-message').innerText = '';
+      
+      const msg = document.getElementById('auth-message');
+      const modalMsg = document.getElementById('modal-auth-message');
+      if (msg) msg.innerText = '';
+      if (modalMsg) modalMsg.innerText = '';
     }
 
     async function handleAuthSubmit(e) {
@@ -182,6 +232,38 @@
       const email = document.getElementById('auth-email').value;
       const password = document.getElementById('auth-password').value;
       const msgEl = document.getElementById('auth-message');
+
+      msgEl.className = 'mt-4 text-center text-xs text-blue-400';
+      msgEl.innerText = 'Processing...';
+
+      if (authMode === 'login') {
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) {
+          msgEl.className = 'mt-4 text-center text-xs text-red-400';
+          msgEl.innerText = error.message;
+        } else {
+          msgEl.className = 'mt-4 text-center text-xs text-green-400';
+          msgEl.innerText = 'Logged in successfully!';
+          updateAuthUI();
+          loadLabsAndProgress();
+        }
+      } else {
+        const { data, error } = await supabase.auth.signUp({ email, password });
+        if (error) {
+          msgEl.className = 'mt-4 text-center text-xs text-red-400';
+          msgEl.innerText = error.message;
+        } else {
+          msgEl.className = 'mt-4 text-center text-xs text-green-400';
+          msgEl.innerText = 'Account created! Check your email to confirm registration.';
+        }
+      }
+    }
+
+    async function handleModalAuthSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('modal-auth-email').value;
+      const password = document.getElementById('modal-auth-password').value;
+      const msgEl = document.getElementById('modal-auth-message');
 
       msgEl.className = 'mt-4 text-center text-xs text-blue-400';
       msgEl.innerText = 'Processing...';
@@ -220,11 +302,12 @@
     }
 
     async function updateAuthUI() {
-      const container = document.getElementById('auth-button-container');
+      const headerAuth = document.getElementById('header-auth-status');
+      const authSection = document.getElementById('auth-section');
       const { data: { user } } = await supabase.auth.getUser();
 
       if (user) {
-        container.innerHTML = `
+        headerAuth.innerHTML = `
           <div class="flex items-center gap-3">
             <span class="text-xs text-gray-300 hidden sm:inline">${user.email}</span>
             <button onclick="handleSignOut()" class="bg-gray-800 border border-gray-700 hover:bg-gray-700 text-gray-300 font-medium px-3 py-1.5 rounded-lg text-xs transition">
@@ -232,8 +315,19 @@
             </button>
           </div>
         `;
+        if (authSection) {
+          authSection.innerHTML = `
+            <div class="bg-gray-800/50 border border-gray-700 rounded-2xl p-6 text-center shadow-xl">
+              <p class="text-green-400 font-semibold mb-2">Active Session: ${user.email}</p>
+              <p class="text-gray-400 text-xs mb-4">You are signed in. Progress on completed lab flags will be recorded under your account.</p>
+              <button onclick="handleSignOut()" class="bg-red-900/60 hover:bg-red-800 text-red-200 border border-red-700 font-medium px-4 py-2 rounded-lg text-xs transition">
+                Sign Out
+              </button>
+            </div>
+          `;
+        }
       } else {
-        container.innerHTML = `
+        headerAuth.innerHTML = `
           <button onclick="toggleAuthModal()" class="bg-blue-600 hover:bg-blue-500 text-white font-medium px-4 py-2 rounded-lg text-sm transition">
             Account Access
           </button>
@@ -295,81 +389,4 @@
               
               <details class="bg-gray-900/60 p-3 rounded text-xs font-mono text-gray-300 mb-4 cursor-pointer">
                 <summary class="font-bold text-blue-400">View Lab Scenario & Logs</summary>
-                <pre class="mt-2 whitespace-pre-wrap text-gray-300">${lab.scenario_details}</pre>
-              </details>
-            </div>
-
-            <div>
-              ${isCompleted ? `
-                <div class="flex items-center text-green-400 font-semibold text-sm">
-                  <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>
-                  Completed
-                </div>
-              ` : `
-                <form onsubmit="submitFlag(event, '${lab.id}', '${lab.flag_hash}')" class="flex gap-2">
-                  <input type="text" id="flag-input-${lab.id}" placeholder="WIZZY{...}" required class="bg-gray-900 border border-gray-700 text-white rounded px-3 py-2 text-sm flex-1 focus:outline-none focus:border-blue-500" />
-                  <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white font-medium px-4 py-2 rounded text-sm transition">Submit</button>
-                </form>
-              `}
-              <div id="feedback-${lab.id}" class="mt-2 text-xs"></div>
-            </div>
-          </div>
-        `;
-        container.innerHTML += cardHtml;
-      });
-    }
-
-    function filterLabs(category) {
-      if (category === 'All') {
-        renderLabs(allLabs);
-      } else {
-        renderLabs(allLabs.filter(l => l.category === category));
-      }
-    }
-
-    async function submitFlag(event, labId, expectedFlag) {
-      event.preventDefault();
-      
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        alert('Please sign in to submit flags and save your progress!');
-        toggleAuthModal();
-        return;
-      }
-
-      const inputEl = document.getElementById(`flag-input-${labId}`);
-      const feedbackEl = document.getElementById(`feedback-${labId}`);
-      const submittedFlag = inputEl.value.trim();
-
-      if (submittedFlag === expectedFlag) {
-        feedbackEl.className = 'mt-2 text-xs text-green-400 font-semibold';
-        feedbackEl.innerText = 'Correct flag! Saving progress...';
-
-        const { error } = await supabase
-          .from('user_progress')
-          .insert([{
-            user_email: user.email,
-            module_name: labId,
-            status: 'Completed'
-          }]);
-
-        if (!error) {
-          userCompletedLabs.add(labId);
-          setTimeout(() => renderLabs(allLabs), 1000);
-        } else {
-          feedbackEl.className = 'mt-2 text-xs text-yellow-400';
-          feedbackEl.innerText = 'Flag correct! (Progress already logged)';
-        }
-      } else {
-        feedbackEl.className = 'mt-2 text-xs text-red-400';
-        feedbackEl.innerText = 'Incorrect flag. Inspect scenario details and try again!';
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      updateAuthUI();
-      loadLabsAndProgress();
-    });
-  </script>
-</body>
-</html>
+     
