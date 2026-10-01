@@ -260,26 +260,31 @@
       const subtitle = document.getElementById('portal-subtitle');
 
       if (mode === 'signup') {
-        signupBtn.className = 'flex-1 py-2 font-semibold text-sm text-emerald-400 border-b-2 border-emerald-500';
-        loginBtn.className = 'flex-1 py-2 font-semibold text-sm text-gray-400 border-b-2 border-transparent';
-        submitBtn.innerText = 'Create Account';
-        title.innerText = 'Student Portal';
-        subtitle.innerText = 'Create a new account or sign in to access practical labs.';
+        if (signupBtn) signupBtn.className = 'flex-1 py-2 font-semibold text-sm text-emerald-400 border-b-2 border-emerald-500';
+        if (loginBtn) loginBtn.className = 'flex-1 py-2 font-semibold text-sm text-gray-400 border-b-2 border-transparent';
+        if (submitBtn) submitBtn.innerText = 'Create Account';
+        if (title) title.innerText = 'Student Portal';
+        if (subtitle) subtitle.innerText = 'Create a new account or sign in to access practical labs.';
       } else {
-        loginBtn.className = 'flex-1 py-2 font-semibold text-sm text-emerald-400 border-b-2 border-emerald-500';
-        signupBtn.className = 'flex-1 py-2 font-semibold text-sm text-gray-400 border-b-2 border-transparent';
-        submitBtn.innerText = 'Sign In';
-        title.innerText = 'Sign In';
-        subtitle.innerText = 'Enter your account details to access your labs and score.';
+        if (loginBtn) loginBtn.className = 'flex-1 py-2 font-semibold text-sm text-emerald-400 border-b-2 border-emerald-500';
+        if (signupBtn) signupBtn.className = 'flex-1 py-2 font-semibold text-sm text-gray-400 border-b-2 border-transparent';
+        if (submitBtn) submitBtn.innerText = 'Sign In';
+        if (title) title.innerText = 'Sign In';
+        if (subtitle) subtitle.innerText = 'Enter your account details to access your labs and score.';
       }
-      document.getElementById('auth-msg').innerText = '';
+      const msg = document.getElementById('auth-msg');
+      if (msg) msg.innerText = '';
     }
 
     async function handleAuthSubmit(e) {
       e.preventDefault();
+
       const email = document.getElementById('auth-email').value;
       const password = document.getElementById('auth-password').value;
       const msg = document.getElementById('auth-msg');
+
+      // Diagnostic Pop-up for Mobile Testing
+      alert("Submit triggered!\nMode: " + activeAuthMode + "\nEmail: " + email);
 
       msg.className = 'mt-4 text-center text-xs text-emerald-400 font-semibold';
       msg.innerText = activeAuthMode === 'signup' ? 'Creating account...' : 'Signing in...';
@@ -287,11 +292,14 @@
       if (activeAuthMode === 'signup') {
         const { data, error } = await supabase.auth.signUp({ email, password });
         if (error) {
+          alert("Supabase Error: " + error.message);
           msg.className = 'mt-4 text-center text-xs text-red-400';
           msg.innerText = error.message;
         } else {
+          alert("Account created successfully in Supabase!");
           msg.className = 'mt-4 text-center text-xs text-emerald-400 font-semibold';
           msg.innerText = 'Account created successfully! Logging you in...';
+          
           const { error: signInErr } = await supabase.auth.signInWithPassword({ email, password });
           if (!signInErr) {
             await refreshAppState();
@@ -302,9 +310,11 @@
       } else {
         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) {
+          alert("Sign-In Error: " + error.message);
           msg.className = 'mt-4 text-center text-xs text-red-400';
           msg.innerText = error.message;
         } else {
+          alert("Signed in successfully!");
           await refreshAppState();
         }
       }
@@ -323,16 +333,4 @@
       const tabsEl = document.getElementById('tab-container');
       const titleEl = document.getElementById('portal-title');
       const subtitleEl = document.getElementById('portal-subtitle');
-      const dashEl = document.getElementById('user-dashboard');
-      const protectedArea = document.getElementById('protected-student-area');
-      const headerAuth = document.getElementById('header-auth-status');
-
-      if (user) {
-        protectedArea.classList.remove('hidden');
-        formEl.classList.add('hidden');
-        tabsEl.classList.add('hidden');
-        titleEl.classList.add('hidden');
-        subtitleEl.classList.add('hidden');
-        dashEl.classList.remove('hidden');
-
-        document.getElementById('dash-user-email').innerText = user.emai
+      const dashEl = document.getElementById
