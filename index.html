@@ -307,8 +307,8 @@
         </div>
       </section>
 
-    </div>
-        <!-- View 3: Editable Settings & Profile Management Section -->
+  </div>
+      <!-- View 3: Editable Settings & Profile Management Section -->
     <div id="view-settings" class="hidden max-w-5xl mx-auto px-6 py-10">
       <h2 class="text-2xl font-bold text-white mb-6">Settings & Account Control</h2>
       
@@ -415,9 +415,9 @@
 
   <!-- Complete Application JavaScript Logic -->
   <script>
-    // Initialize Supabase Credentials (Replace with your live Project URL and Anon Key)
-    const SUPABASE_URL = 'https://YOUR_SUPABASE_PROJECT_ID.supabase.co';
-    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+    // Initialize Supabase Credentials
+    const SUPABASE_URL = 'https://oxnvpsfzytkrgokcuwkv.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im94bnZwc2Z6eXRrcmdva2N1d2t2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2OTI1NDksImV4cCI6MjEwNjI2ODU0OX0.AhzL3LgELbcK_qhnFlnNYWbaXdNUjVyX0-TGT-u9Ot8';
     
     // Create Supabase Client
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -538,7 +538,7 @@
           <button onclick="switchView('home'); toggleSidebarMenu();" class="w-full text-left py-2 text-slate-300 hover:text-white">🏠 Home</button>
           <button onclick="switchView('study'); toggleSidebarMenu();" class="w-full text-left py-2 text-slate-300 hover:text-white">💎 Study Modules</button>
           <button onclick="switchView('dashboard'); toggleSidebarMenu();" class="w-full text-left py-2 text-slate-300 hover:text-white">📊 Student Dashboard</button>
-          <button onclick="switchView('settings'); toggleSidebarMenu();" class="w-full text-left py-2 text-slate-300 hover:text-white">⚙️ Account Settings</button>
+          <button onclick="switchView('settings'); toggleSidebarMenu();" class="w-full text-left py-2 text-slate-300 hover:text-white">⚙️️ Account Settings</button>
         `;
 
         sidebarLogoutBtn.classList.remove('hidden');
