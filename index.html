@@ -396,4 +396,289 @@
     </div>
 
   </main>
-  
+  <!-- Auth Modal (Sign In / Register) -->
+  <div id="auth-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl max-w-md w-full relative shadow-2xl">
+      <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-sm">✕</button>
+      <h3 class="text-xl font-bold text-white mb-1">Account Access</h3>
+      <p class="text-xs text-slate-400 mb-6">Sign in or register a new student profile on Supabase.</p>
+      
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">Email Address</label>
+          <input id="auth-email" type="email" placeholder="student@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">Password</label>
+          <input id="auth-password" type="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
+        </div>
+        <div class="flex gap-3 pt-2">
+          <button onclick="handleSignUp()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition">Sign Up</button>
+          <button onclick="handleSignIn()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg transition">Sign In</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Application Logic & Supabase Integration -->
+  <script>
+    // Supabase Initialization Credentials
+    const SUPABASE_URL = 'https://oxnvpsfzytkrgokcuwkv.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im94bnZwc2Z6eXRrcmdva2N1d2t2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2OTI1NDksImV4cCI6MjEwNjI2ODU0OX0.AhzL3LgELbcK_qhnFlnNYWbaXdNUjVyX0-TGT-u9Ot8';
+    
+    let supabaseClient = null;
+    if (window.supabase) {
+      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
+
+    // Initial load session check & leaderboard fetch
+    document.addEventListener('DOMContentLoaded', () => {
+      checkCurrentSession();
+      loadLeaderboard();
+    });
+
+    // Check active session on page load
+    async function checkCurrentSession() {
+      if (!supabaseClient) return;
+      const { data: { user } } = await supabaseClient.auth.getUser();
+      updateAuthUI(user);
+    }
+
+    // Dynamic View Switcher & Interface Routing
+    function switchView(viewName) {
+      // Hide all dynamic view containers
+      document.getElementById('public-landing-view')?.classList.add('hidden');
+      document.getElementById('authenticated-view')?.classList.add('hidden');
+      document.getElementById('view-settings')?.classList.add('hidden');
+      document.getElementById('view-generic')?.classList.add('hidden');
+
+      if (viewName === 'home') {
+        checkCurrentSession();
+      } else if (viewName === 'study') {
+        checkCurrentSession();
+        document.getElementById('learning')?.scrollIntoView({ behavior: 'smooth' });
+      } else if (viewName === 'dashboard') {
+        document.getElementById('authenticated-view')?.classList.remove('hidden');
+      } else if (viewName === 'settings') {
+        document.getElementById('view-settings')?.classList.remove('hidden');
+      } else {
+        // Generic page view handler
+        const genericView = document.getElementById('view-generic');
+        const genericTitle = document.getElementById('generic-title');
+        const genericDesc = document.getElementById('generic-description');
+        
+        if (genericView && genericTitle && genericDesc) {
+          genericView.classList.remove('hidden');
+          const titles = {
+            'exam-history': 'Exam History',
+            'performance': 'Performance Analysis',
+            'video-lessons': 'Video Lessons',
+            'bookmark': 'Bookmarks',
+            'contact': 'Contact Support',
+            'help': 'Help Desk'
+          };
+          
+          genericTitle.innerText = titles[viewName] || 'Module Section';
+          genericDesc.innerText = viewName === 'exam-history' 
+            ? 'No past exams recorded for this profile.' 
+            : `Welcome to the ${titles[viewName] || 'Module'} section. Dynamic feeds will render here.`;
+        }
+      }
+    }
+
+    // Toggle Drawer Navigation Bar
+    function toggleSidebarMenu() {
+      const drawer = document.getElementById('sidebar-drawer');
+      if (drawer) drawer.classList.toggle('-translate-x-full');
+    }
+
+    // Settings Navigation Tabs Switcher
+    function switchSettingsTab(tabName) {
+      document.getElementById('tab-profile')?.classList.add('hidden');
+      document.getElementById('tab-account')?.classList.add('hidden');
+      
+      document.getElementById('tab-btn-profile').className = "w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono";
+      document.getElementById('tab-btn-account').className = "w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono";
+
+      document.getElementById(`tab-${tabName}`)?.classList.remove('hidden');
+      document.getElementById(`tab-btn-${tabName}`).className = "w-full text-left px-4 py-2.5 rounded-xl bg-blue-600 text-white font-semibold transition text-xs font-mono";
+    }
+
+    // Authenticated View State Updater
+    function updateAuthUI(user) {
+      const container = document.getElementById('auth-container');
+      const publicView = document.getElementById('public-landing-view');
+      const authView = document.getElementById('authenticated-view');
+      const sidebarLogoutBtn = document.getElementById('sidebar-logout-btn');
+      const sidebarLogoutUser = document.getElementById('sidebar-logout-user');
+
+      if (user) {
+        const username = user.email.split('@')[0];
+        
+        // Render Dashboard View
+        publicView?.classList.add('hidden');
+        authView?.classList.remove('hidden');
+
+        // Populate User Info
+        document.getElementById('dash-username').innerText = username;
+        document.getElementById('dash-user-id').innerText = "User ID: " + user.id;
+        document.getElementById('dashboard-avatar').src = `https://api.dicebear.com/7.x/bottts/svg?seed=${username}`;
+        document.getElementById('settings-avatar-preview').src = `https://api.dicebear.com/7.x/bottts/svg?seed=${username}`;
+        document.getElementById('settings-email').value = user.email;
+
+        if (sidebarLogoutBtn && sidebarLogoutUser) {
+          sidebarLogoutBtn.classList.remove('hidden');
+          sidebarLogoutUser.innerText = `(${username})`;
+        }
+
+        // Top Navigation User Pill
+        container.innerHTML = `
+          <div class="flex items-center gap-2">
+            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=${username}" alt="Avatar" class="w-7 h-7 rounded-lg border border-blue-500 bg-slate-900 p-0.5">
+            <span class="px-2.5 py-1 bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-mono rounded-lg hidden sm:inline">
+              ${username}
+            </span>
+            <button onclick="handleSignOut()" class="px-3 py-1.5 bg-slate-800 hover:bg-red-900/50 hover:text-red-300 text-slate-300 text-xs font-semibold rounded-lg transition border border-slate-700">
+              Sign Out
+            </button>
+          </div>
+        `;
+      } else {
+        // Render Public View
+        publicView?.classList.remove('hidden');
+        authView?.classList.add('hidden');
+
+        if (sidebarLogoutBtn) sidebarLogoutBtn.classList.add('hidden');
+
+        container.innerHTML = `
+          <button onclick="openAuthModal()" id="auth-btn" class="px-3.5 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg transition">
+            Sign In / Register
+          </button>
+        `;
+      }
+    }
+
+    // Modal Handlers
+    function openAuthModal() { document.getElementById('auth-modal')?.classList.remove('hidden'); }
+    function closeAuthModal() { document.getElementById('auth-modal')?.classList.add('hidden'); }
+
+    // Supabase User Sign Up
+    async function handleSignUp() {
+      const email = document.getElementById('auth-email').value;
+      const password = document.getElementById('auth-password').value;
+      const { data, error } = await supabaseClient.auth.signUp({ email, password });
+      if (error) alert(error.message);
+      else {
+        alert("Registration process completed! If confirmation is disabled in Supabase, you can sign in directly.");
+        closeAuthModal();
+      }
+    }
+
+    // Supabase User Sign In
+    async function handleSignIn() {
+      const email = document.getElementById('auth-email').value;
+      const password = document.getElementById('auth-password').value;
+      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+      if (error) alert(error.message);
+      else {
+        alert("Logged in successfully!");
+        updateAuthUI(data.user);
+        closeAuthModal();
+        loadLeaderboard();
+      }
+    }
+
+    // Supabase User Sign Out
+    async function handleSignOut() {
+      if (supabaseClient) await supabaseClient.auth.signOut();
+      updateAuthUI(null);
+      switchView('home');
+      alert("Signed out successfully.");
+    }
+
+    // Flag Verification (Lab 1)
+    async function submitFlag() {
+      await submitLabChallenge('flag-input', 'lab-status', 'WIZZY{dir_recon_master}', 'Web Directory Reconnaissance', 100);
+    }
+
+    // General Lab Challenge Handler
+    async function submitLabChallenge(inputId, statusId, expectedFlag, moduleName, points) {
+      const flagInput = document.getElementById(inputId).value.trim();
+      const statusEl = document.getElementById(statusId);
+      
+      const { data: { user } } = await supabaseClient.auth.getUser();
+
+      if (!user) {
+        statusEl.className = "text-xs font-mono mt-2 text-amber-400";
+        statusEl.innerText = "⚠️ Please sign in first to log your laboratory score.";
+        openAuthModal();
+        return;
+      }
+
+      if (flagInput === expectedFlag) {
+        statusEl.className = "text-xs font-mono mt-2 text-emerald-400";
+        statusEl.innerText = "⏳ Verification passed! Saving to database...";
+
+        const { error } = await supabaseClient.from('user_progress').insert([
+          { user_email: user.email, module_name: moduleName, status: "Completed" }
+        ]);
+
+        if (error) {
+          statusEl.className = "text-xs font-mono mt-2 text-red-400";
+          statusEl.innerText = "Database Error: " + error.message;
+        } else {
+          statusEl.className = "text-xs font-mono mt-2 text-emerald-400";
+          statusEl.innerText = "✅ Flag Correct! Progress recorded in Supabase.";
+          loadLeaderboard();
+        }
+      } else {
+        statusEl.className = "text-xs font-mono mt-2 text-red-400";
+        statusEl.innerText = "❌ Incorrect Flag. Inspect scenario data & try again.";
+      }
+    }
+
+    // Fetch and render dynamic Leaderboard from Supabase
+    async function loadLeaderboard() {
+      const tbody = document.getElementById('leaderboard-body');
+      if (!tbody || !supabaseClient) return;
+
+      const { data: progress, error } = await supabaseClient.from('user_progress').select('user_email, module_name');
+
+      if (error || !progress || progress.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" class="px-6 py-6 text-center text-slate-500">No submissions logged yet. Be the first to complete a lab!</td></tr>`;
+        return;
+      }
+
+      const pointsTable = {
+        'Web Directory Reconnaissance': 100,
+        'AWS S3 Access Audit': 150,
+        'Adversarial ML Defense': 200
+      };
+
+      const userStats = {};
+      progress.forEach(row => {
+        const email = row.user_email;
+        if (!userStats[email]) userStats[email] = { email, completed: 0, score: 0 };
+        userStats[email].completed += 1;
+        userStats[email].score += (pointsTable[row.module_name] || 100);
+      });
+
+      const sorted = Object.values(userStats).sort((a, b) => b.score - a.score);
+      tbody.innerHTML = '';
+      sorted.forEach((st, idx) => {
+        const rankBadge = idx === 0 ? '🥇 1st' : idx === 1 ? '🥈 2nd' : idx === 2 ? '🥉 3rd' : `#${idx + 1}`;
+        tbody.innerHTML += `
+          <tr class="hover:bg-slate-800/40 transition">
+            <td class="px-6 py-3.5 font-bold text-blue-400">${rankBadge}</td>
+            <td class="px-6 py-3.5 text-slate-200">${st.email}</td>
+            <td class="px-6 py-3.5 text-center text-slate-400">${st.completed}</td>
+            <td class="px-6 py-3.5 text-right font-bold text-emerald-400">${st.score} pts</td>
+          </tr>
+        `;
+      });
+    }
+  </script>
+
+</body>
+</html>
+
