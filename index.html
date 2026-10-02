@@ -8,7 +8,7 @@
 </head>
 <body class="bg-gray-950 text-gray-100 min-h-screen font-sans relative overflow-x-hidden">
 
-  <!-- Background Canvas: Dark Emerald Theme with White Tech Lines -->
+  <!-- Background Canvas -->
   <div class="fixed inset-0 bg-gradient-to-br from-emerald-950 via-gray-950 to-gray-950 -z-10"></div>
   <div class="fixed inset-0 opacity-10 pointer-events-none -z-10" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'100\' viewBox=\'0 0 100 100\' stroke=\'%23ffffff\' stroke-width=\'0.5\' fill=\'none\'><path d=\'M 10 10 L 90 10 L 90 90 L 10 90 Z M 30 30 L 70 30 M 50 30 L 50 70 M 30 70 L 70 70\' /><circle cx=\'50\' cy=\'50\' r=\'10\' /><circle cx=\'10\' cy=\'10\' r=\'3\' fill=\'%23ffffff\' /><circle cx=\'90\' cy=\'90\' r=\'3\' fill=\'%23ffffff\' /></svg>');"></div>
 
@@ -69,29 +69,29 @@
       
       <!-- Tab Buttons -->
       <div class="flex border-b border-gray-800 mb-6" id="tab-container">
-        <button type="button" id="tab-signup-btn" onclick="toggleAuthMode('signup')" class="flex-1 py-2 font-semibold text-sm text-emerald-400 border-b-2 border-emerald-500">Create Account</button>
-        <button type="button" id="tab-login-btn" onclick="toggleAuthMode('login')" class="flex-1 py-2 font-semibold text-sm text-gray-400 border-b-2 border-transparent">Sign In</button>
+        <button type="button" id="tab-signup-btn" class="flex-1 py-2 font-semibold text-sm text-emerald-400 border-b-2 border-emerald-500">Create Account</button>
+        <button type="button" id="tab-login-btn" class="flex-1 py-2 font-semibold text-sm text-gray-400 border-b-2 border-transparent">Sign In</button>
       </div>
 
-      <!-- Form with action="javascript:void(0);" to explicitly prevent mobile browser reloads -->
-      <form id="auth-form" action="javascript:void(0);" onsubmit="handleAuthSubmit(event)">
+      <!-- Container without <form> to prevent mobile browser reloads -->
+      <div id="auth-container">
         <div class="mb-4">
           <label class="block text-xs uppercase tracking-wider text-gray-400 font-semibold mb-1">Email Address</label>
-          <input type="email" id="auth-email" required class="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-emerald-500 text-sm" placeholder="student@example.com" />
+          <input type="email" id="auth-email" class="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-emerald-500 text-sm" placeholder="student@example.com" />
         </div>
         <div class="mb-6">
           <label class="block text-xs uppercase tracking-wider text-gray-400 font-semibold mb-1">Password</label>
-          <input type="password" id="auth-password" required class="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-emerald-500 text-sm" placeholder="••••••••" />
+          <input type="password" id="auth-password" class="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-emerald-500 text-sm" placeholder="••••••••" />
         </div>
         
-        <button type="submit" id="auth-submit-btn" onclick="handleAuthSubmit(event)" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 rounded-lg text-sm transition shadow-lg shadow-emerald-600/20">
+        <button type="button" id="auth-submit-btn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 rounded-lg text-sm transition shadow-lg shadow-emerald-600/20">
           Create Account
         </button>
-      </form>
+      </div>
 
       <div id="auth-msg" class="mt-4 text-center text-xs font-medium"></div>
 
-      <!-- User Dashboard (Shown when logged in) -->
+      <!-- User Dashboard -->
       <div id="user-dashboard" class="hidden text-center">
         <span class="text-xs font-bold uppercase tracking-widest text-emerald-400 bg-emerald-950/80 border border-emerald-800 px-3 py-1 rounded-full">Active Session</span>
         <h3 class="text-xl font-bold text-white mt-4 mb-1" id="dash-user-email"></h3>
@@ -110,7 +110,7 @@
 
         <div class="flex justify-center gap-3">
           <a href="#labs" class="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-4 py-2 rounded-lg text-xs transition shadow-lg shadow-emerald-600/20 inline-block">Go to Practical Labs</a>
-          <button type="button" onclick="handleSignOut()" class="bg-red-950/80 hover:bg-red-900 text-red-300 border border-red-800 font-medium px-4 py-2 rounded-lg text-xs transition">
+          <button type="button" id="signout-btn" class="bg-red-950/80 hover:bg-red-900 text-red-300 border border-red-800 font-medium px-4 py-2 rounded-lg text-xs transition">
             Sign Out
           </button>
         </div>
@@ -118,10 +118,8 @@
     </div>
   </section>
 
-  <!-- PROTECTED AREA: Practical Labs & Leaderboard (Unlocked upon sign-in) -->
+  <!-- Protected Student Area -->
   <div id="protected-student-area" class="hidden">
-    
-    <!-- Dynamic Labs Section -->
     <section id="labs" class="py-16 px-6 max-w-7xl mx-auto border-b border-gray-800/80">
       <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
         <div>
@@ -137,12 +135,9 @@
         </div>
       </div>
 
-      <div id="labs-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Loaded via Supabase -->
-      </div>
+      <div id="labs-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
     </section>
 
-    <!-- Live Leaderboard Section -->
     <section id="leaderboard" class="py-16 px-6 max-w-7xl mx-auto border-b border-gray-800/80">
       <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
         <div>
@@ -172,7 +167,6 @@
         </table>
       </div>
     </section>
-
   </div>
 
   <!-- Educational Tracks Section -->
@@ -251,88 +245,95 @@
     let allLabs = [];
     let userCompletedLabs = new Set();
 
-    function toggleAuthMode(mode) {
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('tab-signup-btn').addEventListener('click', () => setAuthMode('signup'));
+      document.getElementById('tab-login-btn').addEventListener('click', () => setAuthMode('login'));
+      document.getElementById('auth-submit-btn').addEventListener('click', executeAuth);
+      document.getElementById('signout-btn').addEventListener('click', handleSignOut);
+
+      refreshAppState();
+    });
+
+    function setAuthMode(mode) {
       activeAuthMode = mode;
       const signupBtn = document.getElementById('tab-signup-btn');
       const loginBtn = document.getElementById('tab-login-btn');
       const submitBtn = document.getElementById('auth-submit-btn');
       const title = document.getElementById('portal-title');
       const subtitle = document.getElementById('portal-subtitle');
+      const msg = document.getElementById('auth-msg');
 
       if (mode === 'signup') {
-        if (signupBtn) signupBtn.className = 'flex-1 py-2 font-semibold text-sm text-emerald-400 border-b-2 border-emerald-500';
-        if (loginBtn) loginBtn.className = 'flex-1 py-2 font-semibold text-sm text-gray-400 border-b-2 border-transparent';
-        if (submitBtn) submitBtn.innerText = 'Create Account';
-        if (title) title.innerText = 'Student Portal';
-        if (subtitle) subtitle.innerText = 'Create a new account or sign in to access practical labs.';
+        signupBtn.className = 'flex-1 py-2 font-semibold text-sm text-emerald-400 border-b-2 border-emerald-500';
+        loginBtn.className = 'flex-1 py-2 font-semibold text-sm text-gray-400 border-b-2 border-transparent';
+        submitBtn.innerText = 'Create Account';
+        title.innerText = 'Student Portal';
+        subtitle.innerText = 'Create a new account or sign in to access practical labs.';
       } else {
-        if (loginBtn) loginBtn.className = 'flex-1 py-2 font-semibold text-sm text-emerald-400 border-b-2 border-emerald-500';
-        if (signupBtn) signupBtn.className = 'flex-1 py-2 font-semibold text-sm text-gray-400 border-b-2 border-transparent';
-        if (submitBtn) submitBtn.innerText = 'Sign In';
-        if (title) title.innerText = 'Sign In';
-        if (subtitle) subtitle.innerText = 'Enter your account details to access your labs and score.';
+        loginBtn.className = 'flex-1 py-2 font-semibold text-sm text-emerald-400 border-b-2 border-emerald-500';
+        signupBtn.className = 'flex-1 py-2 font-semibold text-sm text-gray-400 border-b-2 border-transparent';
+        submitBtn.innerText = 'Sign In';
+        title.innerText = 'Sign In';
+        subtitle.innerText = 'Enter your account details to access your labs and score.';
       }
-      const msg = document.getElementById('auth-msg');
       if (msg) msg.innerText = '';
     }
 
-    async function handleAuthSubmit(e) {
-      if (e) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
+    async function executeAuth(e) {
+      if (e) e.preventDefault();
 
-      const emailEl = document.getElementById('auth-email');
-      const passwordEl = document.getElementById('auth-password');
+      const emailInput = document.getElementById('auth-email');
+      const passwordInput = document.getElementById('auth-password');
       const msg = document.getElementById('auth-msg');
 
-      if (!emailEl || !passwordEl) return;
-      const email = emailEl.value;
-      const password = passwordEl.value;
+      const email = emailInput ? emailInput.value.trim() : '';
+      const password = passwordInput ? passwordInput.value : '';
 
       if (!email || !password) {
-        alert("Please enter both email and password.");
+        msg.className = 'mt-4 text-center text-xs text-red-400 font-semibold';
+        msg.innerText = 'Please enter both an email and password.';
         return;
       }
 
-      // Diagnostic Pop-up to prove mobile submission was triggered
-      alert("Submit triggered!\nMode: " + activeAuthMode + "\nEmail: " + email);
-
       msg.className = 'mt-4 text-center text-xs text-emerald-400 font-semibold';
-      msg.innerText = activeAuthMode === 'signup' ? 'Creating account...' : 'Signing in...';
+      msg.innerText = activeAuthMode === 'signup' ? 'Creating account in database...' : 'Signing in...';
 
-      if (activeAuthMode === 'signup') {
-        const { data, error } = await supabase.auth.signUp({ email, password });
-        if (error) {
-          alert("Supabase Error: " + error.message);
-          msg.className = 'mt-4 text-center text-xs text-red-400';
-          msg.innerText = error.message;
-        } else {
-          alert("Account created successfully in Supabase!");
-          msg.className = 'mt-4 text-center text-xs text-emerald-400 font-semibold';
-          msg.innerText = 'Account created successfully! Logging you in...';
-          
+      try {
+        if (activeAuthMode === 'signup') {
+          const { data, error } = await supabase.auth.signUp({ email, password });
+          if (error) throw error;
+
+          msg.innerText = 'Account created successfully! Session starting...';
           const { error: signInErr } = await supabase.auth.signInWithPassword({ email, password });
-          if (!signInErr) {
-            await refreshAppState();
+          if (signInErr) {
+            msg.innerText = 'Account created! Switch to "Sign In" tab to log in.';
           } else {
-            msg.innerText = 'Account created! Please switch to "Sign In" tab to log in.';
+            await refreshAppState();
           }
-        }
-      } else {
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) {
-          alert("Sign-In Error: " + error.message);
-          msg.className = 'mt-4 text-center text-xs text-red-400';
-          msg.innerText = error.message;
         } else {
-          alert("Signed in successfully!");
+          const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+          if (error) throw error;
           await refreshAppState();
         }
+      } catch (err) {
+        msg.className = 'mt-4 text-center text-xs text-red-400 font-semibold';
+        msg.innerText = err.message || 'Authentication failed.';
       }
     }
 
     async function handleSignOut() {
       await supabase.auth.signOut();
       userCompletedLabs.clear();
-  
+      await refreshAppState();
+    }
+
+    async function refreshAppState() {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      const authContainer = document.getElementById('auth-container');
+      const tabsEl = document.getElementById('tab-container');
+      const titleEl = document.getElementById('portal-title');
+      const subtitleEl = document.getElementById('portal-subtitle');
+      const dashEl = document.getElementById('user-dashboard');
+      const protectedArea = document.getElementById('protected-student-area');
+    
