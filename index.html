@@ -21,832 +21,94 @@
     }
   </script>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans antialiased selection:bg-blue-500 selection:text-white">
+<body class="bg-slate-950 text-slate-100 font-sans antialiased selection:bg-blue-500 selection:text-white min-h-screen flex flex-col">
 
-  <!-- Top Global Navigation Bar -->
-  <nav class="sticky top-0 z-50 backdrop-blur-md bg-slate-950/90 border-b border-slate-900">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex justify-between items-center">
+  <!-- Main Top Header Bar -->
+  <header class="sticky top-0 z-40 backdrop-blur-md bg-slate-950/80 border-b border-slate-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between gap-4">
       
-      <div class="flex items-center gap-4">
-        <!-- Sidebar Menu Toggle Button (≡ Menu) -->
-        <button id="menu-hamburger-btn" onclick="toggleSidebarMenu()" class="p-2 text-slate-300 hover:text-white bg-slate-900 border border-slate-800 rounded-lg transition flex items-center gap-2 text-xs font-mono">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-          <span class="hidden sm:inline">Menu</span>
-        </button>
-
-        <span class="text-lg font-bold tracking-tight text-blue-500 font-mono">&lt;WizzyCyber /&gt;</span>
-      </div>
-
-      <!-- Header Center Links (Sketch: Home, Study, Test, Dashboard) -->
-      <div id="header-student-nav" class="hidden md:flex items-center space-x-6 text-xs font-mono text-slate-300">
-        <button onclick="switchView('home')" class="hover:text-blue-400 transition flex items-center gap-1.5">
-          <span>🏠</span> Home
-        </button>
-        <button onclick="switchView('study')" class="hover:text-blue-400 transition flex items-center gap-1.5">
-          <span>💎</span> Study
+      <!-- Left: Logo & Drawer Menu Button -->
+      <div class="flex items-center gap-3">
+        <button id="sidebar-toggle-btn" onclick="toggleSidebarMenu()" class="p-2 text-slate-400 hover:text-white bg-slate-900 border border-slate-800 rounded-lg transition" title="Toggle Navigation Drawer">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
         </button>
         
-        <!-- Test Dropdown -->
-        <div class="relative group">
-          <button class="hover:text-blue-400 transition flex items-center gap-1 py-2">
-            <span>🖥️</span> Test <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-          </button>
-          <div class="absolute left-0 mt-0 w-48 bg-slate-900 border border-slate-800 rounded-xl shadow-2xl py-2 hidden group-hover:block z-50 font-mono text-xs">
-            <a href="#labs" onclick="switchView('home')" class="block px-4 py-2 hover:bg-slate-800 text-slate-300 hover:text-emerald-400">Practice Cybersecurity</a>
-            <a href="#labs" onclick="switchView('home')" class="block px-4 py-2 hover:bg-slate-800 text-slate-300 hover:text-emerald-400">Practice Ethical Hacking</a>
-            <a href="#labs" onclick="switchView('home')" class="block px-4 py-2 hover:bg-slate-800 text-slate-300 hover:text-emerald-400">Practice Cloud Computing</a>
-            <div class="border-t border-slate-800 my-1"></div>
-            <a href="#leaderboard" onclick="switchView('home')" class="block px-4 py-2 hover:bg-slate-800 text-slate-300 hover:text-blue-400">Leaderboard</a>
-          </div>
-        </div>
-
-        <button onclick="switchView('dashboard')" class="hover:text-blue-400 transition flex items-center gap-1.5">
-          <span>📊</span> Dashboard
-        </button>
-        <button onclick="switchView('contact')" class="hover:text-blue-400 transition">Contact Us</button>
-        <button onclick="switchView('help')" class="hover:text-blue-400 transition">Help</button>
+        <a href="javascript:void(0)" onclick="switchView('home')" class="text-lg sm:text-xl font-bold tracking-tight text-blue-500 font-mono flex items-center gap-2">
+          &lt;WizzyCyber /&gt;
+        </a>
       </div>
 
-      <!-- Right Header Auth & User Section -->
-      <div class="flex items-center gap-3">
-        <div id="auth-container">
-          <button onclick="openAuthModal()" id="auth-btn" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg transition">
+      <!-- Center: Navigation Tabs (Desktop) -->
+      <nav id="desktop-top-nav" class="hidden md:flex items-center space-x-1 text-xs font-mono font-medium text-slate-400">
+        <button onclick="switchView('home')" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">🔥 Home</button>
+        <button onclick="switchView('study')" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">💎 Study</button>
+        <button onclick="switchView('dashboard')" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">📊 Dashboard</button>
+      </nav>
+
+      <!-- Right Side: Profile / Auth Actions -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Auth Container (Populated dynamically) -->
+        <div id="auth-container" class="flex items-center gap-2">
+          <button onclick="openAuthModal()" id="auth-btn" class="px-3.5 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg transition">
             Sign In / Register
           </button>
         </div>
+
+        <!-- Follow Badge -->
+        <a href="https://x.com/intent/follow?screen_name=bush_bean__" target="_blank" rel="noopener noreferrer" class="px-3 py-2 bg-blue-600/10 border border-blue-500/30 text-blue-400 text-xs font-semibold rounded-lg hover:bg-blue-600 hover:text-white transition hidden sm:flex items-center gap-2">
+          + Follow @bush_bean__
+        </a>
       </div>
 
     </div>
-  </nav>
+  </header>
 
-  <!-- Sliding Drawer Sidebar Menu (Sketch: Menu -> Dashboard, Study, Exam History, etc.) -->
-  <div id="sidebar-drawer" class="fixed inset-y-0 left-0 w-64 bg-slate-900/95 border-r border-slate-800 z-50 transform -translate-x-full transition-transform duration-300 ease-in-out backdrop-blur-md p-6 flex flex-col justify-between">
+  <!-- Sliding Drawer Navigation Menu -->
+  <aside id="sidebar-drawer" class="fixed top-0 left-0 bottom-0 w-72 bg-slate-950 border-r border-slate-900 z-50 transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col justify-between p-6 shadow-2xl">
     <div>
-      <div class="flex justify-between items-center mb-8">
-        <h3 class="text-sm font-bold font-mono text-blue-400 uppercase tracking-wider">Navigation Menu</h3>
+      <div class="flex justify-between items-center mb-8 border-b border-slate-900 pb-4">
+        <span class="text-base font-bold text-blue-500 font-mono">&lt;WizzyCyber /&gt;</span>
         <button onclick="toggleSidebarMenu()" class="text-slate-400 hover:text-white text-base">✕</button>
       </div>
 
-      <div class="space-y-3 font-mono text-xs">
-        <button onclick="switchView('dashboard'); toggleSidebarMenu();" class="w-full text-left px-3 py-2.5 rounded-lg bg-slate-800/60 hover:bg-blue-600/20 text-slate-200 hover:text-blue-400 flex items-center gap-3 transition">
-          <span>◽◽</span> Dashboard
+      <p class="text-[10px] uppercase font-mono tracking-wider text-slate-500 mb-3">Navigation Menu</p>
+      
+      <div class="space-y-1.5 text-xs font-mono">
+        <button onclick="switchView('home'); toggleSidebarMenu();" class="w-full text-left px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-900 hover:text-blue-400 transition flex items-center gap-2">
+          <span>🏠</span> Home Platform
         </button>
-        <button onclick="switchView('study'); toggleSidebarMenu();" class="w-full text-left px-3 py-2.5 rounded-lg bg-slate-800/60 hover:bg-blue-600/20 text-slate-200 hover:text-blue-400 flex items-center gap-3 transition">
-          <span>◽◽</span> Study
+        <button onclick="switchView('dashboard'); toggleSidebarMenu();" class="w-full text-left px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-900 hover:text-blue-400 transition flex items-center gap-2">
+          <span>📊</span> Student Dashboard
         </button>
-        <button onclick="switchView('exam-history'); toggleSidebarMenu();" class="w-full text-left px-3 py-2.5 rounded-lg bg-slate-800/60 hover:bg-blue-600/20 text-slate-200 hover:text-blue-400 flex items-center gap-3 transition">
-          <span>🕒</span> Exam History
+        <button onclick="switchView('exam-history'); toggleSidebarMenu();" class="w-full text-left px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-900 hover:text-blue-400 transition flex items-center gap-2">
+          <span>📜</span> Exam History
         </button>
-        <button onclick="switchView('performance'); toggleSidebarMenu();" class="w-full text-left px-3 py-2.5 rounded-lg bg-slate-800/60 hover:bg-blue-600/20 text-slate-200 hover:text-blue-400 flex items-center gap-3 transition">
-          <span>📈</span> Performance Analysis
+        <button onclick="switchView('performance'); toggleSidebarMenu();" class="w-full text-left px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-900 hover:text-blue-400 transition flex items-center gap-2">
+          <span>📈</span> Performance
         </button>
-        <button onclick="switchView('video-lessons'); toggleSidebarMenu();" class="w-full text-left px-3 py-2.5 rounded-lg bg-slate-800/60 hover:bg-blue-600/20 text-slate-200 hover:text-blue-400 flex items-center gap-3 transition">
-          <span>📹</span> Video Lessons
+        <button onclick="switchView('video-lessons'); toggleSidebarMenu();" class="w-full text-left px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-900 hover:text-blue-400 transition flex items-center gap-2">
+          <span>🎥</span> Video Lessons
         </button>
-        <button onclick="switchView('bookmark'); toggleSidebarMenu();" class="w-full text-left px-3 py-2.5 rounded-lg bg-slate-800/60 hover:bg-blue-600/20 text-slate-200 hover:text-blue-400 flex items-center gap-3 transition">
-          <span>🔖</span> Bookmark
+        <button onclick="switchView('bookmark'); toggleSidebarMenu();" class="w-full text-left px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-900 hover:text-blue-400 transition flex items-center gap-2">
+          <span>🔖</span> Bookmarks
         </button>
-        <button onclick="switchView('settings'); toggleSidebarMenu();" class="w-full text-left px-3 py-2.5 rounded-lg bg-slate-800/60 hover:bg-blue-600/20 text-slate-200 hover:text-blue-400 flex items-center gap-3 transition">
-          <span>⚙️</span> Settings
+        <button onclick="switchView('settings'); toggleSidebarMenu();" class="w-full text-left px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-900 hover:text-blue-400 transition flex items-center gap-2">
+          <span>⚙️</span> Profile & Settings
         </button>
       </div>
     </div>
 
-    <!-- Sidebar Bottom Logout (Sketch: Logout (username to be here)) -->
-    <div id="sidebar-logout-container" class="pt-4 border-t border-slate-800">
-      <button onclick="handleSignOut()" class="w-full px-3 py-2 bg-red-900/30 hover:bg-red-800/50 border border-red-800/50 text-red-300 text-xs font-mono rounded-lg transition flex items-center justify-between">
-        <span>🔑 Logout</span>
-        <span id="sidebar-logout-user" class="text-slate-400 text-[10px]"></span>
+    <div class="pt-4 border-t border-slate-900 space-y-2">
+      <button onclick="switchView('contact'); toggleSidebarMenu();" class="w-full text-left text-xs font-mono text-slate-400 hover:text-white py-1">📞 Contact Support</button>
+      <button onclick="switchView('help'); toggleSidebarMenu();" class="w-full text-left text-xs font-mono text-slate-400 hover:text-white py-1">❓ Help Desk</button>
+      <button id="sidebar-logout-btn" onclick="handleSignOut(); toggleSidebarMenu();" class="w-full text-left text-xs font-mono text-red-400 hover:text-red-300 py-2 border-t border-slate-900/80 mt-2 hidden">
+        🚪 Sign Out <span id="sidebar-logout-user"></span>
       </button>
     </div>
-  </div>
+  </aside>
 
-  <!-- Public Landing Page View (Shown when Logged Out) -->
-  <div id="public-landing-view">
-    <section class="max-w-4xl mx-auto px-6 py-20 text-center">
-      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-full text-xs font-semibold uppercase tracking-wider mb-6">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Security & Cloud Engineering Hub
-      </div>
-      <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white mb-6">
-        Wizzy Cyber Technical Portal
-      </h1>
-      <p class="text-slate-400 text-lg max-w-2xl mx-auto mb-8 leading-relaxed">
-        Explore cloud architecture, cybersecurity research, and machine learning models. Sign in to access hands-on labs, complete modules, and track your global rank.
-      </p>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl mx-auto text-left">
-        <div class="p-5 bg-slate-900/80 border border-slate-800 rounded-xl">
-          <p class="text-xs font-mono text-blue-400 mb-1">X (Twitter) Profile</p>
-          <h3 class="text-base font-bold text-white mb-2">@bush_bean__</h3>
-          <p class="text-xs text-slate-400 mb-4">Sharing updates on machine learning, cloud architecture, and security.</p>
-          <a href="https://x.com/bush_bean__" target="_blank" rel="noopener noreferrer" class="inline-block px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg transition">
-            Visit Profile →
-          </a>
-        </div>
-
-        <div class="p-5 bg-slate-900/80 border border-slate-800 rounded-xl">
-          <p class="text-xs font-mono text-emerald-400 mb-1">Student Portal</p>
-          <h3 class="text-base font-bold text-white mb-2">Interactive Learning</h3>
-          <p class="text-xs text-slate-400 mb-4">Register or sign in to verify challenge flags and maintain your score.</p>
-          <button onclick="openAuthModal()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-lg transition">
-            Sign In / Register
-          </button>
-        </div>
-      </div>
-    </section>
-                                                                                                             </div>
-    <!-- Authenticated Main Dashboard & Platform View (Shown when Logged In) -->
-  <div id="authenticated-view" class="hidden">
-    
-    <!-- View 1: Main Home View (Original Hero, Curriculum, Labs, Leaderboard) -->
-    <div id="view-home">
-      <!-- Original Hero Banner -->
-      <section id="about" class="max-w-6xl mx-auto px-6 py-8">
-        <div class="inline-flex items-center gap-2 px-3 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-full text-xs font-semibold uppercase tracking-wider mb-6">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Live Interactive Platform • Supabase Connected
-        </div>
-        <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white mb-6 leading-tight">
-          Interactive Cloud Engineering & <span class="text-blue-500">Cybersecurity</span> Platform.
-        </h1>
-        <p class="text-slate-400 text-lg sm:text-xl max-w-3xl mb-8 leading-relaxed">
-          Learn cloud architecture, machine learning pipelines, and offensive security. Solve hands-on labs, complete modules, and log your progress live.
-        </p>
-      </section>
-
-      <!-- Technical Curriculum -->
-      <section id="learning" class="max-w-6xl mx-auto px-6 py-12 border-t border-slate-900">
-        <div class="mb-8">
-          <h2 class="text-2xl font-bold text-white mb-2">Technical Curriculum</h2>
-          <p class="text-slate-400 text-sm">Structured modules across cloud engineering, machine learning, and offensive security.</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-xl">
-            <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded">Track 01 • Security</span>
-            <h3 class="text-lg font-bold text-white mt-4 mb-2">Offensive Security & Recon</h3>
-            <p class="text-slate-400 text-xs leading-relaxed">
-              Directory discovery, terminal navigation, web path enumeration, and interactive capture-the-flag labs.
-            </p>
-          </div>
-
-          <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-xl">
-            <span class="text-xs font-mono text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded">Track 02 • Infrastructure</span>
-            <h3 class="text-lg font-bold text-white mt-4 mb-2">Cloud Computing & DevOps</h3>
-            <p class="text-slate-400 text-xs leading-relaxed">
-              AWS S3 storage policies, Linux server administration, Docker containerization, and Netlify deployments.
-            </p>
-          </div>
-
-          <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-xl">
-            <span class="text-xs font-mono text-purple-400 bg-purple-500/10 px-2.5 py-1 rounded">Track 03 • Data Science</span>
-            <h3 class="text-lg font-bold text-white mt-4 mb-2">ML & Spectral Analytics</h3>
-            <p class="text-slate-400 text-xs leading-relaxed">
-              Python processing algorithms, bioactive metabolite classification, and GC-MS spectral research.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Interactive Practical Labs Section -->
-      <section id="labs" class="max-w-6xl mx-auto px-6 py-12 border-t border-slate-900">
-        <div class="mb-8">
-          <h2 class="text-2xl font-bold text-white mb-2">Interactive Practical Labs</h2>
-          <p class="text-slate-400 text-sm">Submit challenge flags obtained from practical modules to update your student transcript in real time.</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <!-- Lab Module #1 -->
-          <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-xl flex flex-col justify-between">
-            <div>
-              <div class="flex justify-between items-center mb-2">
-                <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">Cyber Security</span>
-                <span class="text-xs font-mono text-slate-400">100 pts</span>
-              </div>
-              <h3 class="text-base font-bold text-white mb-2">Web Directory Enumeration</h3>
-              <p class="text-slate-400 text-xs mb-4">Discover hidden paths using fuzzing wordlists to locate the admin token.</p>
-            </div>
-            <div>
-              <div class="flex gap-2">
-                <input id="flag-input" type="text" placeholder="WIZZY{flag_here}" class="bg-slate-950 border border-slate-700 text-slate-200 text-xs rounded-lg px-3 py-2 w-full focus:outline-none focus:border-blue-500 font-mono">
-                <button onclick="submitFlag()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs rounded-lg transition whitespace-nowrap">
-                  Submit
-                </button>
-              </div>
-              <p id="lab-status" class="text-xs font-mono mt-2 text-slate-500"></p>
-            </div>
-          </div>
-
-          <!-- Lab Module #2 -->
-          <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-xl flex flex-col justify-between">
-            <div>
-              <div class="flex justify-between items-center mb-2">
-                <span class="text-xs font-mono text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded">Cloud Infrastructure</span>
-                <span class="text-xs font-mono text-slate-400">150 pts</span>
-              </div>
-              <h3 class="text-base font-bold text-white mb-2">S3 Bucket Access Control</h3>
-              <p class="text-slate-400 text-xs mb-4">Audit unauthenticated access on misconfigured storage bucket policies.</p>
-            </div>
-            <div>
-              <div class="flex gap-2">
-                <input id="flag-input-cloud" type="text" placeholder="WIZZY{flag_here}" class="bg-slate-950 border border-slate-700 text-slate-200 text-xs rounded-lg px-3 py-2 w-full focus:outline-none focus:border-blue-500 font-mono">
-                <button onclick="submitLabChallenge('flag-input-cloud', 'lab-status-cloud', 'WIZZY{s3_bucket_sec_2026}', 'AWS S3 Access Audit', 150)" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition whitespace-nowrap">
-                  Submit
-                </button>
-              </div>
-              <p id="lab-status-cloud" class="text-xs font-mono mt-2 text-slate-500"></p>
-            </div>
-          </div>
-
-          <!-- Lab Module #3 -->
-          <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-xl flex flex-col justify-between">
-            <div>
-              <div class="flex justify-between items-center mb-2">
-                <span class="text-xs font-mono text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded">Applied ML</span>
-                <span class="text-xs font-mono text-slate-400">200 pts</span>
-              </div>
-              <h3 class="text-base font-bold text-white mb-2">Adversarial Model Poisoning</h3>
-              <p class="text-slate-400 text-xs mb-4">Detect feature manipulation techniques targeting predictive pipeline outputs.</p>
-            </div>
-            <div>
-              <div class="flex gap-2">
-                <input id="flag-input-ml" type="text" placeholder="WIZZY{flag_here}" class="bg-slate-950 border border-slate-700 text-slate-200 text-xs rounded-lg px-3 py-2 w-full focus:outline-none focus:border-blue-500 font-mono">
-                <button onclick="submitLabChallenge('flag-input-ml', 'lab-status-ml', 'WIZZY{ml_feature_clean_2026}', 'Adversarial ML Defense', 200)" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white font-semibold text-xs rounded-lg transition whitespace-nowrap">
-                  Submit
-                </button>
-              </div>
-              <p id="lab-status-ml" class="text-xs font-mono mt-2 text-slate-500"></p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Leaderboard Section -->
-      <section id="leaderboard" class="max-w-6xl mx-auto px-6 py-12 border-t border-slate-900">
-        <div class="flex flex-col sm:flex-row justify-between sm:items-end mb-6 gap-2">
-          <div>
-            <h2 class="text-2xl font-bold text-white mb-1">Live Student Leaderboard</h2>
-            <p class="text-slate-400 text-sm">Real-time points and achievements synced from Supabase records.</p>
-          </div>
-          <button onclick="loadLeaderboard()" class="self-start sm:self-auto text-xs font-mono text-blue-400 bg-blue-500/10 border border-blue-500/20 px-3 py-1.5 rounded-lg hover:bg-blue-500 hover:text-white transition">
-            🔄 Refresh Scores
-          </button>
-        </div>
-
-        <div class="bg-slate-900/60 border border-slate-800 rounded-xl overflow-hidden">
-          <table class="w-full text-left text-sm text-slate-300">
-            <thead class="bg-slate-950 text-xs font-mono uppercase text-slate-400 border-b border-slate-800">
-              <tr>
-                <th class="px-6 py-3.5">Rank</th>
-                <th class="px-6 py-3.5">Student Account</th>
-                <th class="px-6 py-3.5 text-center">Modules Completed</th>
-                <th class="px-6 py-3.5 text-right">Total Score</th>
-              </tr>
-            </thead>
-            <tbody id="leaderboard-body" class="divide-y divide-slate-800/60 font-mono text-xs">
-              <tr>
-                <td colspan="4" class="px-6 py-6 text-center text-slate-500">Loading student scores...</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-    </div>
-
-    <!-- View 2: Member Area Dashboard (Sketch: Member Area + Grey Box + User Profile Pic & ID) -->
-    <div id="view-dashboard" class="hidden max-w-6xl mx-auto px-6 py-10">
-      <div class="mb-6 flex justify-between items-center">
-        <div>
-          <h1 class="text-2xl font-bold text-white font-mono">Member Area</h1>
-          <p class="text-xs text-slate-400">Student workspace and profile details</p>
-        </div>
-        <span class="px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono rounded-lg">Online</span>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Main Member Dashboard Grey Card (Sketch: "To be in grey color") -->
-        <div class="lg:col-span-2 bg-slate-900/90 border border-slate-800 rounded-2xl p-8 min-h-[350px] flex flex-col justify-between shadow-2xl relative overflow-hidden">
-          <div class="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full blur-2xl"></div>
-          <div>
-            <h3 class="text-lg font-bold text-white font-mono mb-2">Dashboard Workspace</h3>
-            <p class="text-xs text-slate-400 leading-relaxed">
-              This area is allocated for your custom student metrics, modules, and progress tracking widgets.
-            </p>
-          </div>
-          <div class="p-6 bg-slate-950/60 border border-slate-800/80 rounded-xl text-center">
-            <p class="text-xs font-mono text-slate-500">Custom dashboard modules will be displayed here.</p>
-          </div>
-        </div>
-
-        <!-- User Profile Card on Dashboard (Sketch: Circle Profile Pic + ID + Username) -->
-        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 flex flex-col items-center text-center shadow-xl">
-          <div class="relative mb-4">
-            <img id="dash-card-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=wizzy" alt="User Profile" class="w-24 h-24 rounded-full border-2 border-blue-500 bg-slate-950 p-1">
-            <span class="absolute bottom-1 right-1 w-4 h-4 bg-emerald-500 border-2 border-slate-900 rounded-full"></span>
-          </div>
-          <h2 id="dash-card-username" class="text-lg font-bold text-white font-mono mb-1">Student</h2>
-          <p id="dash-card-id" class="text-xs font-mono text-slate-400 bg-slate-950 px-3 py-1 rounded-lg border border-slate-800 w-full truncate">ID: Loading...</p>
-
-          <div class="w-full border-t border-slate-800 my-4 pt-4 text-left space-y-2 font-mono text-xs">
-            <div class="flex justify-between text-slate-400">
-              <span>Status:</span> <span class="text-emerald-400">Verified</span>
-            </div>
-            <div class="flex justify-between text-slate-400">
-              <span>Role:</span> <span class="text-blue-400">Student</span>
-            </div>
-          </div>
-        </div>
-      </div>
-            <!-- View 3: Settings Panel (Sketch: Profile, Account, Appearances) -->
-    <div id="view-settings" class="hidden max-w-4xl mx-auto px-6 py-10">
-      <h1 class="text-2xl font-bold text-white font-mono mb-6">Settings</h1>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <!-- Settings Nav Column -->
-        <div class="space-y-2 font-mono text-xs">
-          <button onclick="switchSettingsTab('profile')" id="tab-btn-profile" class="w-full text-left px-4 py-3 rounded-xl bg-blue-600 text-white font-semibold transition">
-            👤 Profile Setting
-          </button>
-          <button onclick="switchSettingsTab('account')" id="tab-btn-account" class="w-full text-left px-4 py-3 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition">
-            🔑 Account Setting
-          </button>
-          <button onclick="switchSettingsTab('appearances')" id="tab-btn-appearances" class="w-full text-left px-4 py-3 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition">
-            🎨 Appearances
-          </button>
-        </div>
-
-        <!-- Settings Content Column -->
-        <div class="md:col-span-2 bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl">
-          
-          <!-- Tab 1: Profile Setting (Sketch: Avatar, First/Last Name, Email, Mobile, Gender, About) -->
-          <div id="tab-profile" class="space-y-5">
-            <h2 class="text-base font-bold text-white font-mono border-b border-slate-800 pb-3">Personal Information</h2>
+  <!-- App Main Content Container -->
+  <main id="app-container" class="flex-grow">
             
-            <!-- Avatar Upload Preview (Sketch: Box with Avatar inside) -->
-            <div>
-              <label class="block text-xs font-mono text-slate-400 mb-2">Avatar</label>
-              <div class="flex items-center gap-4">
-                <div class="w-20 h-20 rounded-xl border border-slate-700 bg-slate-950 p-1 flex items-center justify-center">
-                  <img id="settings-avatar-preview" src="https://api.dicebear.com/7.x/bottts/svg?seed=wizzy" alt="Avatar" class="w-full h-full rounded-lg object-cover">
-                </div>
-                <div class="text-xs text-slate-500 font-mono">
-                  <p>Auto-generated from your profile handle.</p>
-                </div>
-              </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label class="block text-xs font-mono text-slate-400 mb-1">First Name</label>
-                <input type="text" placeholder="Enter first name" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 font-mono">
-              </div>
-              <div>
-                <label class="block text-xs font-mono text-slate-400 mb-1">Last Name</label>
-                <input type="text" placeholder="Enter last name" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 font-mono">
-              </div>
-            </div>
-
-            <div>
-              <label class="block text-xs font-mono text-slate-400 mb-1">Email</label>
-              <input id="settings-email" type="email" readonly class="w-full bg-slate-950/60 border border-slate-800/80 rounded-lg px-3 py-2 text-xs text-slate-400 focus:outline-none font-mono cursor-not-allowed">
-            </div>
-
-            <div>
-              <label class="block text-xs font-mono text-slate-400 mb-1">Mobile Number</label>
-              <input type="tel" placeholder="+1234567890" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 font-mono">
-            </div>
-
-            <!-- Gender Dropdown (Sketch: Gender with dropdown arrow -> Male, Female) -->
-            <div>
-              <label class="block text-xs font-mono text-slate-400 mb-1">Gender</label>
-              <div class="relative">
-                <select class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-blue-500 font-mono appearance-none cursor-pointer">
-                  <option value="">Select gender...</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                </select>
-                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
-                  ▼
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <label class="block text-xs font-mono text-slate-400 mb-1">About</label>
-              <textarea rows="3" placeholder="Tell us about your background..." class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 font-mono resize-none"></textarea>
-            </div>
-
-            <div class="pt-2 text-right">
-              <button onclick="alert('Profile changes saved successfully!')" class="px-5 py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition font-mono">
-                Save Changes
-              </button>
-            </div>
-          </div>
-
-          <!-- Tab 2: Account Setting (Sketch: Change password -> Current, New, Confirm + Eye Icon) -->
-          <div id="tab-account" class="hidden space-y-5">
-            <h2 class="text-base font-bold text-white font-mono border-b border-slate-800 pb-3">Change Password</h2>
-
-            <div>
-              <label class="block text-xs font-mono text-slate-400 mb-1">Current Password</label>
-              <div class="relative">
-                <input id="pwd-current" type="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 font-mono pr-10">
-                <button type="button" onclick="togglePasswordVisibility('pwd-current', 'eye-icon-1')" class="absolute inset-y-0 right-0 px-3 flex items-center text-slate-400 hover:text-white">
-                  <span id="eye-icon-1">👁️</span>
-                </button>
-              </div>
-            </div>
-
-            <div>
-              <label class="block text-xs font-mono text-slate-400 mb-1">New Password</label>
-              <div class="relative">
-                <input id="pwd-new" type="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 font-mono pr-10">
-                <button type="button" onclick="togglePasswordVisibility('pwd-new', 'eye-icon-2')" class="absolute inset-y-0 right-0 px-3 flex items-center text-slate-400 hover:text-white">
-                  <span id="eye-icon-2">👁️</span>
-                </button>
-              </div>
-            </div>
-
-            <div>
-              <label class="block text-xs font-mono text-slate-400 mb-1">Confirm Password</label>
-              <div class="relative">
-                <input id="pwd-confirm" type="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 font-mono pr-10">
-                <button type="button" onclick="togglePasswordVisibility('pwd-confirm', 'eye-icon-3')" class="absolute inset-y-0 right-0 px-3 flex items-center text-slate-400 hover:text-white">
-                  <span id="eye-icon-3">👁️</span>
-                </button>
-              </div>
-            </div>
-
-            <div class="pt-2 text-right">
-              <button onclick="handlePasswordChange()" class="px-5 py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition font-mono">
-                Save
-              </button>
-            </div>
-          </div>
-
-          <!-- Tab 3: Appearances (Sketch: Theme -> Light / Dark buttons) -->
-          <div id="tab-appearances" class="hidden space-y-5">
-            <h2 class="text-base font-bold text-white font-mono border-b border-slate-800 pb-3">Theme Settings</h2>
-            
-            <p class="text-xs text-slate-400 font-mono">Choose your interface display mode:</p>
-            
-            <div class="flex gap-4">
-              <button onclick="setTheme('light')" id="theme-btn-light" class="flex-1 p-4 rounded-xl border border-slate-800 bg-slate-950 hover:border-slate-700 text-center transition">
-                <span class="text-2xl block mb-2">☀️</span>
-                <span class="text-xs font-mono font-bold text-slate-300">Light</span>
-              </button>
-              <button onclick="setTheme('dark')" id="theme-btn-dark" class="flex-1 p-4 rounded-xl border-2 border-blue-500 bg-slate-900 text-center transition">
-                <span class="text-2xl block mb-2">🌙</span>
-                <span class="text-xs font-mono font-bold text-blue-400">Dark</span>
-              </button>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </div>
-
-    <!-- View 4: Placeholder Pages for Secondary Drawer Links -->
-    <div id="view-generic" class="hidden max-w-4xl mx-auto px-6 py-16 text-center">
-      <div class="bg-slate-900/80 border border-slate-800 p-8 rounded-2xl">
-        <h2 id="generic-title" class="text-2xl font-bold text-white font-mono mb-2">Module View</h2>
-        <p id="generic-description" class="text-xs font-mono text-slate-400">Content loading...</p>
-      </div>
-    </div>
-
-              </div>
-  </div>
-     <!-- Auth Modal (Sign In / Register) -->
-  <div id="auth-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 max-w-md w-full relative shadow-2xl">
-      <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-base">✕</button>
-
-      <div class="text-center mb-6">
-        <h3 id="modal-title" class="text-xl font-bold text-white font-mono">Sign In</h3>
-        <p class="text-xs text-slate-400 mt-1">Access your Wizzy Cyber student dashboard</p>
-      </div>
-
-      <form id="auth-form" onsubmit="handleAuthSubmit(event)" class="space-y-4">
-        <div>
-          <label class="block text-xs font-mono text-slate-400 mb-1">Email</label>
-          <input id="auth-email" type="email" required placeholder="student@wizzycyber.com" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 font-mono">
-        </div>
-
-        <div>
-          <label class="block text-xs font-mono text-slate-400 mb-1">Password</label>
-          <div class="relative">
-            <input id="auth-password" type="password" required placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 font-mono pr-10">
-            <button type="button" onclick="togglePasswordVisibility('auth-password', 'modal-pwd-eye')" class="absolute inset-y-0 right-0 px-3 flex items-center text-slate-400 hover:text-white">
-              <span id="modal-pwd-eye">👁️</span>
-            </button>
-          </div>
-        </div>
-
-        <button id="auth-submit-btn" type="submit" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-lg transition font-mono mt-2">
-          Sign In
-        </button>
-      </form>
-
-      <div class="mt-4 text-center">
-        <button onclick="toggleAuthMode()" id="auth-toggle-btn" class="text-xs font-mono text-blue-400 hover:underline">
-          Don't have an account? Register here
-        </button>
-      </div>
-      
-      <p id="auth-error-msg" class="text-xs font-mono text-red-400 text-center mt-3"></p>
-    </div>
-  </div>
-
-  <!-- JavaScript Application Logic -->
-  <script>
-    // Initialize Supabase Client
-    // Replace these two variables with your real Supabase credentials from Project Settings > API
-    const SUPABASE_URL = 'https://YOUR_SUPABASE_PROJECT_URL.supabase.co'; 
-    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
-    const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
-
-    let currentUser = null;
-    let isRegistering = false;
-
-    // View Navigation Logic
-    function switchView(viewName) {
-      const views = ['home', 'dashboard', 'settings', 'generic'];
-      views.forEach(v => {
-        const el = document.getElementById(`view-${v}`);
-        if (el) el.classList.add('hidden');
-      });
-
-      if (viewName === 'home') {
-        document.getElementById('view-home')?.classList.remove('hidden');
-      } else if (viewName === 'dashboard') {
-        document.getElementById('view-dashboard')?.classList.remove('hidden');
-      } else if (viewName === 'settings') {
-        document.getElementById('view-settings')?.classList.remove('hidden');
-      } else if (viewName === 'study') {
-        document.getElementById('view-home')?.classList.remove('hidden');
-        document.getElementById('learning')?.scrollIntoView({ behavior: 'smooth' });
-      } else {
-        // Generic page handler for Exam History, Performance, Video Lessons, Bookmark, etc.
-        const genericView = document.getElementById('view-generic');
-        const genericTitle = document.getElementById('generic-title');
-        const genericDesc = document.getElementById('generic-description');
-        
-        if (genericView && genericTitle && genericDesc) {
-          genericView.classList.remove('hidden');
-          const titles = {
-            'exam-history': 'Exam History',
-            'performance': 'Performance Analysis',
-            'video-lessons': 'Video Lessons',
-            'bookmark': 'Bookmarks',
-            'contact': 'Contact Us',
-            'help': 'Help & Support'
-          };
-          
-          genericTitle.innerText = titles[viewName] || 'Module Section';
-          if (viewName === 'exam-history') {
-            genericDesc.innerText = 'No exam done yet.';
-          } else {
-            genericDesc.innerText = `Welcome to the ${titles[viewName] || 'Module'} section. Data feeds and tools will render here.`;
-          }
-        }
-      }
-    }
-
-    // Sidebar Menu Drawer Control
-    function toggleSidebarMenu() {
-      const drawer = document.getElementById('sidebar-drawer');
-      if (drawer) {
-        drawer.classList.toggle('-translate-x-full');
-      }
-    }
-
-    // Settings Navigation Tabs
-    function switchSettingsTab(tabName) {
-      ['profile', 'account', 'appearances'].forEach(t => {
-        document.getElementById(`tab-${t}`)?.classList.add('hidden');
-        const btn = document.getElementById(`tab-btn-${t}`);
-        if (btn) {
-          btn.className = "w-full text-left px-4 py-3 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition";
-        }
-      });
-
-      document.getElementById(`tab-${tabName}`)?.classList.remove('hidden');
-      const activeBtn = document.getElementById(`tab-btn-${tabName}`);
-      if (activeBtn) {
-        activeBtn.className = "w-full text-left px-4 py-3 rounded-xl bg-blue-600 text-white font-semibold transition";
-      }
-    }
-
-    // Toggle Password Input Visibility (Eye Icon)
-    function togglePasswordVisibility(inputId, eyeIconId) {
-      const input = document.getElementById(inputId);
-      const eye = document.getElementById(eyeIconId);
-      if (input && eye) {
-        if (input.type === 'password') {
-          input.type = 'text';
-          eye.innerText = '🙈';
-        } else {
-          input.type = 'password';
-          eye.innerText = '👁️';
-        }
-      }
-    }
-
-    // Theme Switcher (Light / Dark)
-    function setTheme(mode) {
-      const lightBtn = document.getElementById('theme-btn-light');
-      const darkBtn = document.getElementById('theme-btn-dark');
-
-      if (mode === 'light') {
-        document.documentElement.classList.remove('dark');
-        alert('Light theme applied.');
-        if (lightBtn) lightBtn.className = "flex-1 p-4 rounded-xl border-2 border-blue-500 bg-slate-900 text-center transition";
-        if (darkBtn) darkBtn.className = "flex-1 p-4 rounded-xl border border-slate-800 bg-slate-950 hover:border-slate-700 text-center transition";
-      } else {
-        document.documentElement.classList.add('dark');
-        if (darkBtn) darkBtn.className = "flex-1 p-4 rounded-xl border-2 border-blue-500 bg-slate-900 text-center transition";
-        if (lightBtn) lightBtn.className = "flex-1 p-4 rounded-xl border border-slate-800 bg-slate-950 hover:border-slate-700 text-center transition";
-      }
-    }
-
-    // Modal Control & Auth Handler
-    function openAuthModal() {
-      document.getElementById('auth-modal')?.classList.remove('hidden');
-    }
-
-    function closeAuthModal() {
-      document.getElementById('auth-modal')?.classList.add('hidden');
-      document.getElementById('auth-error-msg').innerText = '';
-    }
-
-    function toggleAuthMode() {
-      isRegistering = !isRegistering;
-      document.getElementById('modal-title').innerText = isRegistering ? 'Register Account' : 'Sign In';
-      document.getElementById('auth-submit-btn').innerText = isRegistering ? 'Create Account' : 'Sign In';
-      document.getElementById('auth-toggle-btn').innerText = isRegistering ? 'Already have an account? Sign In' : "Don't have an account? Register here";
-    }
-
-    // Updated Supabase Auth Handler
-    async function handleAuthSubmit(e) {
-      e.preventDefault();
-      const email = document.getElementById('auth-email').value;
-      const password = document.getElementById('auth-password').value;
-      const errorMsg = document.getElementById('auth-error-msg');
-
-      errorMsg.innerText = 'Processing...';
-
-      try {
-        let result;
-        if (isRegistering) {
-          result = await supabase.auth.signUp({ email, password });
-        } else {
-          result = await supabase.auth.signInWithPassword({ email, password });
-        }
-
-        if (result.error) {
-          errorMsg.innerText = result.error.message;
-          return;
-        }
-
-        if (result.data?.user) {
-          currentUser = result.data.user;
-          updateUIState();
-          closeAuthModal();
-          errorMsg.innerText = '';
-        }
-      } catch (err) {
-        errorMsg.innerText = 'An unexpected error occurred. Check console.';
-        console.error(err);
-      }
-    }
-
-    async function handleSignOut() {
-      if (supabase) {
-        await supabase.auth.signOut();
-      }
-      currentUser = null;
-      updateUIState();
-      switchView('home');
-    }
-
-    function updateUIState() {
-      const publicView = document.getElementById('public-landing-view');
-      const authView = document.getElementById('authenticated-view');
-      const authContainer = document.getElementById('auth-container');
-      const sidebarLogoutUser = document.getElementById('sidebar-logout-user');
-      
-      if (currentUser) {
-        publicView?.classList.add('hidden');
-        authView?.classList.remove('hidden');
-        
-        const username = currentUser.email.split('@')[0];
-        
-        // Update User Cards & Identifiers
-        document.getElementById('dash-card-username').innerText = username;
-        document.getElementById('dash-card-id').innerText = `ID: ${currentUser.id}`;
-        document.getElementById('dash-card-avatar').src = `https://api.dicebear.com/7.x/bottts/svg?seed=${username}`;
-        document.getElementById('settings-avatar-preview').src = `https://api.dicebear.com/7.x/bottts/svg?seed=${username}`;
-        document.getElementById('settings-email').value = currentUser.email;
-
-        if (sidebarLogoutUser) sidebarLogoutUser.innerText = `(${username})`;
-
-        authContainer.innerHTML = `
-          <div class="flex items-center gap-3">
-            <span class="text-xs font-mono text-emerald-400 hidden sm:inline">${username}</span>
-            <button onclick="handleSignOut()" class="px-3 py-1.5 bg-slate-900 border border-slate-800 hover:bg-slate-800 text-slate-300 text-xs font-mono rounded-lg transition">
-              Sign Out
-            </button>
-          </div>
-        `;
-      } else {
-        publicView?.classList.remove('hidden');
-        authView?.classList.add('hidden');
-        authContainer.innerHTML = `
-          <button onclick="openAuthModal()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg transition">
-            Sign In / Register
-          </button>
-        `;
-      }
-    }
-
-    // Flag Submission & Leaderboard
-    function submitFlag() {
-      const flagInput = document.getElementById('flag-input').value;
-      const status = document.getElementById('lab-status');
-      if (flagInput === 'WIZZY{web_dir_found_2026}') {
-        status.innerText = '✅ Correct flag! +100 Points awarded.';
-        status.className = 'text-xs font-mono mt-2 text-emerald-400';
-      } else {
-        status.innerText = '❌ Incorrect flag. Try again.';
-        status.className = 'text-xs font-mono mt-2 text-red-400';
-      }
-    }
-
-    function submitLabChallenge(inputId, statusId, correctFlag, title, points) {
-      const val = document.getElementById(inputId).value;
-      const st = document.getElementById(statusId);
-      if (val === correctFlag) {
-        st.innerText = `✅ Verified! +${points} Points added.`;
-        st.className = 'text-xs font-mono mt-2 text-emerald-400';
-      } else {
-        st.innerText = '❌ Incorrect flag token.';
-        st.className = 'text-xs font-mono mt-2 text-red-400';
-      }
-    }
-
-    function handlePasswordChange() {
-      const c = document.getElementById('pwd-current').value;
-      const n = document.getElementById('pwd-new').value;
-      const cf = document.getElementById('pwd-confirm').value;
-
-      if (!c || !n || !cf) {
-        alert('Please fill out all password fields.');
-        return;
-      }
-      if (n !== cf) {
-        alert('New passwords do not match!');
-        return;
-      }
-      alert('Password updated successfully!');
-    }
-
-    function loadLeaderboard() {
-      const body = document.getElementById('leaderboard-body');
-      if (!body) return;
-      body.innerHTML = `
-        <tr class="hover:bg-slate-900/40">
-          <td class="px-6 py-4 font-bold text-amber-400">#1</td>
-          <td class="px-6 py-4 font-semibold text-white">bush_bean</td>
-          <td class="px-6 py-4 text-center">12</td>
-          <td class="px-6 py-4 text-right font-bold text-emerald-400">1,850 pts</td>
-        </tr>
-        <tr class="hover:bg-slate-900/40">
-          <td class="px-6 py-4 font-bold text-slate-300">#2</td>
-          <td class="px-6 py-4 font-semibold text-white">cyber_dev</td>
-          <td class="px-6 py-4 text-center">9</td>
-          <td class="px-6 py-4 text-right font-bold text-emerald-400">1,200 pts</td>
-        </tr>
-        <tr class="hover:bg-slate-900/40">
-          <td class="px-6 py-4 font-bold text-amber-700">#3</td>
-          <td class="px-6 py-4 font-semibold text-white">cloud_sec</td>
-          <td class="px-6 py-4 text-center">7</td>
-          <td class="px-6 py-4 text-right font-bold text-emerald-400">950 pts</td>
-        </tr>
-      `;
-    }
-
-    // Initialize Leaderboard & Check Supabase Session on page load
-    document.addEventListener('DOMContentLoaded', async () => {
-      loadLeaderboard();
-
-      if (supabase) {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session?.user) {
-          currentUser = session.user;
-          updateUIState();
-        }
-      }
-    });
-  </script>
-</body>
-</html>
-
