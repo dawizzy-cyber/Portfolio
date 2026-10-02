@@ -111,4 +111,119 @@
 
   <!-- App Main Content Container -->
   <main id="app-container" class="flex-grow">
-            
+        <!-- View 1: Public Landing Page View (Logged Out) -->
+    <div id="public-landing-view">
+      <section class="max-w-4xl mx-auto px-6 py-16 sm:py-20 text-center">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-full text-xs font-semibold uppercase tracking-wider mb-6">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Security & Cloud Engineering Hub
+        </div>
+        <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white mb-6">
+          Wizzy Cyber Technical Portal
+        </h1>
+        <p class="text-slate-400 text-base sm:text-lg max-w-2xl mx-auto mb-8 leading-relaxed">
+          Explore cloud infrastructure, cybersecurity research, and machine learning models. Sign in to access hands-on labs, complete modules, and track your global rank.
+        </p>
+
+        <!-- Public Social & Action Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl mx-auto text-left">
+          <div class="p-5 bg-slate-900/80 border border-slate-800 rounded-xl">
+            <p class="text-xs font-mono text-blue-400 mb-1">X (Twitter) Profile</p>
+            <h3 class="text-base font-bold text-white mb-2">@bush_bean__</h3>
+            <p class="text-xs text-slate-400 mb-4">Sharing updates on machine learning, cloud architecture, and security.</p>
+            <a href="https://x.com/bush_bean__" target="_blank" rel="noopener noreferrer" class="inline-block px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg transition">
+              Visit Profile →
+            </a>
+          </div>
+
+          <div class="p-5 bg-slate-900/80 border border-slate-800 rounded-xl">
+            <p class="text-xs font-mono text-emerald-400 mb-1">Student Portal</p>
+            <h3 class="text-base font-bold text-white mb-2">Interactive Learning</h3>
+            <p class="text-xs text-slate-400 mb-4">Register or sign in to verify challenge flags and maintain your score.</p>
+            <button onclick="openAuthModal()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-lg transition">
+              Sign In / Register
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- View 2: Authenticated Main Dashboard & Platform View (Logged In) -->
+    <div id="authenticated-view" class="hidden">
+      
+      <!-- Student Profile Header Card -->
+      <section id="dashboard-section" class="max-w-6xl mx-auto px-6 pt-8 pb-4">
+        <div class="bg-slate-900/90 border border-slate-800 p-6 rounded-2xl shadow-xl">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div class="flex items-center gap-4">
+              <!-- Profile Picture Placeholder -->
+              <div class="relative">
+                <img id="dashboard-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=wizzy" alt="Profile Picture" class="w-16 h-16 rounded-xl border-2 border-blue-500/50 bg-slate-950 p-1">
+                <span class="absolute bottom-0 right-0 w-4 h-4 bg-emerald-500 border-2 border-slate-900 rounded-full"></span>
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <h2 id="dash-username" class="text-2xl font-bold text-white">Student</h2>
+                  <span class="text-xs font-mono bg-blue-500/10 border border-blue-500/20 text-blue-400 px-2 py-0.5 rounded">Active Member</span>
+                </div>
+                <p id="dash-user-id" class="text-xs font-mono text-slate-400 mt-1">ID: Loading...</p>
+              </div>
+            </div>
+            <div class="flex gap-3">
+              <button onclick="switchView('settings')" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg transition border border-slate-700">
+                ⚙️ Settings
+              </button>
+              <button onclick="handleSignOut()" class="px-4 py-2 bg-slate-800 hover:bg-red-900/50 hover:text-red-300 text-slate-300 text-xs font-semibold rounded-lg transition border border-slate-700">
+                Sign Out Account
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Platform Hero Header -->
+      <section id="about" class="max-w-6xl mx-auto px-6 py-6">
+        <div class="inline-flex items-center gap-2 px-3 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-full text-xs font-semibold uppercase tracking-wider mb-4">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Live Interactive Platform • Supabase Connected
+        </div>
+        <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-4 leading-tight">
+          Interactive Cloud Engineering & <span class="text-blue-500">Cybersecurity</span> Platform.
+        </h1>
+        <p class="text-slate-400 text-base sm:text-lg max-w-3xl leading-relaxed">
+          Learn cloud architecture, machine learning pipelines, and offensive security. Solve hands-on labs, complete modules, and log your progress live.
+        </p>
+      </section>
+
+      <!-- Curriculum Tracks -->
+      <section id="learning" class="max-w-6xl mx-auto px-6 py-10 border-t border-slate-900">
+        <div class="mb-8">
+          <h2 class="text-2xl font-bold text-white mb-2">Technical Curriculum</h2>
+          <p class="text-slate-400 text-sm">Structured modules across cloud engineering, machine learning, and offensive security.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-xl">
+            <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded">Track 01 • Security</span>
+            <h3 class="text-lg font-bold text-white mt-4 mb-2">Offensive Security & Recon</h3>
+            <p class="text-slate-400 text-xs leading-relaxed">
+              Directory discovery, terminal navigation, web path enumeration, and interactive capture-the-flag labs.
+            </p>
+          </div>
+
+          <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-xl">
+            <span class="text-xs font-mono text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded">Track 02 • Infrastructure</span>
+            <h3 class="text-lg font-bold text-white mt-4 mb-2">Cloud Computing & DevOps</h3>
+            <p class="text-slate-400 text-xs leading-relaxed">
+              AWS S3 storage policies, Linux server administration, Docker containerization, and Netlify deployments.
+            </p>
+          </div>
+
+          <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-xl">
+            <span class="text-xs font-mono text-purple-400 bg-purple-500/10 px-2.5 py-1 rounded">Track 03 • Data Science</span>
+            <h3 class="text-lg font-bold text-white mt-4 mb-2">ML & Spectral Analytics</h3>
+            <p class="text-slate-400 text-xs leading-relaxed">
+              Python processing algorithms, bioactive metabolite classification, and GC-MS spectral research.
+            </p>
+          </div>
+        </div>
+  </section>
+      
