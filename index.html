@@ -3,163 +3,166 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CyberAcademyX | Student Portal</title>
+  <title>CyberAcademyX | Minimal Auth Test</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-950 text-gray-100 min-h-screen font-sans flex flex-col justify-between">
+<body class="bg-gray-950 text-gray-100 min-h-screen font-sans flex items-center justify-center p-4">
 
-  <!-- Simple Header -->
-  <header class="border-b border-gray-800 bg-gray-900/90 py-4 px-6">
-    <div class="max-w-4xl mx-auto flex justify-between items-center">
-      <div class="flex items-center gap-2">
-        <span class="text-emerald-500 font-black text-2xl">⚡</span>
-        <h1 class="text-xl font-bold text-white tracking-tight">Cyber<span class="text-emerald-500">AcademyX</span></h1>
-      </div>
-      <span class="text-xs font-mono text-gray-400 bg-gray-800 px-3 py-1 rounded-md">Auth Module v1.0</span>
+  <div class="bg-gray-900 border border-gray-800 rounded-2xl p-8 max-w-md w-full shadow-2xl">
+    <div class="text-center mb-6">
+      <div class="text-emerald-500 font-black text-3xl mb-1">⚡ CyberAcademyX</div>
+      <p class="text-xs text-gray-400 font-mono">Authentication Testing Module</p>
     </div>
-  </header>
 
-  <!-- Centered Auth Card -->
-  <main class="py-12 px-6 max-w-md mx-auto w-full">
-    <div class="bg-gray-900 border border-gray-800 rounded-2xl p-8 shadow-2xl">
-      <h2 class="text-2xl font-bold text-white mb-1 text-center" id="portal-title">Student Portal</h2>
-      <p class="text-gray-400 text-sm text-center mb-6" id="portal-subtitle">Create an account or sign in to start learning.</p>
-
-      <!-- Toggle Tabs -->
-      <div class="flex border-b border-gray-800 mb-6" id="tab-bar">
-        <button type="button" id="tab-signup" class="flex-1 py-2 text-sm font-semibold text-emerald-400 border-b-2 border-emerald-500">Create Account</button>
-        <button type="button" id="tab-login" class="flex-1 py-2 text-sm font-semibold text-gray-400 border-b-2 border-transparent">Sign In</button>
-      </div>
-
-      <!-- Pure Button Input Fields (No <form> tags to stop page reloads) -->
-      <div id="auth-fields">
-        <div class="mb-4">
-          <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">Email Address</label>
-          <input type="email" id="user-email" class="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-emerald-500 font-mono" placeholder="student@example.com" />
-        </div>
-        <div class="mb-6">
-          <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">Password</label>
-          <input type="password" id="user-password" class="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-emerald-500 font-mono" placeholder="••••••••" />
-        </div>
-        <button type="button" id="submit-auth-btn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 rounded-lg text-sm transition">
-          Create Account
-        </button>
-      </div>
-
-      <div id="auth-status-msg" class="mt-4 text-center text-xs font-medium"></div>
-
-      <!-- Logged-In State View -->
-      <div id="student-dash" class="hidden text-center">
-        <span class="text-xs font-bold text-emerald-400 bg-emerald-950/80 border border-emerald-800 px-3 py-1 rounded-full">Logged In</span>
-        <h3 class="text-xl font-bold text-white mt-4" id="dash-email"></h3>
-        <p class="text-xs text-gray-400 mt-1 mb-6">Your student authentication state is active.</p>
-        <button type="button" id="logout-btn" class="bg-red-950/80 hover:bg-red-900 text-red-300 border border-red-800 font-medium px-4 py-2 rounded-lg text-xs transition">
-          Sign Out
-        </button>
-      </div>
+    <!-- Auth Mode Toggle -->
+    <div class="flex border-b border-gray-800 mb-6">
+      <button type="button" id="btn-tab-signup" class="flex-1 py-2 text-sm font-semibold text-emerald-400 border-b-2 border-emerald-500">Create Account</button>
+      <button type="button" id="btn-tab-login" class="flex-1 py-2 text-sm font-semibold text-gray-400 border-b-2 border-transparent">Sign In</button>
     </div>
-  </main>
 
-  <!-- Footer -->
-  <footer class="border-t border-gray-800 py-6 text-center text-gray-500 text-xs">
-    © 2026 CyberAcademyX. Minimal Authentication Core.
-  </footer>
+    <!-- Input Form Area -->
+    <div id="auth-form-area">
+      <div class="mb-4">
+        <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">Email Address</label>
+        <input type="email" id="email-input" class="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-emerald-500 font-mono" placeholder="test@example.com" />
+      </div>
 
-  <!-- Supabase JS CDN -->
+      <div class="mb-6">
+        <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">Password</label>
+        <input type="password" id="password-input" class="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-emerald-500 font-mono" placeholder="••••••••" />
+      </div>
+
+      <button type="button" id="action-btn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 rounded-lg text-sm transition">
+        Create Account
+      </button>
+    </div>
+
+    <!-- Status Message Box -->
+    <div id="status-box" class="mt-4 p-3 rounded-lg text-xs font-mono hidden text-center"></div>
+
+    <!-- Dashboard View (Shown after login) -->
+    <div id="dash-area" class="hidden text-center py-4">
+      <div class="inline-block bg-emerald-950 text-emerald-400 border border-emerald-800 px-3 py-1 rounded-full text-xs font-bold mb-3">
+        ✓ Active User Session
+      </div>
+      <h3 class="text-lg font-bold text-white mb-1" id="dash-user-email"></h3>
+      <p class="text-xs text-gray-400 mb-6">You are successfully authenticated with Supabase.</p>
+      
+      <button type="button" id="logout-btn" class="bg-red-950 hover:bg-red-900 text-red-300 border border-red-800 font-medium px-5 py-2 rounded-lg text-xs transition">
+        Sign Out
+      </button>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const SUPABASE_URL = 'https://oamprfzytergokcuwvkx.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im94bnZwc2Z6eXRrcmdva2N1d2t2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2OTI1NDksImV4cCI6MjEwNjI2ODU0OX0.AhzL3LgELbcK_qhnFlnNYWbaXdNUjVyX0-TGT-u9Ot8';
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    let mode = 'signup';
+    let activeTab = 'signup';
 
     document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('tab-signup').addEventListener('click', () => switchTab('signup'));
-      document.getElementById('tab-login').addEventListener('click', () => switchTab('login'));
-      document.getElementById('submit-auth-btn').addEventListener('click', handleAuth);
-      document.getElementById('logout-btn').addEventListener('click', handleLogout);
+      document.getElementById('btn-tab-signup').addEventListener('click', () => setTab('signup'));
+      document.getElementById('btn-tab-login').addEventListener('click', () => setTab('login'));
+      document.getElementById('action-btn').addEventListener('click', executeAuth);
+      document.getElementById('logout-btn').addEventListener('click', executeLogout);
 
-      checkUserSession();
+      checkSession();
     });
 
-    function switchTab(newMode) {
-      mode = newMode;
-      const tabSignup = document.getElementById('tab-signup');
-      const tabLogin = document.getElementById('tab-login');
-      const submitBtn = document.getElementById('submit-auth-btn');
-      const msg = document.getElementById('auth-status-msg');
+    function setTab(tab) {
+      activeTab = tab;
+      const tabSignup = document.getElementById('btn-tab-signup');
+      const tabLogin = document.getElementById('btn-tab-login');
+      const actionBtn = document.getElementById('action-btn');
+      hideStatus();
 
-      if (mode === 'signup') {
+      if (tab === 'signup') {
         tabSignup.className = 'flex-1 py-2 text-sm font-semibold text-emerald-400 border-b-2 border-emerald-500';
         tabLogin.className = 'flex-1 py-2 text-sm font-semibold text-gray-400 border-b-2 border-transparent';
-        submitBtn.innerText = 'Create Account';
+        actionBtn.innerText = 'Create Account';
       } else {
         tabLogin.className = 'flex-1 py-2 text-sm font-semibold text-emerald-400 border-b-2 border-emerald-500';
         tabSignup.className = 'flex-1 py-2 text-sm font-semibold text-gray-400 border-b-2 border-transparent';
-        submitBtn.innerText = 'Sign In';
+        actionBtn.innerText = 'Sign In';
       }
-      if (msg) msg.innerText = '';
     }
 
-    async function handleAuth() {
-      const email = document.getElementById('user-email').value.trim();
-      const password = document.getElementById('user-password').value;
-      const msg = document.getElementById('auth-status-msg');
+    function showStatus(msg, isError = false) {
+      const box = document.getElementById('status-box');
+      box.classList.remove('hidden', 'bg-red-950/80', 'text-red-300', 'border-red-800', 'bg-emerald-950/80', 'text-emerald-300', 'border-emerald-800');
+      
+      if (isError) {
+        box.classList.add('bg-red-950/80', 'text-red-300', 'border', 'border-red-800');
+      } else {
+        box.classList.add('bg-emerald-950/80', 'text-emerald-300', 'border', 'border-emerald-800');
+      }
+      box.innerText = msg;
+    }
+
+    function hideStatus() {
+      document.getElementById('status-box').classList.add('hidden');
+    }
+
+    async function executeAuth() {
+      const email = document.getElementById('email-input').value.trim();
+      const password = document.getElementById('password-input').value;
 
       if (!email || !password) {
-        msg.className = 'mt-4 text-center text-xs text-red-400 font-semibold';
-        msg.innerText = 'Please fill in both email and password.';
+        showStatus('Please enter an email and password.', true);
         return;
       }
 
-      msg.className = 'mt-4 text-center text-xs text-emerald-400 font-semibold';
-      msg.innerText = mode === 'signup' ? 'Creating account...' : 'Signing in...';
+      showStatus(activeTab === 'signup' ? 'Creating account...' : 'Signing in...');
 
       try {
-        if (mode === 'signup') {
+        if (activeTab === 'signup') {
           const { data, error } = await supabase.auth.signUp({ email, password });
           if (error) throw error;
-          msg.innerText = 'Account created successfully! Signing in...';
-          await supabase.auth.signInWithPassword({ email, password });
+
+          // If session is null, email confirmation is enabled in Supabase settings
+          if (data.user && !data.session) {
+            showStatus('Account registered! If confirmation is on, check email. Otherwise try signing in.', false);
+          } else {
+            showStatus('Account created and logged in!');
+            await checkSession();
+          }
         } else {
           const { data, error } = await supabase.auth.signInWithPassword({ email, password });
           if (error) throw error;
+          showStatus('Successfully signed in!');
+          await checkSession();
         }
-        await checkUserSession();
       } catch (err) {
-        msg.className = 'mt-4 text-center text-xs text-red-400 font-semibold';
-        msg.innerText = err.message || 'Authentication error.';
+        showStatus(err.message || 'Authentication error', true);
       }
     }
 
-    async function handleLogout() {
+    async function executeLogout() {
       await supabase.auth.signOut();
-      await checkUserSession();
+      hideStatus();
+      await checkSession();
     }
 
-    async function checkUserSession() {
+    async function checkSession() {
       const { data: { user } } = await supabase.auth.getUser();
-      const authFields = document.getElementById('auth-fields');
-      const tabBar = document.getElementById('tab-bar');
-      const title = document.getElementById('portal-title');
-      const subtitle = document.getElementById('portal-subtitle');
-      const dash = document.getElementById('student-dash');
-      const dashEmail = document.getElementById('dash-email');
+      const formArea = document.getElementById('auth-form-area');
+      const dashArea = document.getElementById('dash-area');
+      const tabSignup = document.getElementById('btn-tab-signup');
+      const tabLogin = document.getElementById('btn-tab-login');
 
       if (user) {
-        authFields.classList.add('hidden');
-        tabBar.classList.add('hidden');
-        title.classList.add('hidden');
-        subtitle.classList.add('hidden');
-        dash.classList.remove('hidden');
-        dashEmail.innerText = user.email;
+        formArea.classList.add('hidden');
+        tabSignup.classList.add('hidden');
+        tabLogin.classList.add('hidden');
+        dashArea.classList.remove('hidden');
+        document.getElementById('dash-user-email').innerText = user.email;
       } else {
-        authFields.classList.remove('hidden');
-        tabBar.classList.remove('hidden');
-        title.classList.remove('hidden');
-        subtitle.classList.remove('hidden');
-        dash.classList.add('hidden');
+        formArea.classList.remove('hidden');
+        tabSignup.classList.remove('hidden');
+        tabLogin.classList.remove('hidden');
+        dashArea.classList.add('hidden');
       }
     }
   </script>
