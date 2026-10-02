@@ -356,5 +356,497 @@
           </div>
         </div>
       </div>
-                                                                                                                    </div>
-                  
+            <!-- View 3: Settings Panel (Sketch: Profile, Account, Appearances) -->
+    <div id="view-settings" class="hidden max-w-4xl mx-auto px-6 py-10">
+      <h1 class="text-2xl font-bold text-white font-mono mb-6">Settings</h1>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Settings Nav Column -->
+        <div class="space-y-2 font-mono text-xs">
+          <button onclick="switchSettingsTab('profile')" id="tab-btn-profile" class="w-full text-left px-4 py-3 rounded-xl bg-blue-600 text-white font-semibold transition">
+            👤 Profile Setting
+          </button>
+          <button onclick="switchSettingsTab('account')" id="tab-btn-account" class="w-full text-left px-4 py-3 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition">
+            🔑 Account Setting
+          </button>
+          <button onclick="switchSettingsTab('appearances')" id="tab-btn-appearances" class="w-full text-left px-4 py-3 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition">
+            🎨 Appearances
+          </button>
+        </div>
+
+        <!-- Settings Content Column -->
+        <div class="md:col-span-2 bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl">
+          
+          <!-- Tab 1: Profile Setting (Sketch: Avatar, First/Last Name, Email, Mobile, Gender, About) -->
+          <div id="tab-profile" class="space-y-5">
+            <h2 class="text-base font-bold text-white font-mono border-b border-slate-800 pb-3">Personal Information</h2>
+            
+            <!-- Avatar Upload Preview (Sketch: Box with Avatar inside) -->
+            <div>
+              <label class="block text-xs font-mono text-slate-400 mb-2">Avatar</label>
+              <div class="flex items-center gap-4">
+                <div class="w-20 h-20 rounded-xl border border-slate-700 bg-slate-950 p-1 flex items-center justify-center">
+                  <img id="settings-avatar-preview" src="https://api.dicebear.com/7.x/bottts/svg?seed=wizzy" alt="Avatar" class="w-full h-full rounded-lg object-cover">
+                </div>
+                <div class="text-xs text-slate-500 font-mono">
+                  <p>Auto-generated from your profile handle.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-mono text-slate-400 mb-1">First Name</label>
+                <input type="text" placeholder="Enter first name" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 font-mono">
+              </div>
+              <div>
+                <label class="block text-xs font-mono text-slate-400 mb-1">Last Name</label>
+                <input type="text" placeholder="Enter last name" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 font-mono">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-mono text-slate-400 mb-1">Email</label>
+              <input id="settings-email" type="email" readonly class="w-full bg-slate-950/60 border border-slate-800/80 rounded-lg px-3 py-2 text-xs text-slate-400 focus:outline-none font-mono cursor-not-allowed">
+            </div>
+
+            <div>
+              <label class="block text-xs font-mono text-slate-400 mb-1">Mobile Number</label>
+              <input type="tel" placeholder="+1234567890" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 font-mono">
+            </div>
+
+            <!-- Gender Dropdown (Sketch: Gender with dropdown arrow -> Male, Female) -->
+            <div>
+              <label class="block text-xs font-mono text-slate-400 mb-1">Gender</label>
+              <div class="relative">
+                <select class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-blue-500 font-mono appearance-none cursor-pointer">
+                  <option value="">Select gender...</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
+                  ▼
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-mono text-slate-400 mb-1">About</label>
+              <textarea rows="3" placeholder="Tell us about your background..." class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 font-mono resize-none"></textarea>
+            </div>
+
+            <div class="pt-2 text-right">
+              <button onclick="alert('Profile changes saved successfully!')" class="px-5 py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition font-mono">
+                Save Changes
+              </button>
+            </div>
+          </div>
+
+          <!-- Tab 2: Account Setting (Sketch: Change password -> Current, New, Confirm + Eye Icon) -->
+          <div id="tab-account" class="hidden space-y-5">
+            <h2 class="text-base font-bold text-white font-mono border-b border-slate-800 pb-3">Change Password</h2>
+
+            <div>
+              <label class="block text-xs font-mono text-slate-400 mb-1">Current Password</label>
+              <div class="relative">
+                <input id="pwd-current" type="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 font-mono pr-10">
+                <button type="button" onclick="togglePasswordVisibility('pwd-current', 'eye-icon-1')" class="absolute inset-y-0 right-0 px-3 flex items-center text-slate-400 hover:text-white">
+                  <span id="eye-icon-1">👁️</span>
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-mono text-slate-400 mb-1">New Password</label>
+              <div class="relative">
+                <input id="pwd-new" type="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 font-mono pr-10">
+                <button type="button" onclick="togglePasswordVisibility('pwd-new', 'eye-icon-2')" class="absolute inset-y-0 right-0 px-3 flex items-center text-slate-400 hover:text-white">
+                  <span id="eye-icon-2">👁️</span>
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-mono text-slate-400 mb-1">Confirm Password</label>
+              <div class="relative">
+                <input id="pwd-confirm" type="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 font-mono pr-10">
+                <button type="button" onclick="togglePasswordVisibility('pwd-confirm', 'eye-icon-3')" class="absolute inset-y-0 right-0 px-3 flex items-center text-slate-400 hover:text-white">
+                  <span id="eye-icon-3">👁️</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="pt-2 text-right">
+              <button onclick="handlePasswordChange()" class="px-5 py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition font-mono">
+                Save
+              </button>
+            </div>
+          </div>
+
+          <!-- Tab 3: Appearances (Sketch: Theme -> Light / Dark buttons) -->
+          <div id="tab-appearances" class="hidden space-y-5">
+            <h2 class="text-base font-bold text-white font-mono border-b border-slate-800 pb-3">Theme Settings</h2>
+            
+            <p class="text-xs text-slate-400 font-mono">Choose your interface display mode:</p>
+            
+            <div class="flex gap-4">
+              <button onclick="setTheme('light')" id="theme-btn-light" class="flex-1 p-4 rounded-xl border border-slate-800 bg-slate-950 hover:border-slate-700 text-center transition">
+                <span class="text-2xl block mb-2">☀️</span>
+                <span class="text-xs font-mono font-bold text-slate-300">Light</span>
+              </button>
+              <button onclick="setTheme('dark')" id="theme-btn-dark" class="flex-1 p-4 rounded-xl border-2 border-blue-500 bg-slate-900 text-center transition">
+                <span class="text-2xl block mb-2">🌙</span>
+                <span class="text-xs font-mono font-bold text-blue-400">Dark</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- View 4: Placeholder Pages for Secondary Drawer Links -->
+    <div id="view-generic" class="hidden max-w-4xl mx-auto px-6 py-16 text-center">
+      <div class="bg-slate-900/80 border border-slate-800 p-8 rounded-2xl">
+        <h2 id="generic-title" class="text-2xl font-bold text-white font-mono mb-2">Module View</h2>
+        <p id="generic-description" class="text-xs font-mono text-slate-400">Content loading...</p>
+      </div>
+    </div>
+
+              </div>
+  </div>
+     <!-- Auth Modal (Sign In / Register) -->
+  <div id="auth-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 max-w-md w-full relative shadow-2xl">
+      <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-base">✕</button>
+
+      <div class="text-center mb-6">
+        <h3 id="modal-title" class="text-xl font-bold text-white font-mono">Sign In</h3>
+        <p class="text-xs text-slate-400 mt-1">Access your Wizzy Cyber student dashboard</p>
+      </div>
+
+      <form id="auth-form" onsubmit="handleAuthSubmit(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-mono text-slate-400 mb-1">Email</label>
+          <input id="auth-email" type="email" required placeholder="student@wizzycyber.com" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 font-mono">
+        </div>
+
+        <div>
+          <label class="block text-xs font-mono text-slate-400 mb-1">Password</label>
+          <div class="relative">
+            <input id="auth-password" type="password" required placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 font-mono pr-10">
+            <button type="button" onclick="togglePasswordVisibility('auth-password', 'modal-pwd-eye')" class="absolute inset-y-0 right-0 px-3 flex items-center text-slate-400 hover:text-white">
+              <span id="modal-pwd-eye">👁️</span>
+            </button>
+          </div>
+        </div>
+
+        <button id="auth-submit-btn" type="submit" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-lg transition font-mono mt-2">
+          Sign In
+        </button>
+      </form>
+
+      <div class="mt-4 text-center">
+        <button onclick="toggleAuthMode()" id="auth-toggle-btn" class="text-xs font-mono text-blue-400 hover:underline">
+          Don't have an account? Register here
+        </button>
+      </div>
+      
+      <p id="auth-error-msg" class="text-xs font-mono text-red-400 text-center mt-3"></p>
+    </div>
+  </div>
+
+  <!-- JavaScript Application Logic -->
+  <script>
+    // Initialize Supabase Client
+    // Replace these two variables with your real Supabase credentials from Project Settings > API
+    const SUPABASE_URL = 'https://YOUR_SUPABASE_PROJECT_URL.supabase.co'; 
+    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+    const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+    let currentUser = null;
+    let isRegistering = false;
+
+    // View Navigation Logic
+    function switchView(viewName) {
+      const views = ['home', 'dashboard', 'settings', 'generic'];
+      views.forEach(v => {
+        const el = document.getElementById(`view-${v}`);
+        if (el) el.classList.add('hidden');
+      });
+
+      if (viewName === 'home') {
+        document.getElementById('view-home')?.classList.remove('hidden');
+      } else if (viewName === 'dashboard') {
+        document.getElementById('view-dashboard')?.classList.remove('hidden');
+      } else if (viewName === 'settings') {
+        document.getElementById('view-settings')?.classList.remove('hidden');
+      } else if (viewName === 'study') {
+        document.getElementById('view-home')?.classList.remove('hidden');
+        document.getElementById('learning')?.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        // Generic page handler for Exam History, Performance, Video Lessons, Bookmark, etc.
+        const genericView = document.getElementById('view-generic');
+        const genericTitle = document.getElementById('generic-title');
+        const genericDesc = document.getElementById('generic-description');
+        
+        if (genericView && genericTitle && genericDesc) {
+          genericView.classList.remove('hidden');
+          const titles = {
+            'exam-history': 'Exam History',
+            'performance': 'Performance Analysis',
+            'video-lessons': 'Video Lessons',
+            'bookmark': 'Bookmarks',
+            'contact': 'Contact Us',
+            'help': 'Help & Support'
+          };
+          
+          genericTitle.innerText = titles[viewName] || 'Module Section';
+          if (viewName === 'exam-history') {
+            genericDesc.innerText = 'No exam done yet.';
+          } else {
+            genericDesc.innerText = `Welcome to the ${titles[viewName] || 'Module'} section. Data feeds and tools will render here.`;
+          }
+        }
+      }
+    }
+
+    // Sidebar Menu Drawer Control
+    function toggleSidebarMenu() {
+      const drawer = document.getElementById('sidebar-drawer');
+      if (drawer) {
+        drawer.classList.toggle('-translate-x-full');
+      }
+    }
+
+    // Settings Navigation Tabs
+    function switchSettingsTab(tabName) {
+      ['profile', 'account', 'appearances'].forEach(t => {
+        document.getElementById(`tab-${t}`)?.classList.add('hidden');
+        const btn = document.getElementById(`tab-btn-${t}`);
+        if (btn) {
+          btn.className = "w-full text-left px-4 py-3 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition";
+        }
+      });
+
+      document.getElementById(`tab-${tabName}`)?.classList.remove('hidden');
+      const activeBtn = document.getElementById(`tab-btn-${tabName}`);
+      if (activeBtn) {
+        activeBtn.className = "w-full text-left px-4 py-3 rounded-xl bg-blue-600 text-white font-semibold transition";
+      }
+    }
+
+    // Toggle Password Input Visibility (Eye Icon)
+    function togglePasswordVisibility(inputId, eyeIconId) {
+      const input = document.getElementById(inputId);
+      const eye = document.getElementById(eyeIconId);
+      if (input && eye) {
+        if (input.type === 'password') {
+          input.type = 'text';
+          eye.innerText = '🙈';
+        } else {
+          input.type = 'password';
+          eye.innerText = '👁️';
+        }
+      }
+    }
+
+    // Theme Switcher (Light / Dark)
+    function setTheme(mode) {
+      const lightBtn = document.getElementById('theme-btn-light');
+      const darkBtn = document.getElementById('theme-btn-dark');
+
+      if (mode === 'light') {
+        document.documentElement.classList.remove('dark');
+        alert('Light theme applied.');
+        if (lightBtn) lightBtn.className = "flex-1 p-4 rounded-xl border-2 border-blue-500 bg-slate-900 text-center transition";
+        if (darkBtn) darkBtn.className = "flex-1 p-4 rounded-xl border border-slate-800 bg-slate-950 hover:border-slate-700 text-center transition";
+      } else {
+        document.documentElement.classList.add('dark');
+        if (darkBtn) darkBtn.className = "flex-1 p-4 rounded-xl border-2 border-blue-500 bg-slate-900 text-center transition";
+        if (lightBtn) lightBtn.className = "flex-1 p-4 rounded-xl border border-slate-800 bg-slate-950 hover:border-slate-700 text-center transition";
+      }
+    }
+
+    // Modal Control & Auth Handler
+    function openAuthModal() {
+      document.getElementById('auth-modal')?.classList.remove('hidden');
+    }
+
+    function closeAuthModal() {
+      document.getElementById('auth-modal')?.classList.add('hidden');
+      document.getElementById('auth-error-msg').innerText = '';
+    }
+
+    function toggleAuthMode() {
+      isRegistering = !isRegistering;
+      document.getElementById('modal-title').innerText = isRegistering ? 'Register Account' : 'Sign In';
+      document.getElementById('auth-submit-btn').innerText = isRegistering ? 'Create Account' : 'Sign In';
+      document.getElementById('auth-toggle-btn').innerText = isRegistering ? 'Already have an account? Sign In' : "Don't have an account? Register here";
+    }
+
+    // Updated Supabase Auth Handler
+    async function handleAuthSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('auth-email').value;
+      const password = document.getElementById('auth-password').value;
+      const errorMsg = document.getElementById('auth-error-msg');
+
+      errorMsg.innerText = 'Processing...';
+
+      try {
+        let result;
+        if (isRegistering) {
+          result = await supabase.auth.signUp({ email, password });
+        } else {
+          result = await supabase.auth.signInWithPassword({ email, password });
+        }
+
+        if (result.error) {
+          errorMsg.innerText = result.error.message;
+          return;
+        }
+
+        if (result.data?.user) {
+          currentUser = result.data.user;
+          updateUIState();
+          closeAuthModal();
+          errorMsg.innerText = '';
+        }
+      } catch (err) {
+        errorMsg.innerText = 'An unexpected error occurred. Check console.';
+        console.error(err);
+      }
+    }
+
+    async function handleSignOut() {
+      if (supabase) {
+        await supabase.auth.signOut();
+      }
+      currentUser = null;
+      updateUIState();
+      switchView('home');
+    }
+
+    function updateUIState() {
+      const publicView = document.getElementById('public-landing-view');
+      const authView = document.getElementById('authenticated-view');
+      const authContainer = document.getElementById('auth-container');
+      const sidebarLogoutUser = document.getElementById('sidebar-logout-user');
+      
+      if (currentUser) {
+        publicView?.classList.add('hidden');
+        authView?.classList.remove('hidden');
+        
+        const username = currentUser.email.split('@')[0];
+        
+        // Update User Cards & Identifiers
+        document.getElementById('dash-card-username').innerText = username;
+        document.getElementById('dash-card-id').innerText = `ID: ${currentUser.id}`;
+        document.getElementById('dash-card-avatar').src = `https://api.dicebear.com/7.x/bottts/svg?seed=${username}`;
+        document.getElementById('settings-avatar-preview').src = `https://api.dicebear.com/7.x/bottts/svg?seed=${username}`;
+        document.getElementById('settings-email').value = currentUser.email;
+
+        if (sidebarLogoutUser) sidebarLogoutUser.innerText = `(${username})`;
+
+        authContainer.innerHTML = `
+          <div class="flex items-center gap-3">
+            <span class="text-xs font-mono text-emerald-400 hidden sm:inline">${username}</span>
+            <button onclick="handleSignOut()" class="px-3 py-1.5 bg-slate-900 border border-slate-800 hover:bg-slate-800 text-slate-300 text-xs font-mono rounded-lg transition">
+              Sign Out
+            </button>
+          </div>
+        `;
+      } else {
+        publicView?.classList.remove('hidden');
+        authView?.classList.add('hidden');
+        authContainer.innerHTML = `
+          <button onclick="openAuthModal()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg transition">
+            Sign In / Register
+          </button>
+        `;
+      }
+    }
+
+    // Flag Submission & Leaderboard
+    function submitFlag() {
+      const flagInput = document.getElementById('flag-input').value;
+      const status = document.getElementById('lab-status');
+      if (flagInput === 'WIZZY{web_dir_found_2026}') {
+        status.innerText = '✅ Correct flag! +100 Points awarded.';
+        status.className = 'text-xs font-mono mt-2 text-emerald-400';
+      } else {
+        status.innerText = '❌ Incorrect flag. Try again.';
+        status.className = 'text-xs font-mono mt-2 text-red-400';
+      }
+    }
+
+    function submitLabChallenge(inputId, statusId, correctFlag, title, points) {
+      const val = document.getElementById(inputId).value;
+      const st = document.getElementById(statusId);
+      if (val === correctFlag) {
+        st.innerText = `✅ Verified! +${points} Points added.`;
+        st.className = 'text-xs font-mono mt-2 text-emerald-400';
+      } else {
+        st.innerText = '❌ Incorrect flag token.';
+        st.className = 'text-xs font-mono mt-2 text-red-400';
+      }
+    }
+
+    function handlePasswordChange() {
+      const c = document.getElementById('pwd-current').value;
+      const n = document.getElementById('pwd-new').value;
+      const cf = document.getElementById('pwd-confirm').value;
+
+      if (!c || !n || !cf) {
+        alert('Please fill out all password fields.');
+        return;
+      }
+      if (n !== cf) {
+        alert('New passwords do not match!');
+        return;
+      }
+      alert('Password updated successfully!');
+    }
+
+    function loadLeaderboard() {
+      const body = document.getElementById('leaderboard-body');
+      if (!body) return;
+      body.innerHTML = `
+        <tr class="hover:bg-slate-900/40">
+          <td class="px-6 py-4 font-bold text-amber-400">#1</td>
+          <td class="px-6 py-4 font-semibold text-white">bush_bean</td>
+          <td class="px-6 py-4 text-center">12</td>
+          <td class="px-6 py-4 text-right font-bold text-emerald-400">1,850 pts</td>
+        </tr>
+        <tr class="hover:bg-slate-900/40">
+          <td class="px-6 py-4 font-bold text-slate-300">#2</td>
+          <td class="px-6 py-4 font-semibold text-white">cyber_dev</td>
+          <td class="px-6 py-4 text-center">9</td>
+          <td class="px-6 py-4 text-right font-bold text-emerald-400">1,200 pts</td>
+        </tr>
+        <tr class="hover:bg-slate-900/40">
+          <td class="px-6 py-4 font-bold text-amber-700">#3</td>
+          <td class="px-6 py-4 font-semibold text-white">cloud_sec</td>
+          <td class="px-6 py-4 text-center">7</td>
+          <td class="px-6 py-4 text-right font-bold text-emerald-400">950 pts</td>
+        </tr>
+      `;
+    }
+
+    // Initialize Leaderboard & Check Supabase Session on page load
+    document.addEventListener('DOMContentLoaded', async () => {
+      loadLeaderboard();
+
+      if (supabase) {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          currentUser = session.user;
+          updateUIState();
+        }
+      }
+    });
+  </script>
+</body>
+</html>
+
