@@ -23,11 +23,13 @@
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans antialiased selection:bg-blue-500 selection:text-white">
 
-  <!-- Navigation -->
+  <!-- Navigation Bar -->
   <nav class="sticky top-0 z-50 backdrop-blur-md bg-slate-950/80 border-b border-slate-900">
     <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
       <span class="text-xl font-bold tracking-tight text-blue-500 font-mono">&lt;WizzyCyber /&gt;</span>
-      <div class="space-x-6 text-sm text-slate-400 font-medium hidden md:flex">
+      
+      <!-- Authenticated Navigation Links -->
+      <div id="desktop-nav-links" class="space-x-6 text-sm text-slate-400 font-medium hidden md:flex">
         <a href="#about" class="hover:text-white transition">About</a>
         <a href="#learning" class="hover:text-white transition">Learning Program</a>
         <a href="#labs" class="hover:text-white transition">Interactive Labs</a>
@@ -41,351 +43,63 @@
             Sign In / Register
           </button>
         </div>
+
+        <!-- Three-Dot Menu Trigger (Logged In View) -->
+        <button id="menu-dots-btn" onclick="toggleMobileMenu()" class="hidden p-2 text-slate-400 hover:text-white bg-slate-900 border border-slate-800 rounded-lg transition">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+          </svg>
+        </button>
+
         <!-- Follow Badge -->
         <a href="https://x.com/intent/follow?screen_name=bush_bean__" target="_blank" rel="noopener noreferrer" class="px-3 py-2 bg-blue-600/10 border border-blue-500/30 text-blue-400 text-xs font-semibold rounded-lg hover:bg-blue-600 hover:text-white transition hidden sm:flex items-center gap-2">
           + Follow @bush_bean__
         </a>
       </div>
     </div>
+
+    <!-- Dropdown / Three-Dot Slide Menu -->
+    <div id="mobile-menu" class="hidden bg-slate-900 border-b border-slate-800 px-6 py-4 space-y-3 font-mono text-sm">
+      <a href="#dashboard-section" onclick="toggleMobileMenu()" class="block text-slate-300 hover:text-blue-400">📊 User Dashboard</a>
+      <a href="#labs" onclick="toggleMobileMenu()" class="block text-slate-300 hover:text-blue-400">🧪 Practical Labs</a>
+      <a href="#leaderboard" onclick="toggleMobileMenu()" class="block text-slate-300 hover:text-blue-400">🏆 Leaderboard</a>
+      <a href="#learning" onclick="toggleMobileMenu()" class="block text-slate-300 hover:text-blue-400">📚 Curriculum</a>
+    </div>
   </nav>
 
-  <!-- Hero Section -->
-  <section id="about" class="max-w-6xl mx-auto px-6 pt-16 pb-12">
-    <div class="inline-flex items-center gap-2 px-3 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-full text-xs font-semibold uppercase tracking-wider mb-6">
-      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Live Interactive Platform • Supabase Connected
-    </div>
-    <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white mb-6 leading-tight">
-      Interactive Cloud Engineering & <span class="text-blue-500">Cybersecurity</span> Platform.
-    </h1>
-    <p class="text-slate-400 text-lg sm:text-xl max-w-3xl mb-8 leading-relaxed">
-      Learn cloud architecture, machine learning pipelines, and offensive security. Solve hands-on labs, complete modules, and log your progress live.
-    </p>
-  </section>
-
-  <!-- Learning Program Tracks -->
-  <section id="learning" class="max-w-6xl mx-auto px-6 py-12 border-t border-slate-900">
-    <div class="mb-8">
-      <h2 class="text-2xl font-bold text-white mb-2">Technical Curriculum</h2>
-      <p class="text-slate-400 text-sm">Structured modules across cloud engineering, machine learning, and offensive security.</p>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-xl">
-        <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded">Track 01 • Security</span>
-        <h3 class="text-lg font-bold text-white mt-4 mb-2">Offensive Security & Recon</h3>
-        <p class="text-slate-400 text-xs leading-relaxed">
-          Directory discovery, terminal navigation, web path enumeration, and interactive capture-the-flag labs.
-        </p>
+  <!-- Public Landing Page View (Shown when Logged Out) -->
+  <div id="public-landing-view">
+    <section class="max-w-4xl mx-auto px-6 py-20 text-center">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-full text-xs font-semibold uppercase tracking-wider mb-6">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Security & Cloud Engineering Hub
       </div>
+      <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white mb-6">
+        Wizzy Cyber Technical Portal
+      </h1>
+      <p class="text-slate-400 text-lg max-w-2xl mx-auto mb-8 leading-relaxed">
+        Explore cloud infrastructure, cybersecurity research, and machine learning models. Sign in to access hands-on labs, complete modules, and track your global rank.
+      </p>
 
-      <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-xl">
-        <span class="text-xs font-mono text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded">Track 02 • Infrastructure</span>
-        <h3 class="text-lg font-bold text-white mt-4 mb-2">Cloud Computing & DevOps</h3>
-        <p class="text-slate-400 text-xs leading-relaxed">
-          AWS S3 storage policies, Linux server administration, Docker containerization, and Netlify deployments.
-        </p>
-      </div>
-
-      <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-xl">
-        <span class="text-xs font-mono text-purple-400 bg-purple-500/10 px-2.5 py-1 rounded">Track 03 • Data Science</span>
-        <h3 class="text-lg font-bold text-white mt-4 mb-2">ML & Spectral Analytics</h3>
-        <p class="text-slate-400 text-xs leading-relaxed">
-          Python processing algorithms, bioactive metabolite classification, and GC-MS spectral research.
-        </p>
-      </div>
-    </div>
-  </section>
-    <!-- Interactive Lab Execution Section -->
-  <section id="labs" class="max-w-6xl mx-auto px-6 py-12 border-t border-slate-900">
-    <div class="mb-8">
-      <h2 class="text-2xl font-bold text-white mb-2">Interactive Practical Labs</h2>
-      <p class="text-slate-400 text-sm">Submit challenge flags obtained from practical modules to update your student transcript in real time.</p>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      
-      <!-- Lab Module #1 -->
-      <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-xl flex flex-col justify-between">
-        <div>
-          <div class="flex justify-between items-center mb-2">
-            <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">Cyber Security</span>
-            <span class="text-xs font-mono text-slate-400">100 pts</span>
-          </div>
-          <h3 class="text-base font-bold text-white mb-2">Web Directory Enumeration</h3>
-          <p class="text-slate-400 text-xs mb-4">Discover hidden paths using fuzzing wordlists to locate the admin token.</p>
+      <!-- Public Social & Info Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl mx-auto text-left">
+        <div class="p-5 bg-slate-900/80 border border-slate-800 rounded-xl">
+          <p class="text-xs font-mono text-blue-400 mb-1">X (Twitter) Profile</p>
+          <h3 class="text-base font-bold text-white mb-2">@bush_bean__</h3>
+          <p class="text-xs text-slate-400 mb-4">Sharing updates on machine learning, cloud architecture, and security.</p>
+          <a href="https://x.com/bush_bean__" target="_blank" rel="noopener noreferrer" class="inline-block px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg transition">
+            Visit Profile →
+          </a>
         </div>
-        <div>
-          <div class="flex gap-2">
-            <input id="flag-input" type="text" placeholder="WIZZY{flag_here}" class="bg-slate-950 border border-slate-700 text-slate-200 text-xs rounded-lg px-3 py-2 w-full focus:outline-none focus:border-blue-500 font-mono">
-            <button onclick="submitFlag()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs rounded-lg transition whitespace-nowrap">
-              Submit
-            </button>
-          </div>
-          <p id="lab-status" class="text-xs font-mono mt-2 text-slate-500"></p>
-        </div>
-      </div>
 
-      <!-- Lab Module #2 -->
-      <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-xl flex flex-col justify-between">
-        <div>
-          <div class="flex justify-between items-center mb-2">
-            <span class="text-xs font-mono text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded">Cloud Infrastructure</span>
-            <span class="text-xs font-mono text-slate-400">150 pts</span>
-          </div>
-          <h3 class="text-base font-bold text-white mb-2">S3 Bucket Access Control</h3>
-          <p class="text-slate-400 text-xs mb-4">Audit unauthenticated access on misconfigured storage bucket policies.</p>
-        </div>
-        <div>
-          <div class="flex gap-2">
-            <input id="flag-input-cloud" type="text" placeholder="WIZZY{flag_here}" class="bg-slate-950 border border-slate-700 text-slate-200 text-xs rounded-lg px-3 py-2 w-full focus:outline-none focus:border-blue-500 font-mono">
-            <button onclick="submitLabChallenge('flag-input-cloud', 'lab-status-cloud', 'WIZZY{s3_bucket_sec_2026}', 'AWS S3 Access Audit', 150)" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition whitespace-nowrap">
-              Submit
-            </button>
-          </div>
-          <p id="lab-status-cloud" class="text-xs font-mono mt-2 text-slate-500"></p>
-        </div>
-      </div>
-
-      <!-- Lab Module #3 -->
-      <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-xl flex flex-col justify-between">
-        <div>
-          <div class="flex justify-between items-center mb-2">
-            <span class="text-xs font-mono text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded">Applied ML</span>
-            <span class="text-xs font-mono text-slate-400">200 pts</span>
-          </div>
-          <h3 class="text-base font-bold text-white mb-2">Adversarial Model Poisoning</h3>
-          <p class="text-slate-400 text-xs mb-4">Detect feature manipulation techniques targeting predictive pipeline outputs.</p>
-        </div>
-        <div>
-          <div class="flex gap-2">
-            <input id="flag-input-ml" type="text" placeholder="WIZZY{flag_here}" class="bg-slate-950 border border-slate-700 text-slate-200 text-xs rounded-lg px-3 py-2 w-full focus:outline-none focus:border-blue-500 font-mono">
-            <button onclick="submitLabChallenge('flag-input-ml', 'lab-status-ml', 'WIZZY{ml_feature_clean_2026}', 'Adversarial ML Defense', 200)" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white font-semibold text-xs rounded-lg transition whitespace-nowrap">
-              Submit
-            </button>
-          </div>
-          <p id="lab-status-ml" class="text-xs font-mono mt-2 text-slate-500"></p>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- Live Student Leaderboard -->
-  <section id="leaderboard" class="max-w-6xl mx-auto px-6 py-12 border-t border-slate-900">
-    <div class="flex flex-col sm:flex-row justify-between sm:items-end mb-6 gap-2">
-      <div>
-        <h2 class="text-2xl font-bold text-white mb-1">Live Student Leaderboard</h2>
-        <p class="text-slate-400 text-sm">Real-time points and achievements synced from Supabase records.</p>
-      </div>
-      <button onclick="loadLeaderboard()" class="self-start sm:self-auto text-xs font-mono text-blue-400 bg-blue-500/10 border border-blue-500/20 px-3 py-1.5 rounded-lg hover:bg-blue-500 hover:text-white transition">
-        🔄 Refresh Scores
-      </button>
-    </div>
-
-    <div class="bg-slate-900/60 border border-slate-800 rounded-xl overflow-hidden">
-      <table class="w-full text-left text-sm text-slate-300">
-        <thead class="bg-slate-950 text-xs font-mono uppercase text-slate-400 border-b border-slate-800">
-          <tr>
-            <th class="px-6 py-3.5">Rank</th>
-            <th class="px-6 py-3.5">Student Account</th>
-            <th class="px-6 py-3.5 text-center">Modules Completed</th>
-            <th class="px-6 py-3.5 text-right">Total Score</th>
-          </tr>
-        </thead>
-        <tbody id="leaderboard-body" class="divide-y divide-slate-800/60 font-mono text-xs">
-          <tr>
-            <td colspan="4" class="px-6 py-6 text-center text-slate-500">Loading student scores...</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- Auth Modal -->
-  <div id="auth-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl max-w-md w-full relative">
-      <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-sm">✕</button>
-      <h3 class="text-xl font-bold text-white mb-1">Account Access</h3>
-      <p class="text-xs text-slate-400 mb-6">Sign in or register a new student profile on Supabase.</p>
-      
-      <div class="space-y-4">
-        <div>
-          <label class="block text-xs font-medium text-slate-300 mb-1">Email Address</label>
-          <input id="auth-email" type="email" placeholder="student@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
-        </div>
-        <div>
-          <label class="block text-xs font-medium text-slate-300 mb-1">Password</label>
-          <input id="auth-password" type="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
-        </div>
-        <div class="flex gap-3 pt-2">
-          <button onclick="handleSignUp()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition">Sign Up</button>
-          <button onclick="handleSignIn()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg transition">Sign In</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- JavaScript Supabase Logic -->
-  <script>
-    // Supabase Initialization
-    const SUPABASE_URL = 'https://oxnvpsfzytkrgokcuwkv.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im94bnZwc2Z6eXRrcmdva2N1d2t2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2OTI1NDksImV4cCI6MjEwNjI2ODU0OX0.AhzL3LgELbcK_qhnFlnNYWbaXdNUjVyX0-TGT-u9Ot8';
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    // Initial load session check & leaderboard fetch
-    document.addEventListener('DOMContentLoaded', () => {
-      checkCurrentSession();
-      loadLeaderboard();
-    });
-
-    // Check active session on load
-    async function checkCurrentSession() {
-      const { data: { user } } = await supabaseClient.auth.getUser();
-      updateAuthUI(user);
-    }
-
-    // Dynamic Auth Button UI state
-    function updateAuthUI(user) {
-      const container = document.getElementById('auth-container');
-      if (user) {
-        const username = user.email.split('@')[0];
-        container.innerHTML = `
-          <div class="flex items-center gap-2">
-            <span class="px-3 py-1.5 bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-mono rounded-lg">
-              👤 ${username}
-            </span>
-            <button onclick="handleSignOut()" class="px-3 py-1.5 bg-slate-800 hover:bg-red-900/50 hover:text-red-300 text-slate-300 text-xs font-semibold rounded-lg transition border border-slate-700">
-              Sign Out
-            </button>
-          </div>
-        `;
-      } else {
-        container.innerHTML = `
-          <button onclick="openAuthModal()" id="auth-btn" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg transition">
+        <div class="p-5 bg-slate-900/80 border border-slate-800 rounded-xl">
+          <p class="text-xs font-mono text-emerald-400 mb-1">Student Portal</p>
+          <h3 class="text-base font-bold text-white mb-2">Interactive Learning</h3>
+          <p class="text-xs text-slate-400 mb-4">Register or sign in to verify challenge flags and maintain your score.</p>
+          <button onclick="openAuthModal()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-lg transition">
             Sign In / Register
           </button>
-        `;
-      }
-    }
-
-    // Modal Handlers
-    function openAuthModal() { document.getElementById('auth-modal').classList.remove('hidden'); }
-    function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); }
-
-    // User Authentication
-    async function handleSignUp() {
-      const email = document.getElementById('auth-email').value;
-      const password = document.getElementById('auth-password').value;
-      const { data, error } = await supabaseClient.auth.signUp({ email, password });
-      if (error) alert(error.message);
-      else {
-        alert("Registration process completed! If confirmation is disabled in Supabase, you can sign in directly.");
-        closeAuthModal();
-      }
-    }
-
-    async function handleSignIn() {
-      const email = document.getElementById('auth-email').value;
-      const password = document.getElementById('auth-password').value;
-      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-      if (error) alert(error.message);
-      else {
-        alert("Logged in successfully!");
-        updateAuthUI(data.user);
-        closeAuthModal();
-        loadLeaderboard();
-      }
-    }
-
-    async function handleSignOut() {
-      await supabaseClient.auth.signOut();
-      updateAuthUI(null);
-      alert("Signed out successfully.");
-    }
-
-    // Flag Verification & Supabase Database Logging (Original Lab 1)
-    async function submitFlag() {
-      await submitLabChallenge('flag-input', 'lab-status', 'WIZZY{dir_recon_master}', 'Web Directory Reconnaissance', 100);
-    }
-
-    // General Lab Challenge Handler
-    async function submitLabChallenge(inputId, statusId, expectedFlag, moduleName, points) {
-      const flagInput = document.getElementById(inputId).value.trim();
-      const statusEl = document.getElementById(statusId);
-      
-      const { data: { user } } = await supabaseClient.auth.getUser();
-
-      if (!user) {
-        statusEl.className = "text-xs font-mono mt-2 text-amber-400";
-        statusEl.innerText = "⚠️ Please sign in first to log your laboratory score.";
-        openAuthModal();
-        return;
-      }
-
-      if (flagInput === expectedFlag) {
-        statusEl.className = "text-xs font-mono mt-2 text-emerald-400";
-        statusEl.innerText = "⏳ Verification passed! Saving to database...";
-
-        const { error } = await supabaseClient.from('user_progress').insert([
-          { user_email: user.email, module_name: moduleName, status: "Completed" }
-        ]);
-
-        if (error) {
-          statusEl.className = "text-xs font-mono mt-2 text-red-400";
-          statusEl.innerText = "Database Error: " + error.message;
-        } else {
-          statusEl.className = "text-xs font-mono mt-2 text-emerald-400";
-          statusEl.innerText = "✅ Flag Correct! Progress recorded in Supabase.";
-          loadLeaderboard();
-        }
-      } else {
-        statusEl.className = "text-xs font-mono mt-2 text-red-400";
-        statusEl.innerText = "❌ Incorrect Flag. Inspect scenario data & try again.";
-      }
-    }
-
-    // Fetch and render dynamic Leaderboard
-    async function loadLeaderboard() {
-      const tbody = document.getElementById('leaderboard-body');
-      if (!tbody) return;
-
-      const { data: progress, error } = await supabaseClient.from('user_progress').select('user_email, module_name');
-
-      if (error || !progress || progress.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4" class="px-6 py-6 text-center text-slate-500">No submissions logged yet. Be the first to complete a lab!</td></tr>`;
-        return;
-      }
-
-      const pointsTable = {
-        'Web Directory Reconnaissance': 100,
-        'AWS S3 Access Audit': 150,
-        'Adversarial ML Defense': 200
-      };
-
-      const userStats = {};
-      progress.forEach(row => {
-        const email = row.user_email;
-        if (!userStats[email]) userStats[email] = { email, completed: 0, score: 0 };
-        userStats[email].completed += 1;
-        userStats[email].score += (pointsTable[row.module_name] || 100);
-      });
-
-      const sorted = Object.values(userStats).sort((a, b) => b.score - a.score);
-      tbody.innerHTML = '';
-      sorted.forEach((st, idx) => {
-        const rankBadge = idx === 0 ? '🥇 1st' : idx === 1 ? '🥈 2nd' : idx === 2 ? '🥉 3rd' : `#${idx + 1}`;
-        tbody.innerHTML += `
-          <tr class="hover:bg-slate-800/40 transition">
-            <td class="px-6 py-3.5 font-bold text-blue-400">${rankBadge}</td>
-            <td class="px-6 py-3.5 text-slate-200">${st.email}</td>
-            <td class="px-6 py-3.5 text-center text-slate-400">${st.completed}</td>
-            <td class="px-6 py-3.5 text-right font-bold text-emerald-400">${st.score} pts</td>
-          </tr>
-        `;
-      });
-    }
-  </script>
-
-</body>
-      </html>
-
+        </div>
+      </div>
+    </section>
+  </div>
+  
