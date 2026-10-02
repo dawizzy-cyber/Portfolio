@@ -226,4 +226,174 @@
           </div>
         </div>
   </section>
+         <!-- Interactive Practical Labs Section -->
+      <section id="labs" class="max-w-6xl mx-auto px-6 py-12 border-t border-slate-900">
+        <div class="mb-8">
+          <h2 class="text-2xl font-bold text-white mb-2">Interactive Practical Labs</h2>
+          <p class="text-slate-400 text-sm">Submit challenge flags obtained from practical modules to update your student transcript in real time.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          <!-- Lab Module #1 -->
+          <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-xl flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">Cyber Security</span>
+                <span class="text-xs font-mono text-slate-400">100 pts</span>
+              </div>
+              <h3 class="text-base font-bold text-white mb-2">Web Directory Enumeration</h3>
+              <p class="text-slate-400 text-xs mb-4">Discover hidden paths using fuzzing wordlists to locate the admin token.</p>
+            </div>
+            <div>
+              <div class="flex gap-2">
+                <input id="flag-input" type="text" placeholder="WIZZY{flag_here}" class="bg-slate-950 border border-slate-700 text-slate-200 text-xs rounded-lg px-3 py-2 w-full focus:outline-none focus:border-blue-500 font-mono">
+                <button onclick="submitFlag()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs rounded-lg transition whitespace-nowrap">
+                  Submit
+                </button>
+              </div>
+              <p id="lab-status" class="text-xs font-mono mt-2 text-slate-500"></p>
+            </div>
+          </div>
+
+          <!-- Lab Module #2 -->
+          <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-xl flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-xs font-mono text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded">Cloud Infrastructure</span>
+                <span class="text-xs font-mono text-slate-400">150 pts</span>
+              </div>
+              <h3 class="text-base font-bold text-white mb-2">S3 Bucket Access Control</h3>
+              <p class="text-slate-400 text-xs mb-4">Audit unauthenticated access on misconfigured storage bucket policies.</p>
+            </div>
+            <div>
+              <div class="flex gap-2">
+                <input id="flag-input-cloud" type="text" placeholder="WIZZY{flag_here}" class="bg-slate-950 border border-slate-700 text-slate-200 text-xs rounded-lg px-3 py-2 w-full focus:outline-none focus:border-blue-500 font-mono">
+                <button onclick="submitLabChallenge('flag-input-cloud', 'lab-status-cloud', 'WIZZY{s3_bucket_sec_2026}', 'AWS S3 Access Audit', 150)" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition whitespace-nowrap">
+                  Submit
+                </button>
+              </div>
+              <p id="lab-status-cloud" class="text-xs font-mono mt-2 text-slate-500"></p>
+            </div>
+          </div>
+
+          <!-- Lab Module #3 -->
+          <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-xl flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-xs font-mono text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded">Applied ML</span>
+                <span class="text-xs font-mono text-slate-400">200 pts</span>
+              </div>
+              <h3 class="text-base font-bold text-white mb-2">Adversarial Model Poisoning</h3>
+              <p class="text-slate-400 text-xs mb-4">Detect feature manipulation techniques targeting predictive pipeline outputs.</p>
+            </div>
+            <div>
+              <div class="flex gap-2">
+                <input id="flag-input-ml" type="text" placeholder="WIZZY{flag_here}" class="bg-slate-950 border border-slate-700 text-slate-200 text-xs rounded-lg px-3 py-2 w-full focus:outline-none focus:border-blue-500 font-mono">
+                <button onclick="submitLabChallenge('flag-input-ml', 'lab-status-ml', 'WIZZY{ml_feature_clean_2026}', 'Adversarial ML Defense', 200)" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white font-semibold text-xs rounded-lg transition whitespace-nowrap">
+                  Submit
+                </button>
+              </div>
+              <p id="lab-status-ml" class="text-xs font-mono mt-2 text-slate-500"></p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Dynamic Supabase Leaderboard Section -->
+      <section id="leaderboard" class="max-w-6xl mx-auto px-6 py-12 border-t border-slate-900">
+        <div class="flex flex-col sm:flex-row justify-between sm:items-end mb-6 gap-2">
+          <div>
+            <h2 class="text-2xl font-bold text-white mb-1">Live Student Leaderboard</h2>
+            <p class="text-slate-400 text-sm">Real-time points and achievements synced from Supabase records.</p>
+          </div>
+          <button onclick="loadLeaderboard()" class="self-start sm:self-auto text-xs font-mono text-blue-400 bg-blue-500/10 border border-blue-500/20 px-3 py-1.5 rounded-lg hover:bg-blue-500 hover:text-white transition">
+            🔄 Refresh Scores
+          </button>
+        </div>
+
+        <div class="bg-slate-900/60 border border-slate-800 rounded-xl overflow-x-auto">
+          <table class="w-full text-left text-sm text-slate-300 min-w-[500px]">
+            <thead class="bg-slate-950 text-xs font-mono uppercase text-slate-400 border-b border-slate-800">
+              <tr>
+                <th class="px-6 py-3.5">Rank</th>
+                <th class="px-6 py-3.5">Student Account</th>
+                <th class="px-6 py-3.5 text-center">Modules Completed</th>
+                <th class="px-6 py-3.5 text-right">Total Score</th>
+              </tr>
+            </thead>
+            <tbody id="leaderboard-body" class="divide-y divide-slate-800/60 font-mono text-xs">
+              <tr>
+                <td colspan="4" class="px-6 py-6 text-center text-slate-500">Loading student scores...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- View 3: Settings & Profile Management Section -->
+    <div id="view-settings" class="hidden max-w-5xl mx-auto px-6 py-10">
+      <h2 class="text-2xl font-bold text-white mb-6">Settings & Account Control</h2>
       
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <!-- Tab Sidebar -->
+        <div class="space-y-2">
+          <button id="tab-btn-profile" onclick="switchSettingsTab('profile')" class="w-full text-left px-4 py-2.5 rounded-xl bg-blue-600 text-white font-semibold transition text-xs font-mono">
+            👤 User Profile
+          </button>
+          <button id="tab-btn-account" onclick="switchSettingsTab('account')" class="w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono">
+            🔒 Password & Security
+          </button>
+        </div>
+
+        <!-- Tab Content Panes -->
+        <div class="md:col-span-3 bg-slate-900/80 border border-slate-800 rounded-2xl p-6">
+          <!-- Profile Tab -->
+          <div id="tab-profile" class="space-y-4">
+            <h3 class="text-base font-bold text-white border-b border-slate-800 pb-2">Public Profile</h3>
+            <div class="flex items-center gap-4">
+              <img id="settings-avatar-preview" src="https://api.dicebear.com/7.x/bottts/svg?seed=wizzy" class="w-14 h-14 rounded-xl border border-slate-700 bg-slate-950 p-1">
+              <div>
+                <p class="text-xs font-mono text-slate-300">Avatar Generated via Dicebear</p>
+                <p class="text-[11px] text-slate-500">Based on your student email handle</p>
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-mono text-slate-400 mb-1">Email Address</label>
+              <input id="settings-email" type="text" readonly class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-400 font-mono">
+            </div>
+          </div>
+
+          <!-- Account Security Tab -->
+          <div id="tab-account" class="hidden space-y-4">
+            <h3 class="text-base font-bold text-white border-b border-slate-800 pb-2">Change Password</h3>
+            <div>
+              <label class="block text-xs font-mono text-slate-400 mb-1">Current Password</label>
+              <input id="pwd-current" type="password" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white font-mono">
+            </div>
+            <div>
+              <label class="block text-xs font-mono text-slate-400 mb-1">New Password</label>
+              <input id="pwd-new" type="password" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white font-mono">
+            </div>
+            <button onclick="alert('Password update request sent to email.')" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition font-mono">
+              Update Password
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- View 4: Generic Module Section -->
+    <div id="view-generic" class="hidden max-w-4xl mx-auto px-6 py-16 text-center">
+      <h2 id="generic-title" class="text-3xl font-bold text-white mb-3">Module</h2>
+      <p id="generic-description" class="text-slate-400 text-sm max-w-md mx-auto mb-6">Data feeds and interactive tools will render here.</p>
+      <button onclick="switchView('home')" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-xs font-mono rounded-lg transition border border-slate-700">
+        ← Return Home
+      </button>
+    </div>
+
+  </main>
+  
