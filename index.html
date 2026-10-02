@@ -20,21 +20,8 @@
       }
     }
   </script>
-  <style>
-    /* Custom Toast Animations */
-    @keyframes slideIn {
-      from { transform: translateY(-100%); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-    .toast-animate {
-      animation: slideIn 0.3s ease-out forwards;
-    }
-  </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans antialiased selection:bg-blue-500 selection:text-white min-h-screen flex flex-col justify-between">
-
-  <!-- Toast Notification Banner Container -->
-  <div id="toast-container" class="fixed top-20 right-6 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased selection:bg-blue-500 selection:text-white">
 
   <!-- Navigation -->
   <nav class="sticky top-0 z-50 backdrop-blur-md bg-slate-950/80 border-b border-slate-900">
@@ -43,16 +30,17 @@
       <div class="space-x-6 text-sm text-slate-400 font-medium hidden md:flex">
         <a href="#about" class="hover:text-white transition">About</a>
         <a href="#learning" class="hover:text-white transition">Learning Program</a>
-        <a href="#dashboard" class="hover:text-white transition">Dashboard</a>
         <a href="#labs" class="hover:text-white transition">Interactive Labs</a>
         <a href="#leaderboard" class="hover:text-white transition">Leaderboard</a>
       </div>
       
       <div class="flex items-center gap-3">
-        <!-- Auth Button / Profile Trigger -->
-        <button onclick="openAuthModal()" id="auth-btn" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg transition flex items-center gap-2">
-          <span>Sign In / Register</span>
-        </button>
+        <!-- Auth Container -->
+        <div id="auth-container" class="flex items-center gap-2">
+          <button onclick="openAuthModal()" id="auth-btn" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg transition">
+            Sign In / Register
+          </button>
+        </div>
         <!-- Follow Badge -->
         <a href="https://x.com/intent/follow?screen_name=bush_bean__" target="_blank" rel="noopener noreferrer" class="px-3 py-2 bg-blue-600/10 border border-blue-500/30 text-blue-400 text-xs font-semibold rounded-lg hover:bg-blue-600 hover:text-white transition hidden sm:flex items-center gap-2">
           + Follow @bush_bean__
@@ -61,310 +49,50 @@
     </div>
   </nav>
 
-  <main>
-    <!-- Hero Section -->
-    <section id="about" class="max-w-6xl mx-auto px-6 pt-16 pb-12">
-      <div class="inline-flex items-center gap-2 px-3 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-full text-xs font-semibold uppercase tracking-wider mb-6">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Live Interactive Platform • Supabase Connected
-      </div>
-      <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white mb-6 leading-tight">
-        Interactive Cloud Engineering & <span class="text-blue-500">Cybersecurity</span> Platform.
-      </h1>
-      <p class="text-slate-400 text-lg sm:text-xl max-w-3xl mb-8 leading-relaxed">
-        Learn cloud architecture, machine learning pipelines, and offensive security. Solve hands-on labs, complete modules, and log your progress live.
-      </p>
-    </section>
+  <!-- Hero Section -->
+  <section id="about" class="max-w-6xl mx-auto px-6 pt-16 pb-12">
+    <div class="inline-flex items-center gap-2 px-3 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-full text-xs font-semibold uppercase tracking-wider mb-6">
+      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Live Interactive Platform • Supabase Connected
+    </div>
+    <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white mb-6 leading-tight">
+      Interactive Cloud Engineering & <span class="text-blue-500">Cybersecurity</span> Platform.
+    </h1>
+    <p class="text-slate-400 text-lg sm:text-xl max-w-3xl mb-8 leading-relaxed">
+      Learn cloud architecture, machine learning pipelines, and offensive security. Solve hands-on labs, complete modules, and log your progress live.
+    </p>
+  </section>
 
-    <!-- Student Dashboard Section (Dynamic Session View) -->
-    <section id="dashboard" class="max-w-6xl mx-auto px-6 py-10 border-t border-slate-900">
-      <div class="bg-gradient-to-r from-slate-900 via-slate-900/80 to-slate-950 border border-slate-800 rounded-2xl p-6 sm:p-8">
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-          <div>
-            <div class="flex items-center gap-2">
-              <h2 class="text-2xl font-bold text-white">Student Dashboard</h2>
-              <span id="session-badge" class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-800 text-slate-400 border border-slate-700">Guest</span>
-            </div>
-            <p class="text-slate-400 text-xs mt-1">Real-time stats synced directly with your Supabase account.</p>
-          </div>
-          <div id="user-controls" class="hidden flex items-center gap-3">
-            <span id="user-email-display" class="text-xs font-mono bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800 text-blue-400"></span>
-            <button onclick="handleSignOut()" class="px-3 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 text-xs font-medium rounded-lg transition">
-              Sign Out
-            </button>
-          </div>
-        </div>
+  <!-- Learning Program Tracks -->
+  <section id="learning" class="max-w-6xl mx-auto px-6 py-12 border-t border-slate-900">
+    <div class="mb-8">
+      <h2 class="text-2xl font-bold text-white mb-2">Technical Curriculum</h2>
+      <p class="text-slate-400 text-sm">Structured modules across cloud engineering, machine learning, and offensive security.</p>
+    </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div class="bg-slate-950/60 border border-slate-800/80 p-4 rounded-xl">
-            <span class="text-xs font-mono text-slate-400">Completed Labs</span>
-            <p id="dashboard-labs-count" class="text-2xl font-extrabold text-emerald-400 mt-1">0 / 3</p>
-          </div>
-          <div class="bg-slate-950/60 border border-slate-800/80 p-4 rounded-xl">
-            <span class="text-xs font-mono text-slate-400">Security Rank</span>
-            <p id="dashboard-rank" class="text-2xl font-extrabold text-blue-400 mt-1">Novice Explorer</p>
-          </div>
-          <div class="bg-slate-950/60 border border-slate-800/80 p-4 rounded-xl">
-            <span class="text-xs font-mono text-slate-400">Database Status</span>
-            <p class="text-2xl font-extrabold text-purple-400 mt-1 flex items-center gap-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block animate-ping"></span> Live
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Learning Program Tracks -->
-    <section id="learning" class="max-w-6xl mx-auto px-6 py-12 border-t border-slate-900">
-      <div class="mb-8">
-        <h2 class="text-2xl font-bold text-white mb-2">Technical Curriculum</h2>
-        <p class="text-slate-400 text-sm">Structured modules across cloud engineering, machine learning, and offensive security.</p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-xl">
+        <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded">Track 01 • Security</span>
+        <h3 class="text-lg font-bold text-white mt-4 mb-2">Offensive Security & Recon</h3>
+        <p class="text-slate-400 text-xs leading-relaxed">
+          Directory discovery, terminal navigation, web path enumeration, and interactive capture-the-flag labs.
+        </p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-xl">
-          <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded">Track 01 • Security</span>
-          <h3 class="text-lg font-bold text-white mt-4 mb-2">Offensive Security & Recon</h3>
-          <p class="text-slate-400 text-xs leading-relaxed">
-            Directory discovery, terminal navigation, web path enumeration, and interactive capture-the-flag labs.
-          </p>
-        </div>
-
-        <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-xl">
-          <span class="text-xs font-mono text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded">Track 02 • Infrastructure</span>
-          <h3 class="text-lg font-bold text-white mt-4 mb-2">Cloud Computing & DevOps</h3>
-          <p class="text-slate-400 text-xs leading-relaxed">
-            AWS S3 storage policies, Linux server administration, Docker containerization, and Netlify deployments.
-          </p>
-        </div>
-
-        <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-xl">
-          <span class="text-xs font-mono text-purple-400 bg-purple-500/10 px-2.5 py-1 rounded">Track 03 • Data Science</span>
-          <h3 class="text-lg font-bold text-white mt-4 mb-2">ML & Spectral Analytics</h3>
-          <p class="text-slate-400 text-xs leading-relaxed">
-            Python processing algorithms, bioactive metabolite classification, and GC-MS spectral research.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Interactive Lab Execution Section -->
-    <section id="labs" class="max-w-6xl mx-auto px-6 py-12 border-t border-slate-900">
-      <div class="mb-8">
-        <h2 class="text-2xl font-bold text-white mb-2">Interactive Security Labs</h2>
-        <p class="text-slate-400 text-sm">Enter verification flags obtained from your technical challenges to log progress on your account.</p>
+      <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-xl">
+        <span class="text-xs font-mono text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded">Track 02 • Infrastructure</span>
+        <h3 class="text-lg font-bold text-white mt-4 mb-2">Cloud Computing & DevOps</h3>
+        <p class="text-slate-400 text-xs leading-relaxed">
+          AWS S3 storage policies, Linux server administration, Docker containerization, and Netlify deployments.
+        </p>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- LAB #1 -->
-        <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-xl flex flex-col justify-between">
-          <div>
-            <div class="flex items-center justify-between mb-3">
-              <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded">Lab #1 • Recon</span>
-              <span id="lab1-badge" class="text-[10px] font-mono text-slate-500 border border-slate-800 px-2 py-0.5 rounded">Pending</span>
-            </div>
-            <h3 class="text-base font-bold text-white mb-1">Web Directory Enumeration</h3>
-            <p class="text-slate-400 text-xs leading-relaxed mb-4">
-              Search target web servers for hidden endpoints. Find the secret flag tucked inside sensitive web directories.
-            </p>
-          </div>
-
-          <div>
-            <label class="block text-[11px] font-mono text-slate-400 mb-2">FLAG INPUT (WIZZY{...})</label>
-            <div class="flex flex-col gap-2">
-              <input id="flag-input" type="text" placeholder="WIZZY{flag_here}" class="bg-slate-950 border border-slate-700 text-slate-200 text-sm rounded-lg px-3.5 py-2 w-full focus:outline-none focus:border-blue-500 font-mono">
-              <button onclick="submitFlag()" class="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs rounded-lg transition">
-                Submit Flag #1
-              </button>
-            </div>
-            <p id="lab-status" class="text-xs font-mono mt-3 text-slate-500 min-h-[20px]"></p>
-          </div>
-        </div>
-
-        <!-- LAB #2 -->
-        <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-xl flex flex-col justify-between">
-          <div>
-            <div class="flex items-center justify-between mb-3">
-              <span class="text-xs font-mono text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded">Lab #2 • Cloud</span>
-              <span id="lab2-badge" class="text-[10px] font-mono text-slate-500 border border-slate-800 px-2 py-0.5 rounded">Pending</span>
-            </div>
-            <h3 class="text-base font-bold text-white mb-1">Cloud IAM Policy Audit</h3>
-            <p class="text-slate-400 text-xs leading-relaxed mb-4">
-              Audit misconfigured AWS S3 bucket permissions and identify over-privileged cloud IAM roles.
-            </p>
-          </div>
-
-          <div>
-            <label class="block text-[11px] font-mono text-slate-400 mb-2">FLAG INPUT (WIZZY{...})</label>
-            <div class="flex flex-col gap-2">
-              <input id="flag-input-2" type="text" placeholder="WIZZY{iam_cloud_master}" class="bg-slate-950 border border-slate-700 text-slate-200 text-sm rounded-lg px-3.5 py-2 w-full focus:outline-none focus:border-blue-500 font-mono">
-              <button onclick="submitLab2Flag()" class="w-full py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition">
-                Submit Flag #2
-              </button>
-            </div>
-            <p id="lab2-status" class="text-xs font-mono mt-3 text-slate-500 min-h-[20px]"></p>
-          </div>
-        </div>
-
-        <!-- LAB #3 -->
-        <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-xl flex flex-col justify-between">
-          <div>
-            <div class="flex items-center justify-between mb-3">
-              <span class="text-xs font-mono text-purple-400 bg-purple-500/10 px-2.5 py-1 rounded">Lab #3 • ML Security</span>
-              <span id="lab3-badge" class="text-[10px] font-mono text-slate-500 border border-slate-800 px-2 py-0.5 rounded">Pending</span>
-            </div>
-            <h3 class="text-base font-bold text-white mb-1">Adversarial Model Poisoning</h3>
-            <p class="text-slate-400 text-xs leading-relaxed mb-4">
-              Inspect spectral data pipelines for malicious adversarial vectors injected into bioactive classifiers.
-            </p>
-          </div>
-
-          <div>
-            <label class="block text-[11px] font-mono text-slate-400 mb-2">FLAG INPUT (WIZZY{...})</label>
-            <div class="flex flex-col gap-2">
-              <input id="flag-input-3" type="text" placeholder="WIZZY{ml_pipeline_secure}" class="bg-slate-950 border border-slate-700 text-slate-200 text-sm rounded-lg px-3.5 py-2 w-full focus:outline-none focus:border-blue-500 font-mono">
-              <button onclick="submitLab3Flag()" class="w-full py-2 bg-purple-600 hover:bg-purple-500 text-white font-semibold text-xs rounded-lg transition">
-                Submit Flag #3
-              </button>
-            </div>
-            <p id="lab3-status" class="text-xs font-mono mt-3 text-slate-500 min-h-[20px]"></p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Student Leaderboard Section -->
-    <section id="leaderboard" class="max-w-6xl mx-auto px-6 py-12 border-t border-slate-900">
-      <div class="flex justify-between items-end mb-6">
-        <div>
-          <h2 class="text-2xl font-bold text-white mb-1">Student Leaderboard</h2>
-          <p class="text-slate-400 text-sm">Recent laboratory achievements recorded in the database.</p>
-        </div>
-        <button onclick="fetchLeaderboard()" class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 text-xs font-mono rounded-lg transition flex items-center gap-1.5">
-          🔄 Refresh
-        </button>
-      </div>
-
-      <div class="bg-slate-900/60 border border-slate-800 rounded-xl overflow-hidden">
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs font-mono">
-            <thead class="bg-slate-950 text-slate-400 border-b border-slate-800 uppercase tracking-wider">
-              <tr>
-                <th class="p-4">User</th>
-                <th class="p-4">Completed Module</th>
-                <th class="p-4">Status</th>
-                <th class="p-4">Time</th>
-              </tr>
-            </thead>
-            <tbody id="leaderboard-body" class="divide-y divide-slate-800/60 text-slate-300">
-              <tr>
-                <td colspan="4" class="p-4 text-center text-slate-500">Loading student logs...</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- Auth Modal -->
-  <div id="auth-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl max-w-md w-full relative">
-      <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-sm">✕</button>
-      <h3 class="text-xl font-bold text-white mb-1">Account Access</h3>
-      <p class="text-xs text-slate-400 mb-6">Sign in or register a new student profile on Supabase.</p>
-      
-      <div class="space-y-4">
-        <div>
-          <label class="block text-xs font-medium text-slate-300 mb-1">Email Address</label>
-          <input id="auth-email" type="email" placeholder="student@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
-        </div>
-        <div>
-          <label class="block text-xs font-medium text-slate-300 mb-1">Password</label>
-          <input id="auth-password" type="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
-        </div>
-        <div class="flex gap-3 pt-2">
-          <button onclick="handleSignUp()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition">Sign Up</button>
-          <button onclick="handleSignIn()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg transition">Sign In</button>
-        </div>
+      <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-xl">
+        <span class="text-xs font-mono text-purple-400 bg-purple-500/10 px-2.5 py-1 rounded">Track 03 • Data Science</span>
+        <h3 class="text-lg font-bold text-white mt-4 mb-2">ML & Spectral Analytics</h3>
+        <p class="text-slate-400 text-xs leading-relaxed">
+          Python processing algorithms, bioactive metabolite classification, and GC-MS spectral research.
+        </p>
       </div>
     </div>
-  </div>
-
-  <!-- Footer -->
-  <footer class="border-t border-slate-900 py-8 bg-slate-950">
-    <div class="max-w-6xl mx-auto px-6 text-center sm:text-left flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-500 font-mono">
-      <span>&copy; Wizzy Cyber Platform. All rights reserved.</span>
-      <span>Connected to Supabase Cloud Infrastructure</span>
-    </div>
-  </footer>
-
-  <!-- JavaScript Supabase Logic -->
-  <script>
-    // Supabase Initialization (Original Credentials Preserved)
-    const SUPABASE_URL = 'https://oxnvpsfzytkrgokcuwkv.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im94bnZwc2Z6eXRrcmdva2N1d2t2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2OTI1NDksImV4cCI6MjEwNjI2ODU0OX0.AhzL3LgELbcK_qhnFlnNYWbaXdNUjVyX0-TGT-u9Ot8';
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    // Toast Notification System
-    function showNotification(message, type = 'info') {
-      const container = document.getElementById('toast-container');
-      const toast = document.createElement('div');
-      
-      let borderCol = 'border-blue-500/40 bg-blue-950/90 text-blue-200';
-      if (type === 'success') borderCol = 'border-emerald-500/40 bg-emerald-950/90 text-emerald-200';
-      if (type === 'error') borderCol = 'border-red-500/40 bg-red-950/90 text-red-200';
-      if (type === 'warning') borderCol = 'border-amber-500/40 bg-amber-950/90 text-amber-200';
-
-      toast.className = `toast-animate border backdrop-blur-md px-4 py-3 rounded-xl shadow-lg text-xs font-mono flex items-center justify-between gap-3 pointer-events-auto ${borderCol}`;
-      toast.innerHTML = `<span>${message}</span><button onclick="this.parentElement.remove()" class="text-xs opacity-60 hover:opacity-100">✕</button>`;
-
-      container.appendChild(toast);
-      setTimeout(() => {
-        if (toast.parentElement) toast.remove();
-      }, 4000);
-    }
-
-    // Modal Handlers (Original Functions Preserved)
-    function openAuthModal() { document.getElementById('auth-modal').classList.remove('hidden'); }
-    function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); }
-
-    // User Authentication (Original Logic Enhanced with Session Updates)
-    async function handleSignUp() {
-      const email = document.getElementById('auth-email').value;
-      const password = document.getElementById('auth-password').value;
-      
-      if (!email || !password) {
-        showNotification("Please enter both email and password.", "warning");
-        return;
-      }
-
-      const { data, error } = await supabaseClient.auth.signUp({ email, password });
-      if (error) {
-        showNotification(error.message, "error");
-      } else {
-        showNotification("Registration email sent! Check your inbox to verify.", "success");
-        closeAuthModal();
-      }
-    }
-
-    async function handleSignIn() {
-      const email = document.getElementById('auth-email').value;
-      const password = document.getElementById('auth-password').value;
-
-      if (!email || !password) {
-        showNotification("Please enter both email and password.", "warning");
-        return;
-      }
-
-      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-      if (error) {
-        showNotification(error.message, "error");
-      } else {
-        showNotification("Logged in successfully!", "success");
-        closeAuthModal();
-      }
-    }
-
-    async function handleSignOut() {
-      const { error } = await supabaseClient.auth.signOut();
-      if (
+  </section>
+  
