@@ -532,4 +532,175 @@ async function handleSignOut() {
   if (typeof switchView === 'function') switchView('home');
   alert("Signed out successfully.");
 }
+// Document Initialization
+document.addEventListener('DOMContentLoaded', async () => {
+  // Inject view content into main app container
+  try {
+    const res = await fetch('views.html');
+    if (res.ok) {
+      const viewsHtml = await res.text();
+      const appContainer = document.getElementById('app-container');
+      if (appContainer) appContainer.innerHTML = viewsHtml;
+    }
+  } catch (err) {
+    console.warn("Using inline template or direct view structure.");
+  }
+
+  if (typeof checkCurrentSession === 'function') checkCurrentSession();
+  loadLeaderboard();
+});
+
+// Dynamic Page Routing
+function switchView(viewName) {
+  document.getElementById('public-landing-view')?.classList.add('hidden');
+  document.getElementById('authenticated-view')?.classList.add('hidden');
+  document.getElementById('view-settings')?.classList.add('hidden');
+  document.getElementById('view-generic')?.classList.add('hidden');
+
+  if (viewName === 'home') {
+    if (typeof checkCurrentSession === 'function') checkCurrentSession();
+  } else if (viewName === 'study') {
+    if (typeof checkCurrentSession === 'function') checkCurrentSession();
+    document.getElementById('learning')?.scrollIntoView({ behavior: 'smooth' });
+  } else if (viewName === 'dashboard') {
+    document.getElementById('authenticated-view')?.classList.remove('hidden');
+  } else if (viewName === 'settings') {
+    document.getElementById('view-settings')?.classList.remove('hidden');
+  } else {
+    const genericView = document.getElementById('view-generic');
+    const genericTitle = document.getElementById('generic-title');
+    const genericDesc = document.getElementById('generic-description');
+    
+    if (genericView && genericTitle && genericDesc) {
+      genericView.classList.remove('hidden');
+      const titles = {
+        'exam-history': 'Exam History',
+        'performance': 'Performance Analysis',
+        'video-lessons': 'Video Lessons',
+        'bookmark': 'Bookmarks',
+        'contact': 'Contact Support',
+        'help': 'Help Desk'
+      };
+      
+      genericTitle.innerText = titles[viewName] || 'Module Section';
+      genericDesc.innerText = viewName === 'exam-history' 
+        ? 'No past exams recorded for this profile.' 
+        : `Welcome to the ${titles[viewName] || 'Module'} section. Dynamic feeds will render here.`;
+    }
+  }
+}
+
+// Side Drawer Navigation Toggle
+function toggleSidebarMenu() {
+  const drawer = document.getElementById('sidebar-drawer');
+  if (drawer) drawer.classList.toggle('-translate-x-full');
+}
+
+// Settings Sub-tab Controller
+function switchSettingsTab(tabName) {
+  document.getElementById('tab-profile')?.classList.add('hidden');
+  document.getElementById('tab-account')?.classList.add('hidden');
+  
+  const profileBtn = document.getElementById('tab-btn-profile');
+  const accountBtn = document.getElementById('tab-btn-account');
+
+  if (profileBtn) profileBtn.className = "w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono";
+  if (accountBtn) accountBtn.className = "w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono";
+
+  document.getElementById(`tab-${tabName}`)?.classList.remove('hidden');
+  const activeBtn = document.getElementById(`tab-btn-${tabName}`);
+  if (activeBtn) activeBtn.className = "w-full text-left px-4 py-2.5 rounded-xl bg-blue-600 text-white font-semibold transition text-xs font-mono";
+}
+
+// Flag Verification (Lab 1 Trigger)
+async function submitFlag() {
+  await submitLabChallenge('flag-input', 'lab-status', 'WIZZY{dir_recon_master}', 'Web Directory Reconnaissance', 100);
+}
+
+// General Practical Challenge Handler
+async function submitLabChallenge(inputId, statusId, expectedFlag, moduleName, points) {
+  const flagInput = document.getElementById(inputId).value.trim();
+  const statusEl = document.getElementById(statusId);
+  
+  const { data: { user } } = await supabaseClient.auth.getUser();
+
+  if (!user) {
+    if (statusEl) {
+      statusEl.className = "text-xs font-mono mt-2 text-amber-400";
+      statusEl.innerText = "⚠️ Please sign in first to log your laboratory score.";
+    }
+    openAuthModal();
+    return;
+  }
+
+  if (flagInput === expectedFlag) {
+    if (statusEl) {
+      statusEl.className = "text-xs font-mono mt-2 text-emerald-400";
+      statusEl.innerText = "⏳ Verification passed! Saving to database...";
+    }
+
+    const { error } = await supabaseClient.from('user_progress').insert([
+      { user_email: user.email, module_name: moduleName, status: "Completed" }
+    ]);
+
+    if (error) {
+      if (statusEl) {
+        statusEl.className = "text-xs font-mono mt-2 text-red-400";
+        statusEl.innerText = "Database Error: " + error.message;
+      }
+    } else {
+      if (statusEl) {
+        statusEl.className = "text-xs font-mono mt-2 text-emerald-400";
+        statusEl.innerText = "✅ Flag Correct! Progress recorded in Supabase.";
+      }
+      loadLeaderboard();
+    }
+  } else {
+    if (statusEl) {
+      statusEl.className = "text-xs font-mono mt-2 text-red-400";
+      statusEl.innerText = "❌ Incorrect Flag. Inspect scenario data & try again.";
+    }
+  }
+}
+
+// Supabase Leaderboard Query & Rendering
+async function loadLeaderboard() {
+  const tbody = document.getElementById('leaderboard-body');
+  if (!tbody || !supabaseClient) return;
+
+  const { data: progress, error } = await supabaseClient.from('user_progress').select('user_email, module_name');
+
+  if (error || !progress || progress.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="4" class="px-6 py-6 text-center text-slate-500">No submissions logged yet. Be the first to complete a lab!</td></tr>`;
+    return;
+  }
+
+  const pointsTable = {
+    'Web Directory Reconnaissance': 100,
+    'AWS S3 Access Audit': 150,
+    'Adversarial ML Defense': 200
+  };
+
+  const userStats = {};
+  progress.forEach(row => {
+    const email = row.user_email;
+    if (!userStats[email]) userStats[email] = { email, completed: 0, score: 0 };
+    userStats[email].completed += 1;
+    userStats[email].score += (pointsTable[row.module_name] || 100);
+  });
+
+  const sorted = Object.values(userStats).sort((a, b) => b.score - a.score);
+  tbody.innerHTML = '';
+  sorted.forEach((st, idx) => {
+    const rankBadge = idx === 0 ? '🥇 1st' : idx === 1 ? '🥈 2nd' : idx === 2 ? '🥉 3rd' : `#${idx + 1}`;
+    tbody.innerHTML += `
+      <tr class="hover:bg-slate-800/40 transition">
+        <td class="px-6 py-3.5 font-bold text-blue-400">${rankBadge}</td>
+        <td class="px-6 py-3.5 text-slate-200">${st.email}</td>
+        <td class="px-6 py-3.5 text-center text-slate-400">${st.completed}</td>
+        <td class="px-6 py-3.5 text-right font-bold text-emerald-400">${st.score} pts</td>
+      </tr>
+    `;
+  });
+}
 
