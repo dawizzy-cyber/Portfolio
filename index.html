@@ -43,6 +43,15 @@
     </div>
   </div>
 
+  <!-- Session Warning Toast -->
+  <div id="session-toast" class="fixed bottom-5 right-5 z-50 transform translate-y-[150%] opacity-0 transition-all duration-500 ease-in-out bg-amber-950/90 border border-amber-500/40 text-white px-5 py-3.5 rounded-xl shadow-2xl flex items-center gap-3">
+    <div class="w-3 h-3 rounded-full bg-amber-400 animate-ping"></div>
+    <div>
+      <p class="text-xs font-mono text-amber-400 font-bold uppercase tracking-wider">Session Inactivity Warning</p>
+      <p id="session-toast-msg" class="text-xs text-slate-200">You will be logged out soon due to inactivity.</p>
+    </div>
+  </div>
+
   <!-- Main Top Header Bar -->
   <header class="sticky top-0 z-40 backdrop-blur-md bg-slate-950/80 border-b border-slate-900">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between gap-4">
@@ -144,13 +153,13 @@
           <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div class="flex items-center gap-4">
               <div class="relative">
-                <img id="dashboard-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=wizzy" alt="Profile Picture" class="w-16 h-16 rounded-xl border-2 border-blue-500/50 bg-slate-950 p-1">
+                <img id="dashboard-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=wizzy" alt="Profile Picture" class="w-16 h-16 rounded-xl border-2 border-blue-500/50 bg-slate-950 p-1 object-cover">
                 <span class="absolute bottom-0 right-0 w-4 h-4 bg-emerald-500 border-2 border-slate-900 rounded-full"></span>
               </div>
               <div>
                 <div class="flex items-center gap-2">
                   <h2 id="dash-username" class="text-2xl font-bold text-white">Student</h2>
-                  <span class="text-xs font-mono bg-blue-500/10 border border-blue-500/20 text-blue-400 px-2 py-0.5 rounded">Active Member</span>
+                  <span class="text-xs font-mono bg-blue-500/10 border border-blue-500/20 text-blue-400 px-2 py-0.5 rounded">Active Session</span>
                 </div>
                 <p id="dash-user-id" class="text-xs font-mono text-slate-400 mt-1">ID: Loading...</p>
               </div>
@@ -326,8 +335,8 @@
         </div>
       </section>
 
-    </div>
-        <!-- View 3: Study Modules -->
+                </div>
+                    <!-- View 3: Study Modules -->
     <div id="view-study" class="hidden max-w-6xl mx-auto px-6 py-10">
       <div class="mb-8 border-b border-slate-900 pb-6">
         <h2 class="text-3xl font-bold text-white mb-2">Study Modules & Learning Paths</h2>
@@ -398,7 +407,7 @@
       </div>
     </div>
 
-    <!-- View 5: Profile Settings -->
+    <!-- View 5: Profile Settings & Account Control -->
     <div id="view-settings" class="hidden max-w-5xl mx-auto px-6 py-10">
       <h2 class="text-2xl font-bold text-white mb-6">Settings & Account Control</h2>
       
@@ -410,17 +419,23 @@
           <button id="tab-btn-account" onclick="switchSettingsTab('account')" class="w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono">
             🔒 Password & Security
           </button>
+          <button id="tab-btn-session" onclick="switchSettingsTab('session')" class="w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono">
+            🛡️ Session & Data Control
+          </button>
         </div>
 
         <div class="md:col-span-3 bg-slate-900/80 border border-slate-800 rounded-2xl p-6">
+          
           <!-- Profile Tab -->
           <div id="tab-profile" class="space-y-4">
-            <h3 class="text-base font-bold text-white border-b border-slate-800 pb-2">Personal Information</h3>
+            <h3 class="text-base font-bold text-white border-b border-slate-800 pb-2">Personal Information & Profile Picture</h3>
+            
             <div class="flex items-center gap-4">
-              <img id="settings-avatar-preview" src="https://api.dicebear.com/7.x/bottts/svg?seed=wizzy" class="w-14 h-14 rounded-xl border border-slate-700 bg-slate-950 p-1">
-              <div>
-                <p class="text-xs font-mono text-slate-300">Avatar Generated via Dicebear</p>
-                <p class="text-[11px] text-slate-500">Seed updates dynamically with username</p>
+              <img id="settings-avatar-preview" src="https://api.dicebear.com/7.x/bottts/svg?seed=wizzy" class="w-16 h-16 rounded-xl border border-slate-700 bg-slate-950 p-1 object-cover">
+              <div class="flex-grow space-y-1">
+                <label class="block text-xs font-mono text-slate-400">Custom Profile Picture URL</label>
+                <input id="settings-avatar-input" type="url" placeholder="https://example.com/avatar.jpg" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white font-mono focus:border-blue-500 focus:outline-none" oninput="previewAvatarUrl(this.value)">
+                <p class="text-[11px] text-slate-500">Leave blank to use auto-generated avatar.</p>
               </div>
             </div>
 
@@ -472,22 +487,59 @@
             <p id="profile-update-msg" class="text-xs font-mono mt-1 hidden"></p>
           </div>
 
-          <!-- Account Security Tab -->
+          <!-- Account Password Tab -->
           <div id="tab-account" class="hidden space-y-4">
             <h3 class="text-base font-bold text-white border-b border-slate-800 pb-2">Change Password</h3>
+            
             <div>
               <label class="block text-xs font-mono text-slate-400 mb-1">Current Password</label>
-              <input id="pwd-current" type="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white font-mono">
+              <div class="relative">
+                <input id="pwd-current" type="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-3 pr-10 py-2 text-xs text-white font-mono focus:outline-none focus:border-blue-500">
+                <button type="button" onclick="togglePasswordVisibility('pwd-current', 'eye-curr')" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white">
+                  <span id="eye-curr" class="text-xs">👁️</span>
+                </button>
+              </div>
             </div>
+
             <div>
               <label class="block text-xs font-mono text-slate-400 mb-1">New Password</label>
-              <input id="pwd-new" type="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white font-mono">
+              <div class="relative">
+                <input id="pwd-new" type="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-3 pr-10 py-2 text-xs text-white font-mono focus:outline-none focus:border-blue-500">
+                <button type="button" onclick="togglePasswordVisibility('pwd-new', 'eye-new')" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white">
+                  <span id="eye-new" class="text-xs">👁️</span>
+                </button>
+              </div>
             </div>
+
             <button onclick="handlePasswordUpdate()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition font-mono">
               Update Password
             </button>
             <p id="password-update-msg" class="text-xs font-mono mt-1 hidden"></p>
           </div>
+
+          <!-- Session & Data Tab -->
+          <div id="tab-session" class="hidden space-y-4">
+            <h3 class="text-base font-bold text-white border-b border-slate-800 pb-2">Session Security & Data Management</h3>
+            
+            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+              <h4 class="text-xs font-mono font-bold text-blue-400">Automatic Inactivity Timeout</h4>
+              <p class="text-xs text-slate-400">Your session automatically logs out after 15 minutes of inactivity to protect your security.</p>
+              <div class="flex items-center gap-2 pt-1">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span id="session-timer-display" class="text-xs font-mono text-emerald-400">Session Status: Active</span>
+              </div>
+            </div>
+
+            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
+              <h4 class="text-xs font-mono font-bold text-red-400">Clear Personal Profile Data</h4>
+              <p class="text-xs text-slate-400">Clear stored local session profile information and reset profile fields.</p>
+              <button onclick="handleClearPersonalData()" class="px-3 py-1.5 bg-red-900/40 border border-red-700/50 hover:bg-red-800 text-red-200 text-xs font-mono rounded-lg transition">
+                Clear Personal Data
+              </button>
+              <p id="data-clear-msg" class="text-xs font-mono hidden"></p>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
@@ -502,7 +554,7 @@
     </div>
 
   </main>
-    <!-- Auth Modal -->
+  <!-- Auth Modal -->
   <div id="auth-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl max-w-md w-full relative shadow-2xl">
       <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-sm">✕</button>
@@ -524,10 +576,17 @@
           <label class="block text-xs font-medium text-slate-300 mb-1">Email Address</label>
           <input id="auth-email" type="email" placeholder="student@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
         </div>
+        
         <div>
           <label class="block text-xs font-medium text-slate-300 mb-1">Password</label>
-          <input id="auth-password" type="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
+          <div class="relative">
+            <input id="auth-password" type="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-3.5 pr-10 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
+            <button type="button" onclick="togglePasswordVisibility('auth-password', 'eye-auth')" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white">
+              <span id="eye-auth" class="text-xs">👁️</span>
+            </button>
+          </div>
         </div>
+
         <div class="flex gap-3 pt-2">
           <button onclick="handleSignUp()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition">Sign Up</button>
           <button onclick="handleSignIn()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg transition">Sign In</button>
@@ -589,25 +648,89 @@
       phone: '',
       gender: '',
       bio: '',
+      avatar_url: '',
       points: 0,
       completed_modules: 0
     };
 
+    // Idle Session Configuration (15 minutes)
+    const IDLE_TIMEOUT_MS = 15 * 60 * 1000;
+    const IDLE_WARN_MS = 13 * 60 * 1000;
+    let idleTimer = null;
+    let warnTimer = null;
+
     document.addEventListener('DOMContentLoaded', async () => {
       await checkInitialAuthSession();
       await loadLeaderboard();
+      setupIdleSessionMonitoring();
       
       supabaseClient.auth.onAuthStateChange((event, session) => {
         if (session) {
           currentUser = session.user;
           updateAuthUI(true);
           fetchUserProfile();
+          resetIdleTimers();
         } else {
           currentUser = null;
           updateAuthUI(false);
+          clearIdleTimers();
         }
       });
     });
+    // Password Eye Toggle
+    function togglePasswordVisibility(inputId, eyeIconId) {
+      const input = document.getElementById(inputId);
+      const icon = document.getElementById(eyeIconId);
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.innerText = '🙈';
+      } else {
+        input.type = 'password';
+        icon.innerText = '👁️';
+      }
+    }
+
+    // Session Idle Timers
+    function setupIdleSessionMonitoring() {
+      const activityEvents = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'];
+      activityEvents.forEach(evt => {
+        window.addEventListener(evt, () => {
+          if (currentUser) resetIdleTimers();
+        });
+      });
+    }
+
+    function resetIdleTimers() {
+      clearIdleTimers();
+      hideSessionToast();
+      
+      warnTimer = setTimeout(() => {
+        showSessionToast("Warning: Logged out in 2 mins due to inactivity.");
+      }, IDLE_WARN_MS);
+
+      idleTimer = setTimeout(() => {
+        alert("Session expired due to 15 minutes of inactivity.");
+        handleSignOut();
+      }, IDLE_TIMEOUT_MS);
+    }
+
+    function clearIdleTimers() {
+      if (idleTimer) clearTimeout(idleTimer);
+      if (warnTimer) clearTimeout(warnTimer);
+    }
+
+    function showSessionToast(msg) {
+      const toast = document.getElementById('session-toast');
+      document.getElementById('session-toast-msg').innerText = msg;
+      toast.classList.remove('translate-y-[150%]', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+    }
+
+    function hideSessionToast() {
+      const toast = document.getElementById('session-toast');
+      toast.classList.remove('translate-y-0', 'opacity-100');
+      toast.classList.add('translate-y-[150%]', 'opacity-0');
+    }
 
     function showWelcomeToast(username) {
       const toast = document.getElementById('welcome-toast');
@@ -631,6 +754,7 @@
         updateAuthUI(false);
       }
     }
+
     function openAuthModal() { document.getElementById('auth-modal').classList.remove('hidden'); }
     function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); }
 
@@ -743,11 +867,14 @@
     }
 
     async function handleSignOut() {
+      clearIdleTimers();
+      hideSessionToast();
       await supabaseClient.auth.signOut();
       currentUser = null;
-      userProfileData = { username: '', first_name: '', last_name: '', phone: '', gender: '', bio: '', points: 0, completed_modules: 0 };
+      userProfileData = { username: '', first_name: '', last_name: '', phone: '', gender: '', bio: '', avatar_url: '', points: 0, completed_modules: 0 };
       updateAuthUI(false);
-        }
+    }
+
     async function fetchUserProfile() {
       if (!currentUser) return;
       const fallbackUsername = currentUser.user_metadata?.username || (currentUser.email ? currentUser.email.split('@')[0] : (currentUser.phone || 'Student'));
@@ -760,16 +887,24 @@
       }
 
       const activeName = userProfileData.username || fallbackUsername;
+      const activeAvatar = userProfileData.avatar_url || `https://api.dicebear.com/7.x/bottts/svg?seed=${activeName}`;
+      
       document.getElementById('dash-username').innerText = activeName;
       document.getElementById('dash-user-id').innerText = `ID: ${currentUser.id.substring(0, 18)}...`;
-      document.getElementById('dashboard-avatar').src = `https://api.dicebear.com/7.x/bottts/svg?seed=${activeName}`;
+      document.getElementById('dashboard-avatar').src = activeAvatar;
       document.getElementById('dash-user-points').innerText = `${userProfileData.points || 0} pts`;
-      document.getElementById('dash-user-modules').innerText = `${userProfileData.completed_modules || userProfileData.completedModules || 0}`;
+      document.getElementById('dash-user-modules').innerText = `${userProfileData.completed_modules || 0}`;
 
       const headerDisplay = document.getElementById('header-user-display');
       if (headerDisplay) headerDisplay.innerText = activeName;
       const sidebarUser = document.getElementById('sidebar-logout-user');
       if (sidebarUser) sidebarUser.innerText = `(${activeName})`;
+    }
+
+    function previewAvatarUrl(url) {
+      const preview = document.getElementById('settings-avatar-preview');
+      const fallback = `https://api.dicebear.com/7.x/bottts/svg?seed=${userProfileData.username || 'student'}`;
+      preview.src = url.trim() ? url.trim() : fallback;
     }
 
     async function handleProfileUpdate() {
@@ -781,6 +916,7 @@
       const phone = document.getElementById('settings-phone-input').value.trim();
       const gender = document.getElementById('settings-gender-input').value;
       const bio = document.getElementById('settings-bio-input').value.trim();
+      const avatarUrl = document.getElementById('settings-avatar-input').value.trim();
 
       if (!newUsername) {
         msg.className = "text-xs font-mono mt-1 text-red-400";
@@ -788,15 +924,14 @@
         return;
       }
 
-      await supabaseClient.auth.updateUser({ data: { username: newUsername, first_name: firstName, last_name: lastName, phone: phone, gender: gender, bio: bio } });
-      await supabaseClient.from('profiles').upsert({ id: currentUser.id, username: newUsername, first_name: firstName, last_name: lastName, phone: phone, gender: gender, bio: bio }).select();
+      await supabaseClient.auth.updateUser({ data: { username: newUsername, first_name: firstName, last_name: lastName, phone: phone, gender: gender, bio: bio, avatar_url: avatarUrl } });
+      await supabaseClient.from('profiles').upsert({ id: currentUser.id, username: newUsername, first_name: firstName, last_name: lastName, phone: phone, gender: gender, bio: bio, avatar_url: avatarUrl }).select();
 
-      userProfileData = { ...userProfileData, username: newUsername, first_name: firstName, last_name: lastName, phone: phone, gender: gender, bio: bio };
+      userProfileData = { ...userProfileData, username: newUsername, first_name: firstName, last_name: lastName, phone: phone, gender: gender, bio: bio, avatar_url: avatarUrl };
       msg.className = "text-xs font-mono mt-1 text-emerald-400";
       msg.innerText = "Profile updated successfully!";
       fetchUserProfile();
     }
-
     async function handlePasswordUpdate() {
       const newPassword = document.getElementById('pwd-new').value;
       const msg = document.getElementById('password-update-msg');
@@ -816,6 +951,30 @@
         msg.innerText = "Password updated successfully!";
         document.getElementById('pwd-current').value = '';
         document.getElementById('pwd-new').value = '';
+      }
+    }
+
+    async function handleClearPersonalData() {
+      const msg = document.getElementById('data-clear-msg');
+      msg.classList.remove('hidden');
+      if (!currentUser) return;
+
+      try {
+        await supabaseClient.from('profiles').update({ first_name: '', last_name: '', bio: '', gender: '', avatar_url: '' }).eq('id', currentUser.id);
+        userProfileData.first_name = '';
+        userProfileData.last_name = '';
+        userProfileData.bio = '';
+        userProfileData.gender = '';
+        userProfileData.avatar_url = '';
+        
+        loadSettingsFormData();
+        fetchUserProfile();
+
+        msg.className = "text-xs font-mono text-emerald-400";
+        msg.innerText = "Personal data fields reset successfully.";
+      } catch (err) {
+        msg.className = "text-xs font-mono text-red-400";
+        msg.innerText = "Error clearing personal data.";
       }
     }
 
@@ -897,7 +1056,7 @@
     async function awardPoints(labTitle, points) {
       if (!currentUser) return alert('Please sign in to log lab completions.');
       const currentPoints = userProfileData.points || 0;
-      const currentMods = userProfileData.completed_modules || userProfileData.completedModules || 0;
+      const currentMods = userProfileData.completed_modules || 0;
 
       userProfileData.points = currentPoints + points;
       userProfileData.completed_modules = currentMods + 1;
@@ -912,6 +1071,7 @@
       fetchUserProfile();
       loadLeaderboard();
     }
+
     async function loadLeaderboard() {
       const tbody = document.getElementById('leaderboard-body');
       let data = null;
@@ -958,15 +1118,21 @@
     function switchSettingsTab(tab) {
       document.getElementById('tab-profile').classList.add('hidden');
       document.getElementById('tab-account').classList.add('hidden');
+      document.getElementById('tab-session').classList.add('hidden');
+
       document.getElementById('tab-btn-profile').className = "w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono";
       document.getElementById('tab-btn-account').className = "w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono";
+      document.getElementById('tab-btn-session').className = "w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono";
 
       if (tab === 'profile') {
         document.getElementById('tab-profile').classList.remove('hidden');
         document.getElementById('tab-btn-profile').className = "w-full text-left px-4 py-2.5 rounded-xl bg-blue-600 text-white font-semibold transition text-xs font-mono";
-      } else {
+      } else if (tab === 'account') {
         document.getElementById('tab-account').classList.remove('hidden');
         document.getElementById('tab-btn-account').className = "w-full text-left px-4 py-2.5 rounded-xl bg-blue-600 text-white font-semibold transition text-xs font-mono";
+      } else {
+        document.getElementById('tab-session').classList.remove('hidden');
+        document.getElementById('tab-btn-session').className = "w-full text-left px-4 py-2.5 rounded-xl bg-blue-600 text-white font-semibold transition text-xs font-mono";
       }
     }
 
@@ -980,7 +1146,10 @@
       document.getElementById('settings-phone-input').value = userProfileData.phone || currentUser.phone || '';
       document.getElementById('settings-gender-input').value = userProfileData.gender || '';
       document.getElementById('settings-bio-input').value = userProfileData.bio || '';
-      document.getElementById('settings-avatar-preview').src = `https://api.dicebear.com/7.x/bottts/svg?seed=${userProfileData.username || fallbackName}`;
+      document.getElementById('settings-avatar-input').value = userProfileData.avatar_url || '';
+      
+      const avatarSrc = userProfileData.avatar_url || `https://api.dicebear.com/7.x/bottts/svg?seed=${userProfileData.username || fallbackName}`;
+      document.getElementById('settings-avatar-preview').src = avatarSrc;
     }
   </script>
 </body>
