@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Wizzy Cyber | Interactive Cloud & Security Platform</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Supabase Client Library -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     tailwind.config = {
@@ -21,15 +22,6 @@
   </script>
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans antialiased selection:bg-blue-500 selection:text-white min-h-screen flex flex-col">
-
-  <!-- Welcome Toast Notification Pop-up -->
-  <div id="welcome-toast" class="fixed top-5 right-5 z-50 bg-emerald-600 text-white font-mono text-xs px-5 py-3 rounded-xl shadow-2xl transition-all duration-300 transform translate-y-[-100px] opacity-0 flex items-center gap-3 border border-emerald-400/30">
-    <span class="text-base">🎉</span>
-    <div>
-      <p class="font-bold">Welcome back!</p>
-      <p id="welcome-toast-username" class="text-[11px] opacity-90"></p>
-    </div>
-  </div>
 
   <!-- Main Top Header Bar -->
   <header class="sticky top-0 z-40 backdrop-blur-md bg-slate-950/80 border-b border-slate-900">
@@ -50,15 +42,18 @@
 
       <!-- Center: Navigation Tabs (Desktop) -->
       <nav id="desktop-top-nav" class="hidden md:flex items-center space-x-1 text-xs font-mono font-medium text-slate-400">
-        <button id="nav-btn-home" onclick="switchView('home')" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">🔥 Home</button>
-        <button id="nav-btn-study" onclick="switchView('study')" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">💎 Study Modules</button>
-        <button id="nav-btn-tests" onclick="switchView('tests')" class="auth-only hidden px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">📝 Tests & Exams</button>
-        <button id="nav-btn-dashboard" onclick="switchView('dashboard')" class="auth-only hidden px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500 hover:text-white transition">📊 Dashboard</button>
+        <button onclick="switchView('home')" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">🔥 Home</button>
+        <button onclick="switchView('study')" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">💎 Study</button>
+        <button onclick="switchView('tests')" class="auth-only hidden px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">📝 Tests</button>
+        <button onclick="switchView('dashboard')" class="auth-only hidden px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">📊 Dashboard</button>
       </nav>
 
       <!-- Right Side: Profile / Auth Actions -->
       <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Auth Container -->
         <div id="auth-container" class="flex items-center gap-2"></div>
+
+        <!-- Follow Badge -->
         <a href="https://x.com/intent/follow?screen_name=bush_bean__" target="_blank" rel="noopener noreferrer" class="px-3 py-2 bg-blue-600/10 border border-blue-500/30 text-blue-400 text-xs font-semibold rounded-lg hover:bg-blue-600 hover:text-white transition hidden sm:flex items-center gap-2">
           + Follow @bush_bean__
         </a>
@@ -77,7 +72,10 @@
 
       <p class="text-[10px] uppercase font-mono tracking-wider text-slate-500 mb-3">Navigation Menu</p>
       
-      <div id="sidebar-nav-links" class="space-y-1.5 text-xs font-mono"></div>
+      <!-- Dynamic Drawer Nav Links -->
+      <div id="sidebar-nav-links" class="space-y-1.5 text-xs font-mono">
+        <!-- Rendered Dynamically via JS based on Auth State -->
+      </div>
     </div>
 
     <div class="pt-4 border-t border-slate-900 space-y-2">
@@ -89,8 +87,10 @@
     </div>
   </aside>
 
+  <!-- App Main Content Container -->
   <main id="app-container" class="flex-grow">
-        <!-- View 1: Public Unauthenticated Landing View -->
+    
+    <!-- View 1: Public Unauthenticated Landing View (Logged Out) -->
     <div id="public-landing-view">
       <section class="max-w-4xl mx-auto px-6 py-16 sm:py-20 text-center">
         <div class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-full text-xs font-semibold uppercase tracking-wider mb-6">
@@ -103,6 +103,7 @@
           Explore cloud infrastructure, cybersecurity research, and machine learning models. Sign in to access hands-on labs, complete modules, and track your global rank.
         </p>
 
+        <!-- Public Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl mx-auto text-left">
           <div class="p-5 bg-slate-900/80 border border-slate-800 rounded-xl">
             <p class="text-xs font-mono text-blue-400 mb-1">X (Twitter) Profile</p>
@@ -125,11 +126,13 @@
       </section>
     </div>
 
-    <!-- View 2: Student Dashboard & Embedded Stats Container -->
+    <!-- View 2: Authenticated Main Dashboard & Platform View (Logged In Only) -->
     <div id="authenticated-view" class="hidden">
+      
+      <!-- Student Profile Header Card -->
       <section id="dashboard-section" class="max-w-6xl mx-auto px-6 pt-8 pb-4">
         <div class="bg-slate-900/90 border border-slate-800 p-6 rounded-2xl shadow-xl">
-          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-800 pb-6 mb-6">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div class="flex items-center gap-4">
               <div class="relative">
                 <img id="dashboard-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=wizzy" alt="Profile Picture" class="w-16 h-16 rounded-xl border-2 border-blue-500/50 bg-slate-950 p-1">
@@ -152,42 +155,92 @@
               </button>
             </div>
           </div>
+        </div>
+      </section>
 
-          <!-- Embedded Stats Dashboard Box -->
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div class="bg-slate-950/60 border border-slate-800/80 p-4 rounded-xl flex justify-between items-center">
-              <div>
-                <p class="text-xs font-mono text-slate-400">Total Score</p>
-                <p id="dash-user-points" class="text-2xl font-bold font-mono text-blue-400">0 pts</p>
-              </div>
-              <span class="text-3xl">🏆</span>
+      <!-- Student Stats & Overview Container -->
+      <section id="student-overview-container" class="max-w-6xl mx-auto px-6 py-4">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl flex justify-between items-center">
+            <div>
+              <p class="text-xs font-mono text-slate-400">Total Score</p>
+              <p id="dash-user-points" class="text-xl font-bold font-mono text-blue-400">0 pts</p>
             </div>
-            <div class="bg-slate-950/60 border border-slate-800/80 p-4 rounded-xl flex justify-between items-center">
-              <div>
-                <p class="text-xs font-mono text-slate-400">Modules Completed</p>
-                <p id="dash-user-modules" class="text-2xl font-bold font-mono text-emerald-400">0</p>
-              </div>
-              <span class="text-3xl">⚡</span>
+            <span class="text-2xl">🏆</span>
+          </div>
+          <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl flex justify-between items-center">
+            <div>
+              <p class="text-xs font-mono text-slate-400">Modules Completed</p>
+              <p id="dash-user-modules" class="text-xl font-bold font-mono text-emerald-400">0</p>
             </div>
-            <div class="bg-slate-950/60 border border-slate-800/80 p-4 rounded-xl flex justify-between items-center">
-              <div>
-                <p class="text-xs font-mono text-slate-400">Global Rank</p>
-                <p id="dash-user-rank" class="text-2xl font-bold font-mono text-purple-400">#--</p>
-              </div>
-              <span class="text-3xl">🥇</span>
+            <span class="text-2xl">⚡</span>
+          </div>
+          <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl flex justify-between items-center">
+            <div>
+              <p class="text-xs font-mono text-slate-400">Global Rank</p>
+              <p id="dash-user-rank" class="text-xl font-bold font-mono text-purple-400">#--</p>
             </div>
+            <span class="text-2xl">🥇</span>
           </div>
         </div>
       </section>
 
-      <!-- Practical Labs Challenge Module -->
-      <section id="labs" class="max-w-6xl mx-auto px-6 py-8">
-        <div class="mb-6">
-          <h2 class="text-2xl font-bold text-white mb-1">Active Practical Labs</h2>
-          <p class="text-slate-400 text-sm">Submit challenge flags obtained from practice modules.</p>
+      <!-- Platform Hero Header -->
+      <section id="about" class="max-w-6xl mx-auto px-6 py-6">
+        <div class="inline-flex items-center gap-2 px-3 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-full text-xs font-semibold uppercase tracking-wider mb-4">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Live Interactive Platform • Supabase Connected
+        </div>
+        <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-4 leading-tight">
+          Interactive Cloud Engineering & <span class="text-blue-500">Cybersecurity</span> Platform.
+        </h1>
+        <p class="text-slate-400 text-base sm:text-lg max-w-3xl leading-relaxed">
+          Learn cloud architecture, machine learning pipelines, and offensive security. Solve hands-on labs, complete modules, and log your progress live.
+        </p>
+      </section>
+
+      <!-- Curriculum Tracks -->
+      <section id="learning" class="max-w-6xl mx-auto px-6 py-10 border-t border-slate-900">
+        <div class="mb-8">
+          <h2 class="text-2xl font-bold text-white mb-2">Technical Curriculum</h2>
+          <p class="text-slate-400 text-sm">Structured modules across cloud engineering, machine learning, and offensive security.</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-xl hover:border-slate-700 transition cursor-pointer" onclick="switchView('study')">
+            <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded">Track 01 • Security</span>
+            <h3 class="text-lg font-bold text-white mt-4 mb-2">Offensive Security & Recon</h3>
+            <p class="text-slate-400 text-xs leading-relaxed">
+              Directory discovery, terminal navigation, web path enumeration, and interactive capture-the-flag labs.
+            </p>
+          </div>
+
+          <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-xl hover:border-slate-700 transition cursor-pointer" onclick="switchView('study')">
+            <span class="text-xs font-mono text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded">Track 02 • Infrastructure</span>
+            <h3 class="text-lg font-bold text-white mt-4 mb-2">Cloud Computing & DevOps</h3>
+            <p class="text-slate-400 text-xs leading-relaxed">
+              AWS S3 storage policies, Linux server administration, Docker containerization, and Netlify deployments.
+            </p>
+          </div>
+
+          <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-xl hover:border-slate-700 transition cursor-pointer" onclick="switchView('study')">
+            <span class="text-xs font-mono text-purple-400 bg-purple-500/10 px-2.5 py-1 rounded">Track 03 • Data Science</span>
+            <h3 class="text-lg font-bold text-white mt-4 mb-2">ML & Spectral Analytics</h3>
+            <p class="text-slate-400 text-xs leading-relaxed">
+              Python processing algorithms, bioactive metabolite classification, and GC-MS spectral research.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Interactive Practical Labs Section -->
+      <section id="labs" class="max-w-6xl mx-auto px-6 py-12 border-t border-slate-900">
+        <div class="mb-8">
+          <h2 class="text-2xl font-bold text-white mb-2">Interactive Practical Labs</h2>
+          <p class="text-slate-400 text-sm">Submit challenge flags obtained from practical modules to update your student transcript in real time.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Lab Module #1 -->
           <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-xl flex flex-col justify-between">
             <div>
               <div class="flex justify-between items-center mb-2">
@@ -208,6 +261,7 @@
             </div>
           </div>
 
+          <!-- Lab Module #2 -->
           <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-xl flex flex-col justify-between">
             <div>
               <div class="flex justify-between items-center mb-2">
@@ -227,7 +281,7 @@
               <p id="lab-status-cloud" class="text-xs font-mono mt-2 text-slate-500"></p>
             </div>
           </div>
-
+          <!-- Lab Module #3 -->
           <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-xl flex flex-col justify-between">
             <div>
               <div class="flex justify-between items-center mb-2">
@@ -247,63 +301,16 @@
               <p id="lab-status-ml" class="text-xs font-mono mt-2 text-slate-500"></p>
             </div>
           </div>
+
         </div>
       </section>
-          </div>
-                <!-- View 3: Study Modules Navigation & Leaderboard Sub-Sections -->
-    <div id="view-study" class="hidden max-w-6xl mx-auto px-6 py-10">
-      <div class="mb-8 border-b border-slate-900 pb-6">
-        <h2 class="text-3xl font-bold text-white mb-2">Study Modules & Tracks</h2>
-        <p class="text-slate-400 text-sm">Explore interactive study paths and global standings.</p>
-      </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between">
-          <div>
-            <div class="inline-block px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono rounded mb-4">Track 01</div>
-            <h3 class="text-xl font-bold text-white mb-3">Practice Cybersecurity</h3>
-            <p class="text-slate-400 text-xs leading-relaxed mb-4">
-              Directory discovery, network analysis, terminal navigation, and security auditing.
-            </p>
-          </div>
-          <button onclick="switchView('labs')" class="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-mono text-xs font-semibold rounded-lg transition">
-            Launch Practical Lab →
-          </button>
-        </div>
-
-        <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between">
-          <div>
-            <div class="inline-block px-2.5 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono rounded mb-4">Track 02</div>
-            <h3 class="text-xl font-bold text-white mb-3">Practice Ethical Hacking</h3>
-            <p class="text-slate-400 text-xs leading-relaxed mb-4">
-              Web penetration testing, authorization bypasses, payload crafting, and CTFs.
-            </p>
-          </div>
-          <button onclick="switchView('labs')" class="w-full py-2 bg-blue-600 hover:bg-blue-500 text-white font-mono text-xs font-semibold rounded-lg transition">
-            Launch Hacking Module →
-          </button>
-        </div>
-
-        <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between">
-          <div>
-            <div class="inline-block px-2.5 py-1 bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-mono rounded mb-4">Track 03</div>
-            <h3 class="text-xl font-bold text-white mb-3">Practice Cloud Computing</h3>
-            <p class="text-slate-400 text-xs leading-relaxed mb-4">
-              AWS infrastructure, S3 access policies, Docker containers, and server admin.
-            </p>
-          </div>
-          <button onclick="switchView('labs')" class="w-full py-2 bg-purple-600 hover:bg-purple-500 text-white font-mono text-xs font-semibold rounded-lg transition">
-            Launch Cloud Module →
-          </button>
-        </div>
-      </div>
-
-      <!-- Integrated Leaderboard inside Study Modules -->
-      <section id="leaderboard" class="border-t border-slate-900 pt-8">
+      <!-- Dynamic Supabase Leaderboard Section -->
+      <section id="leaderboard" class="max-w-6xl mx-auto px-6 py-12 border-t border-slate-900">
         <div class="flex flex-col sm:flex-row justify-between sm:items-end mb-6 gap-2">
           <div>
-            <h2 class="text-2xl font-bold text-white mb-1">Leaderboard</h2>
-            <p class="text-slate-400 text-sm">Real-time points synced from Supabase records.</p>
+            <h2 class="text-2xl font-bold text-white mb-1">Live Student Leaderboard</h2>
+            <p class="text-slate-400 text-sm">Real-time points and achievements synced from Supabase records.</p>
           </div>
           <button onclick="loadLeaderboard()" class="self-start sm:self-auto text-xs font-mono text-blue-400 bg-blue-500/10 border border-blue-500/20 px-3 py-1.5 rounded-lg hover:bg-blue-500 hover:text-white transition">
             🔄 Refresh Scores
@@ -328,65 +335,92 @@
           </table>
         </div>
       </section>
+
     </div>
 
-    <!-- View 4: Dedicated Assessment & Timed Question Engine View -->
+    <!-- View 3: Dedicated Study Modules View -->
+    <div id="view-study" class="hidden max-w-6xl mx-auto px-6 py-10">
+      <div class="mb-8 border-b border-slate-900 pb-6">
+        <h2 class="text-3xl font-bold text-white mb-2">Study Modules & Learning Paths</h2>
+        <p class="text-slate-400 text-sm">Master key technical domains with structured theory and practical exercises.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between">
+          <div>
+            <div class="inline-block px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono rounded mb-4">Module 01</div>
+            <h3 class="text-xl font-bold text-white mb-3">Practical Cybersecurity</h3>
+            <p class="text-slate-400 text-xs leading-relaxed mb-4">
+              Learn network scanning, offensive security fundamentals, directory brute-forcing, and vulnerability auditing techniques.
+            </p>
+          </div>
+          <button onclick="switchView('labs')" class="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-mono text-xs font-semibold rounded-lg transition">
+            Start Cybersecurity Lab →
+          </button>
+        </div>
+
+        <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between">
+          <div>
+            <div class="inline-block px-2.5 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono rounded mb-4">Module 02</div>
+            <h3 class="text-xl font-bold text-white mb-3">Ethical Hacking & Recon</h3>
+            <p class="text-slate-400 text-xs leading-relaxed mb-4">
+              Explore web application penetration testing, payload crafting, authorization bypasses, and security controls.
+            </p>
+          </div>
+          <button onclick="switchView('labs')" class="w-full py-2 bg-blue-600 hover:bg-blue-500 text-white font-mono text-xs font-semibold rounded-lg transition">
+            Start Hacking Challenge →
+          </button>
+        </div>
+
+        <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between">
+          <div>
+            <div class="inline-block px-2.5 py-1 bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-mono rounded mb-4">Module 03</div>
+            <h3 class="text-xl font-bold text-white mb-3">Cloud Computing & DevOps</h3>
+            <p class="text-slate-400 text-xs leading-relaxed mb-4">
+              Understand AWS infrastructure, IAM policies, container orchestration, server administration, and automated pipelines.
+            </p>
+          </div>
+          <button onclick="switchView('labs')" class="w-full py-2 bg-purple-600 hover:bg-purple-500 text-white font-mono text-xs font-semibold rounded-lg transition">
+            Start Cloud Lab →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- View 4: Dedicated Assessment & Tests View -->
     <div id="view-tests" class="hidden max-w-6xl mx-auto px-6 py-10">
       <div class="mb-8 border-b border-slate-900 pb-6">
-        <h2 class="text-3xl font-bold text-white mb-2">Tests, Exams & Analytics Hub</h2>
-        <p class="text-slate-400 text-sm">Interactive timed evaluation suite with instantaneous question advancement.</p>
+        <h2 class="text-3xl font-bold text-white mb-2">Assessments & Certifications</h2>
+        <p class="text-slate-400 text-sm">Verify your skills under timed conditions and earn official skill badges.</p>
       </div>
 
-      <!-- Sub-navigation Tabs for Exams -->
-      <div class="flex flex-wrap gap-2 mb-8 border-b border-slate-900 pb-4">
-        <button onclick="switchTestSubTab('exam')" id="test-sub-exam" class="px-3.5 py-1.5 rounded-lg text-xs font-mono bg-blue-600 text-white font-semibold transition">✍️ Live Exam Engine</button>
-        <button onclick="switchTestSubTab('history')" id="test-sub-history" class="px-3.5 py-1.5 rounded-lg text-xs font-mono bg-slate-900 text-slate-400 hover:text-white border border-slate-800 transition">📜 Study History</button>
-        <button onclick="switchTestSubTab('analytics')" id="test-sub-analytics" class="px-3.5 py-1.5 rounded-lg text-xs font-mono bg-slate-900 text-slate-400 hover:text-white border border-slate-800 transition">📈 Performance Analysis</button>
-        <button onclick="switchTestSubTab('videos')" id="test-sub-videos" class="px-3.5 py-1.5 rounded-lg text-xs font-mono bg-slate-900 text-slate-400 hover:text-white border border-slate-800 transition">🎥 Video Lessons</button>
-        <button onclick="switchTestSubTab('bookmarks')" id="test-sub-bookmarks" class="px-3.5 py-1.5 rounded-lg text-xs font-mono bg-slate-900 text-slate-400 hover:text-white border border-slate-800 transition">🔖 Bookmarks</button>
-      </div>
-
-      <!-- Live Interactive Exam Screen -->
-      <div id="test-content-exam" class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl max-w-3xl">
-        <div id="exam-starter">
-          <span class="text-xs font-mono text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded">Interactive Assessment</span>
-          <h3 class="text-xl font-bold text-white mt-4 mb-2">Cloud Security & Offensive Operations Exam</h3>
-          <p class="text-slate-400 text-xs mb-6">Test your technical knowledge. Selecting an answer immediately advances you to the next question.</p>
-          <button onclick="startInteractiveExam()" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg transition font-mono">
-            ▶ Begin Exam
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl">
+          <span class="text-xs font-mono text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded">Timed Exam</span>
+          <h3 class="text-lg font-bold text-white mt-4 mb-2">Cloud Security Administrator Assessment</h3>
+          <p class="text-slate-400 text-xs mb-4">30 questions covering IAM, network security groups, and storage policies.</p>
+          <button onclick="alert('Assessment environment preparing...')" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg transition">
+            Begin Exam
           </button>
         </div>
 
-        <div id="exam-runner" class="hidden">
-          <div class="flex justify-between items-center mb-4 border-b border-slate-800 pb-3">
-            <span id="exam-progress" class="text-xs font-mono text-blue-400">Question 1 of 3</span>
-            <span id="exam-score-live" class="text-xs font-mono text-emerald-400">Current Score: 0</span>
-          </div>
-          <h4 id="exam-question-text" class="text-lg font-bold text-white mb-6">Question text goes here?</h4>
-          <div id="exam-options-container" class="space-y-3 mb-6"></div>
-        </div>
-
-        <div id="exam-result" class="hidden text-center py-6">
-          <span class="text-4xl">🎉</span>
-          <h3 class="text-2xl font-bold text-white mt-2 mb-2">Exam Completed!</h3>
-          <p id="exam-final-score" class="text-lg font-mono text-emerald-400 font-bold mb-4">You scored 3/3</p>
-          <button onclick="resetInteractiveExam()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-xs font-mono rounded-lg transition border border-slate-700">
-            🔄 Retake Exam
+        <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl">
+          <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded">Practical Assessment</span>
+          <h3 class="text-lg font-bold text-white mt-4 mb-2">Offensive Security Practical Evaluation</h3>
+          <p class="text-slate-400 text-xs mb-4">Hands-on blackbox target evaluation. Discover flags to complete certification.</p>
+          <button onclick="alert('Target environment spawning...')" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-lg transition">
+            Launch Target Machine
           </button>
         </div>
-      </div>
-
-      <!-- Other Sub-Tabs Container -->
-      <div id="test-content-other" class="hidden bg-slate-900/80 border border-slate-800 p-6 rounded-2xl">
-        <h3 id="test-other-title" class="text-lg font-bold text-white mb-2">Sub Section</h3>
-        <p id="test-other-desc" class="text-xs text-slate-400">Module content will populate here.</p>
       </div>
     </div>
-        <!-- View 5: Settings Page (Profile, Password Security & Appearance) -->
+
+    <!-- View 5: Editable Settings & Profile Management Section -->
     <div id="view-settings" class="hidden max-w-5xl mx-auto px-6 py-10">
-      <h2 class="text-2xl font-bold text-white mb-6">Settings & Customization</h2>
+      <h2 class="text-2xl font-bold text-white mb-6">Settings & Account Control</h2>
       
       <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <!-- Tab Sidebar -->
         <div class="space-y-2">
           <button id="tab-btn-profile" onclick="switchSettingsTab('profile')" class="w-full text-left px-4 py-2.5 rounded-xl bg-blue-600 text-white font-semibold transition text-xs font-mono">
             👤 User Profile
@@ -394,15 +428,13 @@
           <button id="tab-btn-account" onclick="switchSettingsTab('account')" class="w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono">
             🔒 Password & Security
           </button>
-          <button id="tab-btn-appearance" onclick="switchSettingsTab('appearance')" class="w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono">
-            🎨 Appearance Theme
-          </button>
         </div>
 
+        <!-- Tab Content Panes -->
         <div class="md:col-span-3 bg-slate-900/80 border border-slate-800 rounded-2xl p-6">
-          <!-- Profile Tab -->
+          <!-- Profile Tab (Editable Controls) -->
           <div id="tab-profile" class="space-y-4">
-            <h3 class="text-base font-bold text-white border-b border-slate-800 pb-2">Personal Details</h3>
+            <h3 class="text-base font-bold text-white border-b border-slate-800 pb-2">Personal Information</h3>
             <div class="flex items-center gap-4">
               <img id="settings-avatar-preview" src="https://api.dicebear.com/7.x/bottts/svg?seed=wizzy" class="w-14 h-14 rounded-xl border border-slate-700 bg-slate-950 p-1">
               <div>
@@ -459,42 +491,26 @@
             <p id="profile-update-msg" class="text-xs font-mono mt-1 hidden"></p>
           </div>
 
-          <!-- Password & Security Tab with Eye Toggle -->
+          <!-- Account Security Tab -->
           <div id="tab-account" class="hidden space-y-4">
             <h3 class="text-base font-bold text-white border-b border-slate-800 pb-2">Change Password</h3>
             <div>
+              <label class="block text-xs font-mono text-slate-400 mb-1">Current Password</label>
+              <input id="pwd-current" type="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white font-mono">
+            </div>
+            <div>
               <label class="block text-xs font-mono text-slate-400 mb-1">New Password</label>
-              <div class="relative">
-                <input id="pwd-new" type="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-3 pr-10 py-2 text-xs text-white font-mono focus:outline-none focus:border-blue-500">
-                <button type="button" onclick="togglePasswordVisibility('pwd-new', 'eye-icon-new')" class="absolute right-3 top-2.5 text-slate-400 hover:text-white text-xs">
-                  <span id="eye-icon-new">👁️</span>
-                </button>
-              </div>
+              <input id="pwd-new" type="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white font-mono">
             </div>
             <button onclick="handlePasswordUpdate()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition font-mono">
               Update Password
             </button>
             <p id="password-update-msg" class="text-xs font-mono mt-1 hidden"></p>
           </div>
-
-          <!-- Appearance Theme Tab -->
-          <div id="tab-appearance" class="hidden space-y-4">
-            <h3 class="text-base font-bold text-white border-b border-slate-800 pb-2">Theme Mode Selection</h3>
-            <p class="text-xs text-slate-400">Choose your preferred portal color palette.</p>
-            <div class="flex gap-4">
-              <button onclick="setPortalTheme('dark')" class="px-5 py-3 bg-slate-950 border-2 border-blue-500 rounded-xl text-xs font-mono text-white flex items-center gap-2">
-                🌙 Dark Mode
-              </button>
-              <button onclick="setPortalTheme('light')" class="px-5 py-3 bg-slate-200 border-2 border-slate-400 rounded-xl text-xs font-mono text-slate-900 flex items-center gap-2">
-                ☀️ Light Mode
-              </button>
-            </div>
-          </div>
         </div>
       </div>
     </div>
-
-    <!-- View 6: Generic View -->
+      <!-- View 6: Generic Section Container -->
     <div id="view-generic" class="hidden max-w-4xl mx-auto px-6 py-16 text-center">
       <h2 id="generic-title" class="text-3xl font-bold text-white mb-3">Module</h2>
       <p id="generic-description" class="text-slate-400 text-sm max-w-md mx-auto mb-6">Data feeds and interactive tools will render here.</p>
@@ -502,65 +518,34 @@
         ← Return Home
       </button>
     </div>
+
   </main>
 
-  <!-- Auth Modal with Eye Toggle and Forgot Password Section -->
+  <!-- Auth Modal (Sign In / Register) -->
   <div id="auth-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl max-w-md w-full relative shadow-2xl">
       <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-sm">✕</button>
+      <h3 class="text-xl font-bold text-white mb-1">Account Access</h3>
+      <p class="text-xs text-slate-400 mb-6">Sign in or register a new student profile on Supabase.</p>
       
-      <!-- Standard Login / Register Form -->
-      <div id="auth-form-main">
-        <h3 class="text-xl font-bold text-white mb-1">Account Access</h3>
-        <p class="text-xs text-slate-400 mb-6">Sign in or register a new student profile on Supabase.</p>
-        
-        <div class="space-y-4">
-          <div>
-            <label class="block text-xs font-medium text-slate-300 mb-1">Email Address</label>
-            <input id="auth-email" type="email" placeholder="student@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-blue-500 font-mono">
-          </div>
-          <div>
-            <div class="flex justify-between items-center mb-1">
-              <label class="text-xs font-medium text-slate-300">Password</label>
-              <button onclick="toggleForgotPass(true)" class="text-[11px] font-mono text-blue-400 hover:underline">Forgot Password?</button>
-            </div>
-            <div class="relative">
-              <input id="auth-password" type="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-3 pr-10 py-2 text-sm text-white focus:outline-none focus:border-blue-500 font-mono">
-              <button type="button" onclick="togglePasswordVisibility('auth-password', 'eye-icon-auth')" class="absolute right-3 top-2.5 text-slate-400 hover:text-white text-xs">
-                <span id="eye-icon-auth">👁️</span>
-              </button>
-            </div>
-          </div>
-          <div class="flex gap-3 pt-2">
-            <button onclick="handleSignUp()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition font-mono">Sign Up</button>
-            <button onclick="handleSignIn()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg transition font-mono">Sign In</button>
-          </div>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">Email Address</label>
+          <input id="auth-email" type="email" placeholder="student@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">Password</label>
+          <input id="auth-password" type="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
+        </div>
+        <div class="flex gap-3 pt-2">
+          <button onclick="handleSignUp()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition">Sign Up</button>
+          <button onclick="handleSignIn()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg transition">Sign In</button>
         </div>
       </div>
-
-      <!-- Dedicated Forgotten Password Form -->
-      <div id="auth-form-forgot" class="hidden">
-        <h3 class="text-xl font-bold text-white mb-1">Reset Password</h3>
-        <p class="text-xs text-slate-400 mb-6">Enter your account email to receive a password recovery link.</p>
-        
-        <div class="space-y-4">
-          <div>
-            <label class="block text-xs font-medium text-slate-300 mb-1">Account Email</label>
-            <input id="forgot-email" type="email" placeholder="student@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-blue-500 font-mono">
-          </div>
-          <button onclick="handleForgotPassword()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition font-mono">
-            Send Password Reset Link
-          </button>
-          <button onclick="toggleForgotPass(false)" class="w-full py-2 text-xs font-mono text-slate-400 hover:text-white">
-            ← Back to Sign In
-          </button>
-          <p id="forgot-msg" class="text-xs font-mono text-center hidden"></p>
-        </div>
-      </div>
-
     </div>
   </div>
 
+  <!-- Application Footer -->
   <footer class="border-t border-slate-900 bg-slate-950 py-8 text-center text-xs font-mono text-slate-500 mt-auto">
     <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
       <p>© 2026 Wizzy Cyber Platform. All rights reserved.</p>
@@ -573,13 +558,17 @@
       </div>
     </div>
   </footer>
-    <script>
-    // Supabase Credentials
+
+  <!-- Complete Application JavaScript Logic -->
+  <script>
+    // Initialize Supabase Credentials
     const SUPABASE_URL = 'https://oxnvpsfzytkrgokcuwkv.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im94bnZwc2Z6eXRrcmdva2N1d2t2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2OTI1NDksImV4cCI6MjEwNjI2ODU0OX0.AhzL3LgELbcK_qhnFlnNYWbaXdNUjVyX0-TGT-u9Ot8';
     
+    // Create Supabase Client
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+    // Application Global State
     let currentUser = null;
     let userProfileData = {
       username: '',
@@ -592,32 +581,12 @@
       completed_modules: 0
     };
 
-    // Sample Interactive Exam Data
-    const examQuestions = [
-      {
-        question: "Which AWS service is designed for object storage with bucket policies?",
-        options: ["AWS EC2", "AWS S3", "AWS Lambda", "AWS RDS"],
-        correct: 1
-      },
-      {
-        question: "Which command-line tool is commonly used for directory enumeration?",
-        options: ["Gobuster", "Nmap", "Wireshark", "Metasploit"],
-        correct: 0
-      },
-      {
-        question: "What type of attack involves injecting malicious input into ML datasets?",
-        options: ["Data Poisoning", "DDoS", "SQL Injection", "XSS"],
-        correct: 0
-      }
-    ];
-
-    let currentExamIdx = 0;
-    let examScore = 0;
-
+    // Initialize Application State on Page Load
     document.addEventListener('DOMContentLoaded', async () => {
       await checkInitialAuthSession();
       await loadLeaderboard();
       
+      // Listen for Supabase Authentication State Changes
       supabaseClient.auth.onAuthStateChange((event, session) => {
         if (session) {
           currentUser = session.user;
@@ -630,6 +599,7 @@
       });
     });
 
+    // Verify Active User Session
     async function checkInitialAuthSession() {
       const { data: { session } } = await supabaseClient.auth.getSession();
       if (session) {
@@ -641,66 +611,6 @@
       }
     }
 
-    // Toggle Password Visibility Eye Function
-    function togglePasswordVisibility(inputId, eyeIconId) {
-      const input = document.getElementById(inputId);
-      const icon = document.getElementById(eyeIconId);
-      if (input.type === 'password') {
-        input.type = 'text';
-        icon.innerText = '🙈';
-      } else {
-        input.type = 'password';
-        icon.innerText = '👁️';
-      }
-    }
-
-    // Toggle Forgot Password view inside Modal
-    function toggleForgotPass(showForgot) {
-      const mainForm = document.getElementById('auth-form-main');
-      const forgotForm = document.getElementById('auth-form-forgot');
-      if (showForgot) {
-        mainForm.classList.add('hidden');
-        forgotForm.classList.remove('hidden');
-      } else {
-        forgotForm.classList.add('hidden');
-        mainForm.classList.remove('hidden');
-      }
-    }
-
-    // Handle Forgot Password Email Submission
-    async function handleForgotPassword() {
-      const email = document.getElementById('forgot-email').value.trim();
-      const msg = document.getElementById('forgot-msg');
-      msg.classList.remove('hidden');
-
-      if (!email) {
-        msg.className = "text-xs font-mono text-center text-red-400";
-        msg.innerText = "Please enter your email address.";
-        return;
-      }
-
-      const { error } = await supabaseClient.auth.resetPasswordForEmail(email);
-      if (error) {
-        msg.className = "text-xs font-mono text-center text-red-400";
-        msg.innerText = error.message;
-      } else {
-        msg.className = "text-xs font-mono text-center text-emerald-400";
-        msg.innerText = "Password reset link sent to your email!";
-      }
-    }
-
-    // Show Welcome Back Pop-Up Notification
-    function showWelcomeToast(username) {
-      const toast = document.getElementById('welcome-toast');
-      const userEl = document.getElementById('welcome-toast-username');
-      userEl.innerText = `Welcome back, ${username}!`;
-      toast.classList.remove('translate-y-[-100px]', 'opacity-0');
-
-      setTimeout(() => {
-        toast.classList.add('translate-y-[-100px]', 'opacity-0');
-      }, 4000);
-    }
-
     // Toggle Navigation Views
     function switchView(viewName) {
       const publicView = document.getElementById('public-landing-view');
@@ -710,6 +620,7 @@
       const settingsView = document.getElementById('view-settings');
       const genericView = document.getElementById('view-generic');
 
+      // Hide all content containers
       publicView.classList.add('hidden');
       authView.classList.add('hidden');
       studyView.classList.add('hidden');
@@ -718,7 +629,11 @@
       genericView.classList.add('hidden');
 
       if (viewName === 'home') {
-        publicView.classList.remove('hidden');
+        if (currentUser) {
+          authView.classList.remove('hidden');
+        } else {
+          publicView.classList.remove('hidden');
+        }
       } else if (viewName === 'dashboard') {
         if (currentUser) {
           authView.classList.remove('hidden');
@@ -749,6 +664,7 @@
           openAuthModal();
         }
       } else {
+        // Generic View Handler (e.g. Help Desk, Contact Support)
         genericView.classList.remove('hidden');
         document.getElementById('generic-title').innerText = viewName.toUpperCase();
         document.getElementById('generic-description').innerText = `Information regarding the ${viewName} page module.`;
@@ -757,12 +673,14 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    // Toggle Sidebar Menu
     function toggleSidebarMenu() {
-      document.getElementById('sidebar-drawer').classList.toggle('-translate-x-full');
+      const drawer = document.getElementById('sidebar-drawer');
+      drawer.classList.toggle('-translate-x-full');
     }
 
+    // Modal Display Handlers
     function openAuthModal() {
-      toggleForgotPass(false);
       document.getElementById('auth-modal').classList.remove('hidden');
     }
 
@@ -770,6 +688,7 @@
       document.getElementById('auth-modal').classList.add('hidden');
     }
 
+    // Update User Interface according to Authentication State
     function updateAuthUI(isLoggedIn) {
       const authContainer = document.getElementById('auth-container');
       const sidebarLinks = document.getElementById('sidebar-nav-links');
@@ -779,6 +698,7 @@
       if (isLoggedIn) {
         const displayName = userProfileData.username || currentUser.email.split('@')[0];
 
+        // Header Auth Control
         authContainer.innerHTML = `
           <button onclick="switchView('settings')" class="flex items-center gap-2 bg-slate-900 border border-slate-800 hover:border-slate-700 px-3 py-1.5 rounded-lg text-xs font-mono text-slate-200 transition">
             <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
@@ -786,20 +706,26 @@
           </button>
         `;
 
+        // Mobile Drawer Links
         sidebarLinks.innerHTML = `
           <button onclick="switchView('home'); toggleSidebarMenu();" class="w-full text-left py-2 text-slate-300 hover:text-white">🏠 Home</button>
           <button onclick="switchView('study'); toggleSidebarMenu();" class="w-full text-left py-2 text-slate-300 hover:text-white">💎 Study Modules</button>
           <button onclick="switchView('tests'); toggleSidebarMenu();" class="w-full text-left py-2 text-slate-300 hover:text-white">📝 Tests & Exams</button>
-          <button onclick="switchView('dashboard'); toggleSidebarMenu();" class="w-full text-left py-2 text-emerald-400 hover:text-emerald-300 font-bold">📊 Student Dashboard</button>
+          <button onclick="switchView('dashboard'); toggleSidebarMenu();" class="w-full text-left py-2 text-slate-300 hover:text-white">📊 Student Dashboard</button>
           <button onclick="switchView('settings'); toggleSidebarMenu();" class="w-full text-left py-2 text-slate-300 hover:text-white">⚙ Account Settings</button>
         `;
 
         sidebarLogoutBtn.classList.remove('hidden');
         document.getElementById('sidebar-logout-user').innerText = `(${displayName})`;
+
         authOnlyElems.forEach(el => el.classList.remove('hidden'));
+
+        if (!document.getElementById('public-landing-view').classList.contains('hidden')) {
+          switchView('home');
+        }
       } else {
         authContainer.innerHTML = `
-          <button onclick="openAuthModal()" class="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition shadow-lg shadow-blue-500/20 font-mono">
+          <button onclick="openAuthModal()" class="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition shadow-lg shadow-blue-500/20">
             Sign In
           </button>
         `;
@@ -812,20 +738,22 @@
 
         sidebarLogoutBtn.classList.add('hidden');
         authOnlyElems.forEach(el => el.classList.add('hidden'));
+
+        switchView('home');
       }
     }
-
+    // Authentication Handlers
     async function handleSignUp() {
       const email = document.getElementById('auth-email').value;
       const password = document.getElementById('auth-password').value;
 
-      if (!email || !password) return alert('Please input both email and password.');
+      if (!email || !password) return alert('Please input both an email and a password.');
 
       const { data, error } = await supabaseClient.auth.signUp({ email, password });
       if (error) {
         alert('Registration Error: ' + error.message);
       } else {
-        alert('Account created! Please sign in.');
+        alert('Account created! Please sign in with your credentials.');
         closeAuthModal();
       }
     }
@@ -841,8 +769,6 @@
         alert('Authentication Error: ' + error.message);
       } else {
         closeAuthModal();
-        const activeName = email.split('@')[0];
-        showWelcomeToast(activeName);
       }
     }
 
@@ -851,37 +777,45 @@
       currentUser = null;
       userProfileData = { username: '', first_name: '', last_name: '', phone: '', gender: '', bio: '', points: 0, completed_modules: 0 };
       updateAuthUI(false);
-      switchView('home');
     }
 
+    // Fetch Profile Record safely using Supabase Auth User Metadata or Table fallback
     async function fetchUserProfile() {
       if (!currentUser) return;
 
       const fallbackUsername = currentUser.user_metadata?.username || currentUser.email.split('@')[0];
 
       try {
-        const { data } = await supabaseClient.from('profiles').select('*').eq('id', currentUser.id).maybeSingle();
-        if (data) userProfileData = { ...userProfileData, ...data };
-        else userProfileData.username = fallbackUsername;
+        const { data, error } = await supabaseClient
+          .from('profiles')
+          .select('*')
+          .eq('id', currentUser.id)
+          .maybeSingle();
+
+        if (data) {
+          userProfileData = { ...userProfileData, ...data };
+        } else {
+          userProfileData.username = fallbackUsername;
+        }
       } catch (err) {
         userProfileData.username = fallbackUsername;
       }
 
+      // Update UI Elements
       const activeName = userProfileData.username || fallbackUsername;
-      // Truncate user ID safely
-      const truncatedId = currentUser.id.length > 12 ? `${currentUser.id.substring(0, 12)}...` : currentUser.id;
-      
       document.getElementById('dash-username').innerText = activeName;
-      document.getElementById('dash-user-id').innerText = `ID: ${truncatedId}`;
+      document.getElementById('dash-user-id').innerText = `ID: ${currentUser.id.substring(0, 18)}...`;
       document.getElementById('dashboard-avatar').src = `https://api.dicebear.com/7.x/bottts/svg?seed=${activeName}`;
       document.getElementById('dash-user-points').innerText = `${userProfileData.points || 0} pts`;
-      document.getElementById('dash-user-modules').innerText = `${userProfileData.completed_modules || 0}`;
+      document.getElementById('dash-user-modules').innerText = `${userProfileData.completed_modules || userProfileData.completedModules || 0}`;
 
       const headerDisplay = document.getElementById('header-user-display');
       if (headerDisplay) headerDisplay.innerText = activeName;
+      const sidebarUser = document.getElementById('sidebar-logout-user');
+      if (sidebarUser) sidebarUser.innerText = `(${activeName})`;
     }
 
-    // Flag Submissions
+    // Submit Challenge Flag (Lab 1 Default)
     async function submitFlag() {
       const flagInput = document.getElementById('flag-input').value.trim();
       const statusEl = document.getElementById('lab-status');
@@ -896,6 +830,7 @@
       }
     }
 
+    // Generic Modular Lab Challenge Submission Handler
     async function submitLabChallenge(inputId, statusId, targetFlag, labName, points) {
       const flagVal = document.getElementById(inputId).value.trim();
       const statusEl = document.getElementById(statusId);
@@ -910,29 +845,40 @@
       }
     }
 
+    // Award Points & Update Profile
     async function awardPoints(labTitle, points) {
       if (!currentUser) return alert('Please sign in to log lab completions.');
 
-      userProfileData.points = (userProfileData.points || 0) + points;
-      userProfileData.completed_modules = (userProfileData.completed_modules || 0) + 1;
+      const currentPoints = userProfileData.points || 0;
+      const currentMods = userProfileData.completed_modules || userProfileData.completedModules || 0;
 
-      await supabaseClient.from('profiles').upsert({
-        id: currentUser.id,
-        username: userProfileData.username || currentUser.email.split('@')[0],
-        points: userProfileData.points,
-        completed_modules: userProfileData.completed_modules
-      });
+      userProfileData.points = currentPoints + points;
+      userProfileData.completed_modules = currentMods + 1;
+
+      const { error } = await supabaseClient
+        .from('profiles')
+        .upsert({
+          id: currentUser.id,
+          username: userProfileData.username || currentUser.email.split('@')[0],
+          points: userProfileData.points,
+          completed_modules: userProfileData.completed_modules
+        });
 
       fetchUserProfile();
       loadLeaderboard();
     }
 
+    // Query & Render Dynamic Leaderboard Table
     async function loadLeaderboard() {
       const tbody = document.getElementById('leaderboard-body');
       let data = null;
 
       try {
-        const res = await supabaseClient.from('profiles').select('username, points, completed_modules').order('points', { ascending: false }).limit(10);
+        const res = await supabaseClient
+          .from('profiles')
+          .select('username, points, completed_modules')
+          .order('points', { ascending: false })
+          .limit(10);
         data = res.data;
       } catch (e) {
         data = null;
@@ -946,10 +892,17 @@
             <td class="px-6 py-3.5 text-center">12</td>
             <td class="px-6 py-3.5 text-right font-bold text-blue-400">1,250 pts</td>
           </tr>
+          <tr>
+            <td class="px-6 py-3.5 text-slate-400">#2</td>
+            <td class="px-6 py-3.5 text-slate-300">security_student_01</td>
+            <td class="px-6 py-3.5 text-center">5</td>
+            <td class="px-6 py-3.5 text-right font-bold text-blue-400">450 pts</td>
+          </tr>
         `;
         return;
       }
 
+      // Compute rank if user logged in
       if (currentUser) {
         const userRankIndex = data.findIndex(p => p.username === userProfileData.username);
         if (userRankIndex !== -1) {
@@ -967,93 +920,119 @@
       `).join('');
     }
 
-    // Interactive Exam Engine Functions
-    function startInteractiveExam() {
-      currentExamIdx = 0;
-      examScore = 0;
-      document.getElementById('exam-starter').classList.add('hidden');
-      document.getElementById('exam-result').classList.add('hidden');
-      document.getElementById('exam-runner').classList.remove('hidden');
-      renderExamQuestion();
-    }
-
-    function renderExamQuestion() {
-      const q = examQuestions[currentExamIdx];
-      document.getElementById('exam-progress').innerText = `Question ${currentExamIdx + 1} of ${examQuestions.length}`;
-      document.getElementById('exam-score-live').innerText = `Current Score: ${examScore}`;
-      document.getElementById('exam-question-text').innerText = q.question;
-
-      const optsContainer = document.getElementById('exam-options-container');
-      optsContainer.innerHTML = q.options.map((opt, i) => `
-        <button onclick="handleExamAnswer(${i})" class="w-full text-left px-4 py-3 bg-slate-950 border border-slate-800 hover:border-blue-500 hover:bg-slate-900/50 text-xs font-mono text-slate-200 rounded-xl transition">
-          ${String.fromCharCode(65 + i)}. ${opt}
-        </button>
-      `).join('');
-    }
-
-    function handleExamAnswer(selectedIdx) {
-      if (selectedIdx === examQuestions[currentExamIdx].correct) {
-        examScore++;
-      }
-      currentExamIdx++;
-
-      if (currentExamIdx < examQuestions.length) {
-        renderExamQuestion();
-      } else {
-        finishInteractiveExam();
-      }
-    }
-
-    function finishInteractiveExam() {
-      document.getElementById('exam-runner').classList.add('hidden');
-      document.getElementById('exam-result').classList.remove('hidden');
-      document.getElementById('exam-final-score').innerText = `You scored ${examScore} / ${examQuestions.length}`;
-    }
-
-    function resetInteractiveExam() {
-      document.getElementById('exam-result').classList.add('hidden');
-      document.getElementById('exam-starter').classList.remove('hidden');
-    }
-
-    // Exam Sub-tab Navigation
-    function switchTestSubTab(subTab) {
-      const buttons = ['exam', 'history', 'analytics', 'videos', 'bookmarks'];
-      buttons.forEach(b => {
-        const btn = document.getElementById(`test-sub-${b}`);
-        if (btn) btn.className = "px-3.5 py-1.5 rounded-lg text-xs font-mono bg-slate-900 text-slate-400 hover:text-white border border-slate-800 transition";
-      });
-
-      document.getElementById(`test-sub-${subTab}`).className = "px-3.5 py-1.5 rounded-lg text-xs font-mono bg-blue-600 text-white font-semibold transition";
-
-      const examContainer = document.getElementById('test-content-exam');
-      const otherContainer = document.getElementById('test-content-other');
-
-      if (subTab === 'exam') {
-        examContainer.classList.remove('hidden');
-        otherContainer.classList.add('hidden');
-      } else {
-        examContainer.classList.add('hidden');
-        otherContainer.classList.remove('hidden');
-        document.getElementById('test-other-title').innerText = subTab.toUpperCase() + " SECTION";
-        document.getElementById('test-other-desc').innerText = `Your personal ${subTab} statistics and logs will load here.`;
-      }
-    }
-
-    // Settings Navigation
+    // Settings Navigation Tabs
     function switchSettingsTab(tab) {
       document.getElementById('tab-profile').classList.add('hidden');
       document.getElementById('tab-account').classList.add('hidden');
-      document.getElementById('tab-appearance').classList.add('hidden');
+      document.getElementById('tab-btn-profile').className = "w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono";
+      document.getElementById('tab-btn-account').className = "w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono";
 
-      ['profile', 'account', 'appearance'].forEach(t => {
-        const btn = document.getElementById(`tab-btn-${t}`);
-        if (btn) btn.className = "w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono";
-      });
-
-      document.getElementById(`tab-${tab}`).classList.remove('hidden');
-      document.getElementById(`tab-btn-${tab}`).className = "w-full text-left px-4 py-2.5 rounded-xl bg-blue-600 text-white font-semibold transition text-xs font-mono";
+      if (tab === 'profile') {
+        document.getElementById('tab-profile').classList.remove('hidden');
+        document.getElementById('tab-btn-profile').className = "w-full text-left px-4 py-2.5 rounded-xl bg-blue-600 text-white font-semibold transition text-xs font-mono";
+      } else {
+        document.getElementById('tab-account').classList.remove('hidden');
+        document.getElementById('tab-btn-account').className = "w-full text-left px-4 py-2.5 rounded-xl bg-blue-600 text-white font-semibold transition text-xs font-mono";
+      }
     }
 
-    function setPortalTheme(theme) {
-      if (theme === 'light') {
-        document.documentElement.classList.remove('dark'
+    // Settings Profile Form Loader
+    function loadSettingsFormData() {
+      if (!currentUser) return;
+
+      const fallbackName = currentUser.email.split('@')[0];
+      document.getElementById('settings-username-input').value = userProfileData.username || fallbackName;
+      document.getElementById('settings-email-input').value = currentUser.email || '';
+      document.getElementById('settings-firstname-input').value = userProfileData.first_name || '';
+      document.getElementById('settings-lastname-input').value = userProfileData.last_name || '';
+      document.getElementById('settings-phone-input').value = userProfileData.phone || '';
+      document.getElementById('settings-gender-input').value = userProfileData.gender || '';
+      document.getElementById('settings-bio-input').value = userProfileData.bio || '';
+      document.getElementById('settings-avatar-preview').src = `https://api.dicebear.com/7.x/bottts/svg?seed=${userProfileData.username || fallbackName}`;
+    }
+
+    // Handle User Profile Updates (Works via Supabase user_metadata with DB fallback)
+    async function handleProfileUpdate() {
+      const msg = document.getElementById('profile-update-msg');
+      msg.classList.remove('hidden');
+
+      const newUsername = document.getElementById('settings-username-input').value.trim();
+      const firstName = document.getElementById('settings-firstname-input').value.trim();
+      const lastName = document.getElementById('settings-lastname-input').value.trim();
+      const phone = document.getElementById('settings-phone-input').value.trim();
+      const gender = document.getElementById('settings-gender-input').value;
+      const bio = document.getElementById('settings-bio-input').value.trim();
+
+      if (!newUsername) {
+        msg.className = "text-xs font-mono mt-1 text-red-400";
+        msg.innerText = "Display username cannot be empty.";
+        return;
+                                }
+      // Update Supabase Auth User Metadata (Always succeeds without table dependencies)
+      const { data: authData, error: authError } = await supabaseClient.auth.updateUser({
+        data: {
+          username: newUsername,
+          first_name: firstName,
+          last_name: lastName,
+          phone: phone,
+          gender: gender,
+          bio: bio
+        }
+      });
+
+      // Optional sync with 'profiles' table if created
+      await supabaseClient.from('profiles').upsert({
+        id: currentUser.id,
+        username: newUsername,
+        first_name: firstName,
+        last_name: lastName,
+        phone: phone,
+        gender: gender,
+        bio: bio
+      }).select();
+
+      // Update local memory state
+      userProfileData = {
+        ...userProfileData,
+        username: newUsername,
+        first_name: firstName,
+        last_name: lastName,
+        phone: phone,
+        gender: gender,
+        bio: bio
+      };
+
+      msg.className = "text-xs font-mono mt-1 text-emerald-400";
+      msg.innerText = "Profile updated successfully!";
+      
+      fetchUserProfile();
+    }
+
+    // Handle Password Update Requests
+    async function handlePasswordUpdate() {
+      const newPassword = document.getElementById('pwd-new').value;
+      const msg = document.getElementById('password-update-msg');
+
+      if (!newPassword || newPassword.length < 6) {
+        msg.classList.remove('hidden');
+        msg.className = "text-xs font-mono mt-1 text-red-400";
+        msg.innerText = "Password must be at least 6 characters.";
+        return;
+      }
+
+      const { error } = await supabaseClient.auth.updateUser({ password: newPassword });
+
+      msg.classList.remove('hidden');
+      if (error) {
+        msg.className = "text-xs font-mono mt-1 text-red-400";
+        msg.innerText = "Password update failed: " + error.message;
+      } else {
+        msg.className = "text-xs font-mono mt-1 text-emerald-400";
+        msg.innerText = "Password updated successfully!";
+        document.getElementById('pwd-current').value = '';
+        document.getElementById('pwd-new').value = '';
+      }
+    }
+  </script>
+</body>
+</html>
