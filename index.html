@@ -23,6 +23,15 @@
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans antialiased selection:bg-blue-500 selection:text-white min-h-screen flex flex-col">
 
+  <!-- Welcome Toast Notification -->
+  <div id="welcome-toast" class="fixed top-5 right-5 z-50 transform translate-y-[-150%] opacity-0 transition-all duration-500 ease-in-out bg-slate-900 border border-emerald-500/40 text-white px-5 py-3.5 rounded-xl shadow-2xl flex items-center gap-3">
+    <div class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></div>
+    <div>
+      <p class="text-xs font-mono text-emerald-400 font-bold uppercase tracking-wider">Authentication Successful</p>
+      <p id="welcome-toast-msg" class="text-sm font-semibold text-slate-100">Welcome back!</p>
+    </div>
+  </div>
+
   <!-- Main Top Header Bar -->
   <header class="sticky top-0 z-40 backdrop-blur-md bg-slate-950/80 border-b border-slate-900">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between gap-4">
@@ -184,8 +193,7 @@
           </div>
         </div>
       </section>
-
-      <!-- Platform Hero Header -->
+        <!-- Platform Hero Header -->
       <section id="about" class="max-w-6xl mx-auto px-6 py-6">
         <div class="inline-flex items-center gap-2 px-3 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-full text-xs font-semibold uppercase tracking-wider mb-4">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Live Interactive Platform • Supabase Connected
@@ -281,6 +289,7 @@
               <p id="lab-status-cloud" class="text-xs font-mono mt-2 text-slate-500"></p>
             </div>
           </div>
+
           <!-- Lab Module #3 -->
           <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-xl flex flex-col justify-between">
             <div>
@@ -499,18 +508,8 @@
               <input id="pwd-current" type="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white font-mono">
             </div>
             <div>
-              <label class="block text-xs font-mono text-slate-400 mb-1">New Password</label>
-              <input id="pwd-new" type="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white font-mono">
-            </div>
-            <button onclick="handlePasswordUpdate()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition font-mono">
-              Update Password
-            </button>
-            <p id="password-update-msg" class="text-xs font-mono mt-1 hidden"></p>
-          </div>
-        </div>
-      </div>
-    </div>
-      <!-- View 6: Generic Section Container -->
+              <label class="blo
+                <!-- View 6: Generic Section Container -->
     <div id="view-generic" class="hidden max-w-4xl mx-auto px-6 py-16 text-center">
       <h2 id="generic-title" class="text-3xl font-bold text-white mb-3">Module</h2>
       <p id="generic-description" class="text-slate-400 text-sm max-w-md mx-auto mb-6">Data feeds and interactive tools will render here.</p>
@@ -521,14 +520,25 @@
 
   </main>
 
-  <!-- Auth Modal (Sign In / Register) -->
+  <!-- Auth Modal (Email & Phone Sign In / Register) -->
   <div id="auth-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl max-w-md w-full relative shadow-2xl">
       <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-sm">✕</button>
       <h3 class="text-xl font-bold text-white mb-1">Account Access</h3>
-      <p class="text-xs text-slate-400 mb-6">Sign in or register a new student profile on Supabase.</p>
+      <p class="text-xs text-slate-400 mb-4">Sign in or register a new student profile on Supabase.</p>
       
-      <div class="space-y-4">
+      <!-- Authentication Method Tabs -->
+      <div class="flex border-b border-slate-800 mb-5">
+        <button id="auth-tab-email" onclick="switchAuthMode('email')" class="flex-1 py-2 text-xs font-mono font-bold border-b-2 border-blue-500 text-blue-400 transition">
+          📧 Email Auth
+        </button>
+        <button id="auth-tab-phone" onclick="switchAuthMode('phone')" class="flex-1 py-2 text-xs font-mono text-slate-400 border-b-2 border-transparent hover:text-slate-200 transition">
+          📱 Phone Auth (OTP)
+        </button>
+      </div>
+
+      <!-- Email Authentication Mode -->
+      <div id="auth-email-container" class="space-y-4">
         <div>
           <label class="block text-xs font-medium text-slate-300 mb-1">Email Address</label>
           <input id="auth-email" type="email" placeholder="student@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
@@ -542,6 +552,29 @@
           <button onclick="handleSignIn()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg transition">Sign In</button>
         </div>
       </div>
+
+      <!-- Phone OTP Authentication Mode -->
+      <div id="auth-phone-container" class="space-y-4 hidden">
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">Mobile Phone Number (with Country Code)</label>
+          <input id="auth-phone-num" type="tel" placeholder="+1234567890" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2 text-sm text-white font-mono focus:outline-none focus:border-blue-500">
+        </div>
+
+        <button id="send-otp-btn" onclick="handleSendPhoneOTP()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition">
+          Send Verification SMS Code
+        </button>
+
+        <div id="otp-verify-section" class="space-y-3 pt-2 border-t border-slate-800/80 hidden">
+          <div>
+            <label class="block text-xs font-medium text-emerald-400 mb-1">Enter 6-Digit SMS Code</label>
+            <input id="auth-phone-otp" type="text" maxlength="6" placeholder="123456" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2 text-center text-lg tracking-widest font-mono text-white focus:outline-none focus:border-emerald-500">
+          </div>
+          <button onclick="handleVerifyPhoneOTP()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs rounded-lg transition">
+            Verify & Sign In
+          </button>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -580,6 +613,21 @@
       points: 0,
       completed_modules: 0
     };
+
+    // Toast Banner System
+    function showWelcomeToast(username) {
+      const toast = document.getElementById('welcome-toast');
+      const toastMsg = document.getElementById('welcome-toast-msg');
+      toastMsg.innerText = `Welcome back, ${username}!`;
+      
+      toast.classList.remove('translate-y-[-150%]', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-[-150%]', 'opacity-0');
+      }, 4000);
+    }
 
     // Initialize Application State on Page Load
     document.addEventListener('DOMContentLoaded', async () => {
@@ -688,6 +736,26 @@
       document.getElementById('auth-modal').classList.add('hidden');
     }
 
+    // Switch Modal Auth Tab (Email vs Phone)
+    function switchAuthMode(mode) {
+      const emailTab = document.getElementById('auth-tab-email');
+      const phoneTab = document.getElementById('auth-tab-phone');
+      const emailContainer = document.getElementById('auth-email-container');
+      const phoneContainer = document.getElementById('auth-phone-container');
+
+      if (mode === 'email') {
+        emailTab.className = "flex-1 py-2 text-xs font-mono font-bold border-b-2 border-blue-500 text-blue-400 transition";
+        phoneTab.className = "flex-1 py-2 text-xs font-mono text-slate-400 border-b-2 border-transparent hover:text-slate-200 transition";
+        emailContainer.classList.remove('hidden');
+        phoneContainer.classList.add('hidden');
+      } else {
+        phoneTab.className = "flex-1 py-2 text-xs font-mono font-bold border-b-2 border-blue-500 text-blue-400 transition";
+        emailTab.className = "flex-1 py-2 text-xs font-mono text-slate-400 border-b-2 border-transparent hover:text-slate-200 transition";
+        phoneContainer.classList.remove('hidden');
+        emailContainer.classList.add('hidden');
+      }
+    }
+
     // Update User Interface according to Authentication State
     function updateAuthUI(isLoggedIn) {
       const authContainer = document.getElementById('auth-container');
@@ -696,7 +764,7 @@
       const authOnlyElems = document.querySelectorAll('.auth-only');
 
       if (isLoggedIn) {
-        const displayName = userProfileData.username || currentUser.email.split('@')[0];
+        const displayName = userProfileData.username || (currentUser.email ? currentUser.email.split('@')[0] : (currentUser.phone || 'Student'));
 
         // Header Auth Control
         authContainer.innerHTML = `
@@ -705,8 +773,7 @@
             <span id="header-user-display">${displayName}</span>
           </button>
         `;
-
-        // Mobile Drawer Links
+                  // Mobile Drawer Links
         sidebarLinks.innerHTML = `
           <button onclick="switchView('home'); toggleSidebarMenu();" class="w-full text-left py-2 text-slate-300 hover:text-white">🏠 Home</button>
           <button onclick="switchView('study'); toggleSidebarMenu();" class="w-full text-left py-2 text-slate-300 hover:text-white">💎 Study Modules</button>
@@ -742,6 +809,7 @@
         switchView('home');
       }
     }
+
     // Authentication Handlers
     async function handleSignUp() {
       const email = document.getElementById('auth-email').value;
@@ -769,6 +837,50 @@
         alert('Authentication Error: ' + error.message);
       } else {
         closeAuthModal();
+        const activeName = email.split('@')[0];
+        showWelcomeToast(activeName);
+      }
+    }
+
+    // Phone OTP Auth Handlers
+    async function handleSendPhoneOTP() {
+      const phoneNum = document.getElementById('auth-phone-num').value.trim();
+      if (!phoneNum || !phoneNum.startsWith('+')) {
+        return alert('Please enter a valid phone number including country code (e.g. +1234567890).');
+      }
+
+      const btn = document.getElementById('send-otp-btn');
+      btn.innerText = "Sending SMS Code...";
+
+      const { data, error } = await supabaseClient.auth.signInWithOtp({ phone: phoneNum });
+      btn.innerText = "Send Verification SMS Code";
+
+      if (error) {
+        alert('Error sending SMS: ' + error.message);
+      } else {
+        alert('OTP verification code sent to ' + phoneNum);
+        document.getElementById('otp-verify-section').classList.remove('hidden');
+      }
+    }
+
+    async function handleVerifyPhoneOTP() {
+      const phoneNum = document.getElementById('auth-phone-num').value.trim();
+      const token = document.getElementById('auth-phone-otp').value.trim();
+
+      if (!token || token.length < 6) return alert('Please enter the full 6-digit SMS verification code.');
+
+      const { data, error } = await supabaseClient.auth.verifyOtp({
+        phone: phoneNum,
+        token: token,
+        type: 'sms'
+      });
+
+      if (error) {
+        alert('Verification failed: ' + error.message);
+      } else {
+        closeAuthModal();
+        const activeName = phoneNum;
+        showWelcomeToast(activeName);
       }
     }
 
@@ -783,7 +895,7 @@
     async function fetchUserProfile() {
       if (!currentUser) return;
 
-      const fallbackUsername = currentUser.user_metadata?.username || currentUser.email.split('@')[0];
+      const fallbackUsername = currentUser.user_metadata?.username || (currentUser.email ? currentUser.email.split('@')[0] : (currentUser.phone || 'Student'));
 
       try {
         const { data, error } = await supabaseClient
@@ -859,7 +971,7 @@
         .from('profiles')
         .upsert({
           id: currentUser.id,
-          username: userProfileData.username || currentUser.email.split('@')[0],
+          username: userProfileData.username || (currentUser.email ? currentUser.email.split('@')[0] : 'Student'),
           points: userProfileData.points,
           completed_modules: userProfileData.completed_modules
         });
@@ -900,8 +1012,7 @@
           </tr>
         `;
         return;
-      }
-
+        }
       // Compute rank if user logged in
       if (currentUser) {
         const userRankIndex = data.findIndex(p => p.username === userProfileData.username);
@@ -940,12 +1051,12 @@
     function loadSettingsFormData() {
       if (!currentUser) return;
 
-      const fallbackName = currentUser.email.split('@')[0];
+      const fallbackName = currentUser.email ? currentUser.email.split('@')[0] : (currentUser.phone || 'Student');
       document.getElementById('settings-username-input').value = userProfileData.username || fallbackName;
-      document.getElementById('settings-email-input').value = currentUser.email || '';
+      document.getElementById('settings-email-input').value = currentUser.email || 'N/A (Phone Auth)';
       document.getElementById('settings-firstname-input').value = userProfileData.first_name || '';
       document.getElementById('settings-lastname-input').value = userProfileData.last_name || '';
-      document.getElementById('settings-phone-input').value = userProfileData.phone || '';
+      document.getElementById('settings-phone-input').value = userProfileData.phone || currentUser.phone || '';
       document.getElementById('settings-gender-input').value = userProfileData.gender || '';
       document.getElementById('settings-bio-input').value = userProfileData.bio || '';
       document.getElementById('settings-avatar-preview').src = `https://api.dicebear.com/7.x/bottts/svg?seed=${userProfileData.username || fallbackName}`;
@@ -967,7 +1078,8 @@
         msg.className = "text-xs font-mono mt-1 text-red-400";
         msg.innerText = "Display username cannot be empty.";
         return;
-                                }
+      }
+
       // Update Supabase Auth User Metadata (Always succeeds without table dependencies)
       const { data: authData, error: authError } = await supabaseClient.auth.updateUser({
         data: {
