@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Wizzy Cyber | Interactive Cloud & Security Platform</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Supabase Client Library -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     tailwind.config = {
@@ -21,12 +20,15 @@
     }
   </script>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans antialiased selection:bg-blue-500 selection:text-white min-h-screen flex flex-col transition-colors duration-200">
+<body class="bg-slate-950 text-slate-100 font-sans antialiased selection:bg-blue-500 selection:text-white min-h-screen flex flex-col">
 
-  <!-- Toast Notification Pop-up -->
-  <div id="toast-notification" class="fixed top-5 right-5 z-50 transform translate-y-[-150%] opacity-0 transition-all duration-300 ease-in-out bg-slate-900 border border-emerald-500/40 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3">
-    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-    <p id="toast-message" class="text-xs font-mono font-semibold text-emerald-300">Welcome back!</p>
+  <!-- Welcome Toast Notification Pop-up -->
+  <div id="welcome-toast" class="fixed top-5 right-5 z-50 bg-emerald-600 text-white font-mono text-xs px-5 py-3 rounded-xl shadow-2xl transition-all duration-300 transform translate-y-[-100px] opacity-0 flex items-center gap-3 border border-emerald-400/30">
+    <span class="text-base">🎉</span>
+    <div>
+      <p class="font-bold">Welcome back!</p>
+      <p id="welcome-toast-username" class="text-[11px] opacity-90"></p>
+    </div>
   </div>
 
   <!-- Main Top Header Bar -->
@@ -48,18 +50,15 @@
 
       <!-- Center: Navigation Tabs (Desktop) -->
       <nav id="desktop-top-nav" class="hidden md:flex items-center space-x-1 text-xs font-mono font-medium text-slate-400">
-        <button onclick="switchView('home')" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">🔥 Home</button>
-        <button onclick="switchView('study')" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">💎 Study</button>
-        <button onclick="switchView('tests')" class="auth-only hidden px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">📝 Tests</button>
-        <button id="nav-btn-dashboard" onclick="switchView('dashboard')" class="auth-only hidden px-3 py-1.5 rounded-lg text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 font-bold transition">📊 Dashboard</button>
+        <button id="nav-btn-home" onclick="switchView('home')" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">🔥 Home</button>
+        <button id="nav-btn-study" onclick="switchView('study')" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">💎 Study Modules</button>
+        <button id="nav-btn-tests" onclick="switchView('tests')" class="auth-only hidden px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">📝 Tests & Exams</button>
+        <button id="nav-btn-dashboard" onclick="switchView('dashboard')" class="auth-only hidden px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500 hover:text-white transition">📊 Dashboard</button>
       </nav>
 
       <!-- Right Side: Profile / Auth Actions -->
       <div class="flex items-center gap-2 sm:gap-3">
-        <!-- Auth Container -->
         <div id="auth-container" class="flex items-center gap-2"></div>
-
-        <!-- Follow Badge -->
         <a href="https://x.com/intent/follow?screen_name=bush_bean__" target="_blank" rel="noopener noreferrer" class="px-3 py-2 bg-blue-600/10 border border-blue-500/30 text-blue-400 text-xs font-semibold rounded-lg hover:bg-blue-600 hover:text-white transition hidden sm:flex items-center gap-2">
           + Follow @bush_bean__
         </a>
@@ -78,10 +77,7 @@
 
       <p class="text-[10px] uppercase font-mono tracking-wider text-slate-500 mb-3">Navigation Menu</p>
       
-      <!-- Dynamic Drawer Nav Links -->
-      <div id="sidebar-nav-links" class="space-y-1.5 text-xs font-mono">
-        <!-- Rendered Dynamically via JS based on Auth State -->
-      </div>
+      <div id="sidebar-nav-links" class="space-y-1.5 text-xs font-mono"></div>
     </div>
 
     <div class="pt-4 border-t border-slate-900 space-y-2">
@@ -93,10 +89,8 @@
     </div>
   </aside>
 
-  <!-- App Main Content Container -->
   <main id="app-container" class="flex-grow">
-    
-    <!-- View 1: Public Unauthenticated Landing View (Logged Out) -->
+        <!-- View 1: Public Unauthenticated Landing View -->
     <div id="public-landing-view">
       <section class="max-w-4xl mx-auto px-6 py-16 sm:py-20 text-center">
         <div class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-full text-xs font-semibold uppercase tracking-wider mb-6">
@@ -109,7 +103,6 @@
           Explore cloud infrastructure, cybersecurity research, and machine learning models. Sign in to access hands-on labs, complete modules, and track your global rank.
         </p>
 
-        <!-- Public Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl mx-auto text-left">
           <div class="p-5 bg-slate-900/80 border border-slate-800 rounded-xl">
             <p class="text-xs font-mono text-blue-400 mb-1">X (Twitter) Profile</p>
@@ -124,29 +117,28 @@
             <p class="text-xs font-mono text-emerald-400 mb-1">Student Portal</p>
             <h3 class="text-base font-bold text-white mb-2">Interactive Learning</h3>
             <p class="text-xs text-slate-400 mb-4">Register or sign in to verify challenge flags and maintain your score.</p>
-            <button onclick="openAuthModal('signin')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-lg transition">
+            <button onclick="openAuthModal()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-lg transition">
               Sign In / Register
             </button>
           </div>
         </div>
       </section>
-  </div>
-   <!-- View 2: Authenticated Main Dashboard & Platform View (Logged In Only) -->
+    </div>
+
+    <!-- View 2: Student Dashboard & Embedded Stats Container -->
     <div id="authenticated-view" class="hidden">
-      
-      <!-- Student Profile Header Card & Combined Overview -->
       <section id="dashboard-section" class="max-w-6xl mx-auto px-6 pt-8 pb-4">
-        <div class="bg-slate-900/90 border border-slate-800 p-6 sm:p-8 rounded-2xl shadow-xl space-y-6">
-          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-6">
+        <div class="bg-slate-900/90 border border-slate-800 p-6 rounded-2xl shadow-xl">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-800 pb-6 mb-6">
             <div class="flex items-center gap-4">
               <div class="relative">
-                <img id="dashboard-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=wizzy" alt="Profile Picture" class="w-20 h-20 rounded-xl border-2 border-emerald-500/60 bg-slate-950 p-1">
+                <img id="dashboard-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=wizzy" alt="Profile Picture" class="w-16 h-16 rounded-xl border-2 border-blue-500/50 bg-slate-950 p-1">
                 <span class="absolute bottom-0 right-0 w-4 h-4 bg-emerald-500 border-2 border-slate-900 rounded-full"></span>
               </div>
               <div>
                 <div class="flex items-center gap-2">
-                  <h2 id="dash-username" class="text-2xl sm:text-3xl font-bold text-white">Student</h2>
-                  <span class="text-xs font-mono bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 px-2.5 py-0.5 rounded-full font-bold">Active Member</span>
+                  <h2 id="dash-username" class="text-2xl font-bold text-white">Student</h2>
+                  <span class="text-xs font-mono bg-blue-500/10 border border-blue-500/20 text-blue-400 px-2 py-0.5 rounded">Active Member</span>
                 </div>
                 <p id="dash-user-id" class="text-xs font-mono text-slate-400 mt-1">ID: Loading...</p>
               </div>
@@ -161,52 +153,157 @@
             </div>
           </div>
 
-          <!-- Embedded Student Stats inside Dashboard Header -->
+          <!-- Embedded Stats Dashboard Box -->
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div class="bg-slate-950/60 border border-slate-800 p-4 rounded-xl flex justify-between items-center">
+            <div class="bg-slate-950/60 border border-slate-800/80 p-4 rounded-xl flex justify-between items-center">
               <div>
                 <p class="text-xs font-mono text-slate-400">Total Score</p>
-                <p id="dash-user-points" class="text-xl font-bold font-mono text-blue-400">0 pts</p>
+                <p id="dash-user-points" class="text-2xl font-bold font-mono text-blue-400">0 pts</p>
               </div>
-              <span class="text-2xl">🏆</span>
+              <span class="text-3xl">🏆</span>
             </div>
-            <div class="bg-slate-950/60 border border-slate-800 p-4 rounded-xl flex justify-between items-center">
+            <div class="bg-slate-950/60 border border-slate-800/80 p-4 rounded-xl flex justify-between items-center">
               <div>
                 <p class="text-xs font-mono text-slate-400">Modules Completed</p>
-                <p id="dash-user-modules" class="text-xl font-bold font-mono text-emerald-400">0</p>
+                <p id="dash-user-modules" class="text-2xl font-bold font-mono text-emerald-400">0</p>
               </div>
-              <span class="text-2xl">⚡</span>
+              <span class="text-3xl">⚡</span>
             </div>
-            <div class="bg-slate-950/60 border border-slate-800 p-4 rounded-xl flex justify-between items-center">
+            <div class="bg-slate-950/60 border border-slate-800/80 p-4 rounded-xl flex justify-between items-center">
               <div>
                 <p class="text-xs font-mono text-slate-400">Global Rank</p>
-                <p id="dash-user-rank" class="text-xl font-bold font-mono text-purple-400">#--</p>
+                <p id="dash-user-rank" class="text-2xl font-bold font-mono text-purple-400">#--</p>
               </div>
-              <span class="text-2xl">🥇</span>
+              <span class="text-3xl">🥇</span>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Platform Hero Header -->
-      <section id="about" class="max-w-6xl mx-auto px-6 py-6">
-        <div class="inline-flex items-center gap-2 px-3 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-full text-xs font-semibold uppercase tracking-wider mb-4">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Live Interactive Platform • Supabase Connected
+      <!-- Practical Labs Challenge Module -->
+      <section id="labs" class="max-w-6xl mx-auto px-6 py-8">
+        <div class="mb-6">
+          <h2 class="text-2xl font-bold text-white mb-1">Active Practical Labs</h2>
+          <p class="text-slate-400 text-sm">Submit challenge flags obtained from practice modules.</p>
         </div>
-        <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-4 leading-tight">
-          Interactive Cloud Engineering & <span class="text-blue-500">Cybersecurity</span> Platform.
-        </h1>
-        <p class="text-slate-400 text-base sm:text-lg max-w-3xl leading-relaxed">
-          Learn cloud architecture, machine learning pipelines, and offensive security. Solve hands-on labs, complete modules, and log your progress live.
-        </p>
-      </section>
 
-      <!-- Dynamic Supabase Leaderboard Section -->
-      <section id="leaderboard" class="max-w-6xl mx-auto px-6 py-12 border-t border-slate-900">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-xl flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">Cyber Security</span>
+                <span class="text-xs font-mono text-slate-400">100 pts</span>
+              </div>
+              <h3 class="text-base font-bold text-white mb-2">Web Directory Enumeration</h3>
+              <p class="text-slate-400 text-xs mb-4">Discover hidden paths using fuzzing wordlists to locate the admin token.</p>
+            </div>
+            <div>
+              <div class="flex gap-2">
+                <input id="flag-input" type="text" placeholder="WIZZY{flag_here}" class="bg-slate-950 border border-slate-700 text-slate-200 text-xs rounded-lg px-3 py-2 w-full focus:outline-none focus:border-blue-500 font-mono">
+                <button onclick="submitFlag()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs rounded-lg transition whitespace-nowrap">
+                  Submit
+                </button>
+              </div>
+              <p id="lab-status" class="text-xs font-mono mt-2 text-slate-500"></p>
+            </div>
+          </div>
+
+          <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-xl flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-xs font-mono text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded">Cloud Infrastructure</span>
+                <span class="text-xs font-mono text-slate-400">150 pts</span>
+              </div>
+              <h3 class="text-base font-bold text-white mb-2">S3 Bucket Access Control</h3>
+              <p class="text-slate-400 text-xs mb-4">Audit unauthenticated access on misconfigured storage bucket policies.</p>
+            </div>
+            <div>
+              <div class="flex gap-2">
+                <input id="flag-input-cloud" type="text" placeholder="WIZZY{flag_here}" class="bg-slate-950 border border-slate-700 text-slate-200 text-xs rounded-lg px-3 py-2 w-full focus:outline-none focus:border-blue-500 font-mono">
+                <button onclick="submitLabChallenge('flag-input-cloud', 'lab-status-cloud', 'WIZZY{s3_bucket_sec_2026}', 'AWS S3 Access Audit', 150)" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition whitespace-nowrap">
+                  Submit
+                </button>
+              </div>
+              <p id="lab-status-cloud" class="text-xs font-mono mt-2 text-slate-500"></p>
+            </div>
+          </div>
+
+          <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-xl flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-xs font-mono text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded">Applied ML</span>
+                <span class="text-xs font-mono text-slate-400">200 pts</span>
+              </div>
+              <h3 class="text-base font-bold text-white mb-2">Adversarial Model Poisoning</h3>
+              <p class="text-slate-400 text-xs mb-4">Detect feature manipulation techniques targeting predictive pipeline outputs.</p>
+            </div>
+            <div>
+              <div class="flex gap-2">
+                <input id="flag-input-ml" type="text" placeholder="WIZZY{flag_here}" class="bg-slate-950 border border-slate-700 text-slate-200 text-xs rounded-lg px-3 py-2 w-full focus:outline-none focus:border-blue-500 font-mono">
+                <button onclick="submitLabChallenge('flag-input-ml', 'lab-status-ml', 'WIZZY{ml_feature_clean_2026}', 'Adversarial ML Defense', 200)" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white font-semibold text-xs rounded-lg transition whitespace-nowrap">
+                  Submit
+                </button>
+              </div>
+              <p id="lab-status-ml" class="text-xs font-mono mt-2 text-slate-500"></p>
+            </div>
+          </div>
+        </div>
+      </section>
+          </div>
+                <!-- View 3: Study Modules Navigation & Leaderboard Sub-Sections -->
+    <div id="view-study" class="hidden max-w-6xl mx-auto px-6 py-10">
+      <div class="mb-8 border-b border-slate-900 pb-6">
+        <h2 class="text-3xl font-bold text-white mb-2">Study Modules & Tracks</h2>
+        <p class="text-slate-400 text-sm">Explore interactive study paths and global standings.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between">
+          <div>
+            <div class="inline-block px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono rounded mb-4">Track 01</div>
+            <h3 class="text-xl font-bold text-white mb-3">Practice Cybersecurity</h3>
+            <p class="text-slate-400 text-xs leading-relaxed mb-4">
+              Directory discovery, network analysis, terminal navigation, and security auditing.
+            </p>
+          </div>
+          <button onclick="switchView('labs')" class="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-mono text-xs font-semibold rounded-lg transition">
+            Launch Practical Lab →
+          </button>
+        </div>
+
+        <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between">
+          <div>
+            <div class="inline-block px-2.5 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono rounded mb-4">Track 02</div>
+            <h3 class="text-xl font-bold text-white mb-3">Practice Ethical Hacking</h3>
+            <p class="text-slate-400 text-xs leading-relaxed mb-4">
+              Web penetration testing, authorization bypasses, payload crafting, and CTFs.
+            </p>
+          </div>
+          <button onclick="switchView('labs')" class="w-full py-2 bg-blue-600 hover:bg-blue-500 text-white font-mono text-xs font-semibold rounded-lg transition">
+            Launch Hacking Module →
+          </button>
+        </div>
+
+        <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between">
+          <div>
+            <div class="inline-block px-2.5 py-1 bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-mono rounded mb-4">Track 03</div>
+            <h3 class="text-xl font-bold text-white mb-3">Practice Cloud Computing</h3>
+            <p class="text-slate-400 text-xs leading-relaxed mb-4">
+              AWS infrastructure, S3 access policies, Docker containers, and server admin.
+            </p>
+          </div>
+          <button onclick="switchView('labs')" class="w-full py-2 bg-purple-600 hover:bg-purple-500 text-white font-mono text-xs font-semibold rounded-lg transition">
+            Launch Cloud Module →
+          </button>
+        </div>
+      </div>
+
+      <!-- Integrated Leaderboard inside Study Modules -->
+      <section id="leaderboard" class="border-t border-slate-900 pt-8">
         <div class="flex flex-col sm:flex-row justify-between sm:items-end mb-6 gap-2">
           <div>
-            <h2 class="text-2xl font-bold text-white mb-1">Live Student Leaderboard</h2>
-            <p class="text-slate-400 text-sm">Real-time points and achievements synced from Supabase records.</p>
+            <h2 class="text-2xl font-bold text-white mb-1">Leaderboard</h2>
+            <p class="text-slate-400 text-sm">Real-time points synced from Supabase records.</p>
           </div>
           <button onclick="loadLeaderboard()" class="self-start sm:self-auto text-xs font-mono text-blue-400 bg-blue-500/10 border border-blue-500/20 px-3 py-1.5 rounded-lg hover:bg-blue-500 hover:text-white transition">
             🔄 Refresh Scores
@@ -231,179 +328,65 @@
           </table>
         </div>
       </section>
-
     </div>
 
-    <!-- View 3: Dedicated Study Modules View -->
-    <div id="view-study" class="hidden max-w-6xl mx-auto px-6 py-10">
-      <div class="mb-8 border-b border-slate-900 pb-6">
-        <h2 class="text-3xl font-bold text-white mb-2">Study Modules & Learning Paths</h2>
-        <p class="text-slate-400 text-sm">Master key technical domains with structured theory and practical exercises.</p>
-      </div>
-
-      <div id="study-tracks-container" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between">
-          <div>
-            <div class="inline-block px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono rounded mb-4">Module 01</div>
-            <h3 class="text-xl font-bold text-white mb-3">Practical Cybersecurity</h3>
-            <p class="text-slate-400 text-xs leading-relaxed mb-4">
-              Learn network scanning, offensive security fundamentals, directory brute-forcing, and vulnerability auditing techniques.
-            </p>
-          </div>
-          <button onclick="scrollToLab('lab-cyber')" class="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-mono text-xs font-semibold rounded-lg transition">
-            Start Cybersecurity Lab →
-          </button>
-        </div>
-
-        <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between">
-          <div>
-            <div class="inline-block px-2.5 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono rounded mb-4">Module 02</div>
-            <h3 class="text-xl font-bold text-white mb-3">Ethical Hacking & Recon</h3>
-            <p class="text-slate-400 text-xs leading-relaxed mb-4">
-              Explore web application penetration testing, payload crafting, authorization bypasses, and security controls.
-            </p>
-          </div>
-          <button onclick="scrollToLab('lab-hacking')" class="w-full py-2 bg-blue-600 hover:bg-blue-500 text-white font-mono text-xs font-semibold rounded-lg transition">
-            Start Hacking Challenge →
-          </button>
-        </div>
-
-        <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between">
-          <div>
-            <div class="inline-block px-2.5 py-1 bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-mono rounded mb-4">Module 03</div>
-            <h3 class="text-xl font-bold text-white mb-3">Cloud Computing & DevOps</h3>
-            <p class="text-slate-400 text-xs leading-relaxed mb-4">
-              Understand AWS infrastructure, IAM policies, container orchestration, server administration, and automated pipelines.
-            </p>
-          </div>
-          <button onclick="scrollToLab('lab-cloud')" class="w-full py-2 bg-purple-600 hover:bg-purple-500 text-white font-mono text-xs font-semibold rounded-lg transition">
-            Start Cloud Lab →
-          </button>
-        </div>
-      </div>
-
-      <!-- Interactive Practical Labs Section (Embedded inside Study View) -->
-      <section id="labs" class="pt-8 border-t border-slate-900">
-        <div class="mb-8">
-          <h2 class="text-2xl font-bold text-white mb-2">Practical Lab Modules</h2>
-          <p class="text-slate-400 text-sm">Submit challenge flags obtained from practical modules to update your student transcript in real time.</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <!-- Lab Module #1 -->
-          <div id="lab-cyber" class="bg-slate-900/80 border border-slate-800 p-6 rounded-xl flex flex-col justify-between scroll-mt-24">
-            <div>
-              <div class="flex justify-between items-center mb-2">
-                <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">Cyber Security</span>
-                <span class="text-xs font-mono text-slate-400">100 pts</span>
-              </div>
-              <h3 class="text-base font-bold text-white mb-2">Web Directory Enumeration</h3>
-              <p class="text-slate-400 text-xs mb-4">Discover hidden paths using fuzzing wordlists to locate the admin token.</p>
-            </div>
-            <div>
-              <div class="flex gap-2">
-                <input id="flag-input" type="text" placeholder="WIZZY{flag_here}" class="bg-slate-950 border border-slate-700 text-slate-200 text-xs rounded-lg px-3 py-2 w-full focus:outline-none focus:border-blue-500 font-mono">
-                <button onclick="submitFlag()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs rounded-lg transition whitespace-nowrap">
-                  Submit
-                </button>
-              </div>
-              <p id="lab-status" class="text-xs font-mono mt-2 text-slate-500"></p>
-            </div>
-          </div>
-
-          <!-- Lab Module #2 -->
-          <div id="lab-hacking" class="bg-slate-900/80 border border-slate-800 p-6 rounded-xl flex flex-col justify-between scroll-mt-24">
-            <div>
-              <div class="flex justify-between items-center mb-2">
-                <span class="text-xs font-mono text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded">Ethical Hacking</span>
-                <span class="text-xs font-mono text-slate-400">150 pts</span>
-              </div>
-              <h3 class="text-base font-bold text-white mb-2">S3 Bucket Access Control</h3>
-              <p class="text-slate-400 text-xs mb-4">Audit unauthenticated access on misconfigured storage bucket policies.</p>
-            </div>
-            <div>
-              <div class="flex gap-2">
-                <input id="flag-input-cloud" type="text" placeholder="WIZZY{flag_here}" class="bg-slate-950 border border-slate-700 text-slate-200 text-xs rounded-lg px-3 py-2 w-full focus:outline-none focus:border-blue-500 font-mono">
-                <button onclick="submitLabChallenge('flag-input-cloud', 'lab-status-cloud', 'WIZZY{s3_bucket_sec_2026}', 'AWS S3 Access Audit', 150)" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition whitespace-nowrap">
-                  Submit
-                </button>
-              </div>
-              <p id="lab-status-cloud" class="text-xs font-mono mt-2 text-slate-500"></p>
-            </div>
-          </div>
-
-          <!-- Lab Module #3 -->
-          <div id="lab-cloud" class="bg-slate-900/80 border border-slate-800 p-6 rounded-xl flex flex-col justify-between scroll-mt-24">
-            <div>
-              <div class="flex justify-between items-center mb-2">
-                <span class="text-xs font-mono text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded">Applied ML</span>
-                <span class="text-xs font-mono text-slate-400">200 pts</span>
-              </div>
-              <h3 class="text-base font-bold text-white mb-2">Adversarial Model Poisoning</h3>
-              <p class="text-slate-400 text-xs mb-4">Detect feature manipulation techniques targeting predictive pipeline outputs.</p>
-            </div>
-            <div>
-              <div class="flex gap-2">
-                <input id="flag-input-ml" type="text" placeholder="WIZZY{flag_here}" class="bg-slate-950 border border-slate-700 text-slate-200 text-xs rounded-lg px-3 py-2 w-full focus:outline-none focus:border-blue-500 font-mono">
-                <button onclick="submitLabChallenge('flag-input-ml', 'lab-status-ml', 'WIZZY{ml_feature_clean_2026}', 'Adversarial ML Defense', 200)" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white font-semibold text-xs rounded-lg transition whitespace-nowrap">
-                  Submit
-                </button>
-              </div>
-              <p id="lab-status-ml" class="text-xs font-mono mt-2 text-slate-500"></p>
-            </div>
-          </div>
-
-        </div>
-      </section>
-  </div>
-      <!-- View 4: Dedicated Assessment & Tests View -->
+    <!-- View 4: Dedicated Assessment & Timed Question Engine View -->
     <div id="view-tests" class="hidden max-w-6xl mx-auto px-6 py-10">
       <div class="mb-8 border-b border-slate-900 pb-6">
-        <h2 class="text-3xl font-bold text-white mb-2">Assessments & Certifications</h2>
-        <p class="text-slate-400 text-sm">Verify your skills under timed conditions and earn official skill badges.</p>
+        <h2 class="text-3xl font-bold text-white mb-2">Tests, Exams & Analytics Hub</h2>
+        <p class="text-slate-400 text-sm">Interactive timed evaluation suite with instantaneous question advancement.</p>
       </div>
 
-      <!-- Active Quiz Interface -->
-      <div id="quiz-container" class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl max-w-2xl mx-auto hidden mb-8">
-        <div class="flex justify-between items-center mb-4">
-          <span id="quiz-badge" class="text-xs font-mono text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded">Question 1 of 3</span>
-          <span class="text-xs font-mono text-slate-400">Timed Exam</span>
-        </div>
-        <h3 id="quiz-question-title" class="text-lg font-bold text-white mb-4">Loading question...</h3>
-        <div id="quiz-options" class="space-y-2 mb-6"></div>
-        <div id="quiz-feedback" class="text-xs font-mono mb-4 hidden"></div>
-        <button id="quiz-next-btn" onclick="submitQuizAnswer()" class="w-full py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition font-mono">
-          Submit & Next Question →
-        </button>
+      <!-- Sub-navigation Tabs for Exams -->
+      <div class="flex flex-wrap gap-2 mb-8 border-b border-slate-900 pb-4">
+        <button onclick="switchTestSubTab('exam')" id="test-sub-exam" class="px-3.5 py-1.5 rounded-lg text-xs font-mono bg-blue-600 text-white font-semibold transition">✍️ Live Exam Engine</button>
+        <button onclick="switchTestSubTab('history')" id="test-sub-history" class="px-3.5 py-1.5 rounded-lg text-xs font-mono bg-slate-900 text-slate-400 hover:text-white border border-slate-800 transition">📜 Study History</button>
+        <button onclick="switchTestSubTab('analytics')" id="test-sub-analytics" class="px-3.5 py-1.5 rounded-lg text-xs font-mono bg-slate-900 text-slate-400 hover:text-white border border-slate-800 transition">📈 Performance Analysis</button>
+        <button onclick="switchTestSubTab('videos')" id="test-sub-videos" class="px-3.5 py-1.5 rounded-lg text-xs font-mono bg-slate-900 text-slate-400 hover:text-white border border-slate-800 transition">🎥 Video Lessons</button>
+        <button onclick="switchTestSubTab('bookmarks')" id="test-sub-bookmarks" class="px-3.5 py-1.5 rounded-lg text-xs font-mono bg-slate-900 text-slate-400 hover:text-white border border-slate-800 transition">🔖 Bookmarks</button>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl">
-          <span class="text-xs font-mono text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded">Timed Exam</span>
-          <h3 class="text-lg font-bold text-white mt-4 mb-2">Cloud Security Administrator Assessment</h3>
-          <p class="text-slate-400 text-xs mb-4">30 questions covering IAM, network security groups, and storage policies.</p>
-          <button onclick="startExam('cloud')" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg transition">
-            Begin Exam
+      <!-- Live Interactive Exam Screen -->
+      <div id="test-content-exam" class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl max-w-3xl">
+        <div id="exam-starter">
+          <span class="text-xs font-mono text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded">Interactive Assessment</span>
+          <h3 class="text-xl font-bold text-white mt-4 mb-2">Cloud Security & Offensive Operations Exam</h3>
+          <p class="text-slate-400 text-xs mb-6">Test your technical knowledge. Selecting an answer immediately advances you to the next question.</p>
+          <button onclick="startInteractiveExam()" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg transition font-mono">
+            ▶ Begin Exam
           </button>
         </div>
 
-        <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl">
-          <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded">Practical Assessment</span>
-          <h3 class="text-lg font-bold text-white mt-4 mb-2">Offensive Security Practical Evaluation</h3>
-          <p class="text-slate-400 text-xs mb-4">Hands-on blackbox target evaluation. Discover flags to complete certification.</p>
-          <button onclick="startExam('cyber')" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-lg transition">
-            Launch Target Machine
+        <div id="exam-runner" class="hidden">
+          <div class="flex justify-between items-center mb-4 border-b border-slate-800 pb-3">
+            <span id="exam-progress" class="text-xs font-mono text-blue-400">Question 1 of 3</span>
+            <span id="exam-score-live" class="text-xs font-mono text-emerald-400">Current Score: 0</span>
+          </div>
+          <h4 id="exam-question-text" class="text-lg font-bold text-white mb-6">Question text goes here?</h4>
+          <div id="exam-options-container" class="space-y-3 mb-6"></div>
+        </div>
+
+        <div id="exam-result" class="hidden text-center py-6">
+          <span class="text-4xl">🎉</span>
+          <h3 class="text-2xl font-bold text-white mt-2 mb-2">Exam Completed!</h3>
+          <p id="exam-final-score" class="text-lg font-mono text-emerald-400 font-bold mb-4">You scored 3/3</p>
+          <button onclick="resetInteractiveExam()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-xs font-mono rounded-lg transition border border-slate-700">
+            🔄 Retake Exam
           </button>
         </div>
+      </div>
+
+      <!-- Other Sub-Tabs Container -->
+      <div id="test-content-other" class="hidden bg-slate-900/80 border border-slate-800 p-6 rounded-2xl">
+        <h3 id="test-other-title" class="text-lg font-bold text-white mb-2">Sub Section</h3>
+        <p id="test-other-desc" class="text-xs text-slate-400">Module content will populate here.</p>
       </div>
     </div>
-
-    <!-- View 5: Editable Settings & Profile Management Section -->
+        <!-- View 5: Settings Page (Profile, Password Security & Appearance) -->
     <div id="view-settings" class="hidden max-w-5xl mx-auto px-6 py-10">
-      <h2 class="text-2xl font-bold text-white mb-6">Settings & Account Control</h2>
+      <h2 class="text-2xl font-bold text-white mb-6">Settings & Customization</h2>
       
       <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <!-- Tab Sidebar -->
         <div class="space-y-2">
           <button id="tab-btn-profile" onclick="switchSettingsTab('profile')" class="w-full text-left px-4 py-2.5 rounded-xl bg-blue-600 text-white font-semibold transition text-xs font-mono">
             👤 User Profile
@@ -412,15 +395,14 @@
             🔒 Password & Security
           </button>
           <button id="tab-btn-appearance" onclick="switchSettingsTab('appearance')" class="w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono">
-            🎨 Appearance
+            🎨 Appearance Theme
           </button>
         </div>
 
-        <!-- Tab Content Panes -->
         <div class="md:col-span-3 bg-slate-900/80 border border-slate-800 rounded-2xl p-6">
-          <!-- Profile Tab (Editable Controls) -->
+          <!-- Profile Tab -->
           <div id="tab-profile" class="space-y-4">
-            <h3 class="text-base font-bold text-white border-b border-slate-800 pb-2">Personal Information</h3>
+            <h3 class="text-base font-bold text-white border-b border-slate-800 pb-2">Personal Details</h3>
             <div class="flex items-center gap-4">
               <img id="settings-avatar-preview" src="https://api.dicebear.com/7.x/bottts/svg?seed=wizzy" class="w-14 h-14 rounded-xl border border-slate-700 bg-slate-950 p-1">
               <div>
@@ -477,62 +459,42 @@
             <p id="profile-update-msg" class="text-xs font-mono mt-1 hidden"></p>
           </div>
 
-          <!-- Account Security Tab -->
+          <!-- Password & Security Tab with Eye Toggle -->
           <div id="tab-account" class="hidden space-y-4">
             <h3 class="text-base font-bold text-white border-b border-slate-800 pb-2">Change Password</h3>
-            
-            <div>
-              <label class="block text-xs font-mono text-slate-400 mb-1">Current Password</label>
-              <div class="relative">
-                <input id="pwd-current" type="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white font-mono pr-10">
-                <button type="button" onclick="togglePasswordVisibility('pwd-current', 'eye-pwd-current')" class="absolute right-3 top-2.5 text-slate-400 hover:text-white">
-                  <svg id="eye-pwd-current" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-
             <div>
               <label class="block text-xs font-mono text-slate-400 mb-1">New Password</label>
               <div class="relative">
-                <input id="pwd-new" type="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white font-mono pr-10">
-                <button type="button" onclick="togglePasswordVisibility('pwd-new', 'eye-pwd-new')" class="absolute right-3 top-2.5 text-slate-400 hover:text-white">
-                  <svg id="eye-pwd-new" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                  </svg>
+                <input id="pwd-new" type="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-3 pr-10 py-2 text-xs text-white font-mono focus:outline-none focus:border-blue-500">
+                <button type="button" onclick="togglePasswordVisibility('pwd-new', 'eye-icon-new')" class="absolute right-3 top-2.5 text-slate-400 hover:text-white text-xs">
+                  <span id="eye-icon-new">👁️</span>
                 </button>
               </div>
             </div>
-
             <button onclick="handlePasswordUpdate()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition font-mono">
               Update Password
             </button>
             <p id="password-update-msg" class="text-xs font-mono mt-1 hidden"></p>
           </div>
 
-          <!-- Appearance Tab -->
+          <!-- Appearance Theme Tab -->
           <div id="tab-appearance" class="hidden space-y-4">
-            <h3 class="text-base font-bold text-white border-b border-slate-800 pb-2">Theme Preferences</h3>
-            <p class="text-xs text-slate-400">Choose display mode preference for the platform workspace.</p>
-            
-            <div class="flex gap-4 pt-2">
-              <button id="theme-btn-dark" onclick="setThemeMode('dark')" class="flex-1 p-4 rounded-xl border border-blue-500 bg-slate-950 text-white text-xs font-mono font-bold flex flex-col items-center gap-2">
+            <h3 class="text-base font-bold text-white border-b border-slate-800 pb-2">Theme Mode Selection</h3>
+            <p class="text-xs text-slate-400">Choose your preferred portal color palette.</p>
+            <div class="flex gap-4">
+              <button onclick="setPortalTheme('dark')" class="px-5 py-3 bg-slate-950 border-2 border-blue-500 rounded-xl text-xs font-mono text-white flex items-center gap-2">
                 🌙 Dark Mode
-                <span class="text-[10px] font-normal text-slate-400">Default dark theme</span>
               </button>
-              <button id="theme-btn-light" onclick="setThemeMode('light')" class="flex-1 p-4 rounded-xl border border-slate-800 bg-slate-900 text-slate-400 hover:text-white text-xs font-mono font-bold flex flex-col items-center gap-2">
+              <button onclick="setPortalTheme('light')" class="px-5 py-3 bg-slate-200 border-2 border-slate-400 rounded-xl text-xs font-mono text-slate-900 flex items-center gap-2">
                 ☀️ Light Mode
-                <span class="text-[10px] font-normal text-slate-500">Bright background</span>
               </button>
             </div>
           </div>
         </div>
       </div>
-                </div>
-                  <!-- View 6: Generic Section Container -->
+    </div>
+
+    <!-- View 6: Generic View -->
     <div id="view-generic" class="hidden max-w-4xl mx-auto px-6 py-16 text-center">
       <h2 id="generic-title" class="text-3xl font-bold text-white mb-3">Module</h2>
       <p id="generic-description" class="text-slate-400 text-sm max-w-md mx-auto mb-6">Data feeds and interactive tools will render here.</p>
@@ -540,76 +502,65 @@
         ← Return Home
       </button>
     </div>
-
   </main>
 
-  <!-- Auth Modal (Sign In / Register / Forgotten Password) -->
+  <!-- Auth Modal with Eye Toggle and Forgot Password Section -->
   <div id="auth-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl max-w-md w-full relative shadow-2xl">
       <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-sm">✕</button>
       
-      <!-- Modal Section 1: Sign In / Register -->
-      <div id="auth-modal-main">
+      <!-- Standard Login / Register Form -->
+      <div id="auth-form-main">
         <h3 class="text-xl font-bold text-white mb-1">Account Access</h3>
         <p class="text-xs text-slate-400 mb-6">Sign in or register a new student profile on Supabase.</p>
         
         <div class="space-y-4">
           <div>
             <label class="block text-xs font-medium text-slate-300 mb-1">Email Address</label>
-            <input id="auth-email" type="email" placeholder="student@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
+            <input id="auth-email" type="email" placeholder="student@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-blue-500 font-mono">
           </div>
-          
           <div>
             <div class="flex justify-between items-center mb-1">
-              <label class="block text-xs font-medium text-slate-300">Password</label>
-              <button onclick="showForgotPasswordView()" class="text-[11px] font-mono text-blue-400 hover:text-blue-300">Forgot password?</button>
+              <label class="text-xs font-medium text-slate-300">Password</label>
+              <button onclick="toggleForgotPass(true)" class="text-[11px] font-mono text-blue-400 hover:underline">Forgot Password?</button>
             </div>
-            
-            <!-- Password Input with Eye Toggle -->
             <div class="relative">
-              <input id="auth-password" type="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-blue-500 pr-10">
-              <button type="button" onclick="togglePasswordVisibility('auth-password', 'eye-auth-pwd')" class="absolute right-3 top-2.5 text-slate-400 hover:text-white">
-                <svg id="eye-auth-pwd" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
+              <input id="auth-password" type="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-3 pr-10 py-2 text-sm text-white focus:outline-none focus:border-blue-500 font-mono">
+              <button type="button" onclick="togglePasswordVisibility('auth-password', 'eye-icon-auth')" class="absolute right-3 top-2.5 text-slate-400 hover:text-white text-xs">
+                <span id="eye-icon-auth">👁️</span>
               </button>
             </div>
           </div>
-
           <div class="flex gap-3 pt-2">
-            <button onclick="handleSignUp()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition">Sign Up</button>
-            <button onclick="handleSignIn()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg transition">Sign In</button>
+            <button onclick="handleSignUp()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition font-mono">Sign Up</button>
+            <button onclick="handleSignIn()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg transition font-mono">Sign In</button>
           </div>
         </div>
       </div>
 
-      <!-- Modal Section 2: Forgotten Password View -->
-      <div id="auth-modal-forgot" class="hidden">
+      <!-- Dedicated Forgotten Password Form -->
+      <div id="auth-form-forgot" class="hidden">
         <h3 class="text-xl font-bold text-white mb-1">Reset Password</h3>
-        <p class="text-xs text-slate-400 mb-6">Enter your email address to receive a password reset link.</p>
+        <p class="text-xs text-slate-400 mb-6">Enter your account email to receive a password recovery link.</p>
         
         <div class="space-y-4">
           <div>
-            <label class="block text-xs font-medium text-slate-300 mb-1">Registered Email Address</label>
-            <input id="reset-email" type="email" placeholder="student@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
+            <label class="block text-xs font-medium text-slate-300 mb-1">Account Email</label>
+            <input id="forgot-email" type="email" placeholder="student@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-blue-500 font-mono">
           </div>
-          
-          <button onclick="handleForgotPassword()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition">
-            Send Reset Link
+          <button onclick="handleForgotPassword()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition font-mono">
+            Send Password Reset Link
           </button>
-          <button onclick="hideForgotPasswordView()" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs rounded-lg transition">
+          <button onclick="toggleForgotPass(false)" class="w-full py-2 text-xs font-mono text-slate-400 hover:text-white">
             ← Back to Sign In
           </button>
-          
-          <p id="reset-status-msg" class="text-xs font-mono mt-2 hidden text-center"></p>
+          <p id="forgot-msg" class="text-xs font-mono text-center hidden"></p>
         </div>
       </div>
 
     </div>
   </div>
 
-  <!-- Application Footer -->
   <footer class="border-t border-slate-900 bg-slate-950 py-8 text-center text-xs font-mono text-slate-500 mt-auto">
     <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
       <p>© 2026 Wizzy Cyber Platform. All rights reserved.</p>
@@ -622,17 +573,13 @@
       </div>
     </div>
   </footer>
-
-  <!-- Complete Application JavaScript Logic -->
-  <script>
-    // Initialize Supabase Credentials
+    <script>
+    // Supabase Credentials
     const SUPABASE_URL = 'https://oxnvpsfzytkrgokcuwkv.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im94bnZwc2Z6eXRrcmdva2N1d2t2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2OTI1NDksImV4cCI6MjEwNjI2ODU0OX0.AhzL3LgELbcK_qhnFlnNYWbaXdNUjVyX0-TGT-u9Ot8';
     
-    // Create Supabase Client
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // Application Global State
     let currentUser = null;
     let userProfileData = {
       username: '',
@@ -645,32 +592,32 @@
       completed_modules: 0
     };
 
-    // Assessment Quiz State
-    let currentQuizIndex = 0;
-    const quizQuestions = [
+    // Sample Interactive Exam Data
+    const examQuestions = [
       {
-        question: "1. Which AWS service is best suited for fine-grained identity access management?",
-        options: ["AWS S3", "AWS IAM", "AWS Lambda", "AWS EC2"],
+        question: "Which AWS service is designed for object storage with bucket policies?",
+        options: ["AWS EC2", "AWS S3", "AWS Lambda", "AWS RDS"],
         correct: 1
       },
       {
-        question: "2. What flag format is standard across Wizzy Cyber security challenges?",
-        options: ["FLAG{...}", "CTF{...}", "WIZZY{...}", "ADMIN{...}"],
-        correct: 2
+        question: "Which command-line tool is commonly used for directory enumeration?",
+        options: ["Gobuster", "Nmap", "Wireshark", "Metasploit"],
+        correct: 0
       },
       {
-        question: "3. What is the main objective of directory enumeration during security audits?",
-        options: ["Encrypt databases", "Discover hidden files & web paths", "Format server storage", "Clear access logs"],
-        correct: 1
+        question: "What type of attack involves injecting malicious input into ML datasets?",
+        options: ["Data Poisoning", "DDoS", "SQL Injection", "XSS"],
+        correct: 0
       }
     ];
 
-    // Initialize Application State on Page Load
+    let currentExamIdx = 0;
+    let examScore = 0;
+
     document.addEventListener('DOMContentLoaded', async () => {
       await checkInitialAuthSession();
       await loadLeaderboard();
       
-      // Listen for Supabase Authentication State Changes
       supabaseClient.auth.onAuthStateChange((event, session) => {
         if (session) {
           currentUser = session.user;
@@ -683,47 +630,6 @@
       });
     });
 
-    // Helper: Shorten User UUID
-    function formatShortID(id) {
-      if (!id) return 'Loading...';
-      const clean = id.replace(/-/g, '');
-      return `ID: ${clean.substring(0, 4)}...${clean.substring(clean.length - 4)}`;
-    }
-
-    // Helper: Show Toast Notification
-    function showToast(message) {
-      const toast = document.getElementById('toast-notification');
-      const msgEl = document.getElementById('toast-message');
-      msgEl.innerText = message;
-      toast.classList.remove('translate-y-[-150%]', 'opacity-0');
-      toast.classList.add('translate-y-0', 'opacity-100');
-
-      setTimeout(() => {
-        toast.classList.remove('translate-y-0', 'opacity-100');
-        toast.classList.add('translate-y-[-150%]', 'opacity-0');
-      }, 3500);
-    }
-
-    // Helper: Toggle Password Input Visibility
-    function togglePasswordVisibility(inputId, eyeIconId) {
-      const input = document.getElementById(inputId);
-      const eyeIcon = document.getElementById(eyeIconId);
-
-      if (input.type === 'password') {
-        input.type = 'text';
-        eyeIcon.innerHTML = `
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858-5.908a8.959 8.959 0 013.682-.783c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21f-9 9" />
-        `;
-      } else {
-        input.type = 'password';
-        eyeIcon.innerHTML = `
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-        `;
-      }
-    }
-
-    // Verify Active User Session
     async function checkInitialAuthSession() {
       const { data: { session } } = await supabaseClient.auth.getSession();
       if (session) {
@@ -735,6 +641,66 @@
       }
     }
 
+    // Toggle Password Visibility Eye Function
+    function togglePasswordVisibility(inputId, eyeIconId) {
+      const input = document.getElementById(inputId);
+      const icon = document.getElementById(eyeIconId);
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.innerText = '🙈';
+      } else {
+        input.type = 'password';
+        icon.innerText = '👁️';
+      }
+    }
+
+    // Toggle Forgot Password view inside Modal
+    function toggleForgotPass(showForgot) {
+      const mainForm = document.getElementById('auth-form-main');
+      const forgotForm = document.getElementById('auth-form-forgot');
+      if (showForgot) {
+        mainForm.classList.add('hidden');
+        forgotForm.classList.remove('hidden');
+      } else {
+        forgotForm.classList.add('hidden');
+        mainForm.classList.remove('hidden');
+      }
+    }
+
+    // Handle Forgot Password Email Submission
+    async function handleForgotPassword() {
+      const email = document.getElementById('forgot-email').value.trim();
+      const msg = document.getElementById('forgot-msg');
+      msg.classList.remove('hidden');
+
+      if (!email) {
+        msg.className = "text-xs font-mono text-center text-red-400";
+        msg.innerText = "Please enter your email address.";
+        return;
+      }
+
+      const { error } = await supabaseClient.auth.resetPasswordForEmail(email);
+      if (error) {
+        msg.className = "text-xs font-mono text-center text-red-400";
+        msg.innerText = error.message;
+      } else {
+        msg.className = "text-xs font-mono text-center text-emerald-400";
+        msg.innerText = "Password reset link sent to your email!";
+      }
+    }
+
+    // Show Welcome Back Pop-Up Notification
+    function showWelcomeToast(username) {
+      const toast = document.getElementById('welcome-toast');
+      const userEl = document.getElementById('welcome-toast-username');
+      userEl.innerText = `Welcome back, ${username}!`;
+      toast.classList.remove('translate-y-[-100px]', 'opacity-0');
+
+      setTimeout(() => {
+        toast.classList.add('translate-y-[-100px]', 'opacity-0');
+      }, 4000);
+    }
+
     // Toggle Navigation Views
     function switchView(viewName) {
       const publicView = document.getElementById('public-landing-view');
@@ -744,7 +710,6 @@
       const settingsView = document.getElementById('view-settings');
       const genericView = document.getElementById('view-generic');
 
-      // Hide all content containers
       publicView.classList.add('hidden');
       authView.classList.add('hidden');
       studyView.classList.add('hidden');
@@ -753,16 +718,12 @@
       genericView.classList.add('hidden');
 
       if (viewName === 'home') {
-        if (currentUser) {
-          authView.classList.remove('hidden');
-        } else {
-          publicView.classList.remove('hidden');
-        }
+        publicView.classList.remove('hidden');
       } else if (viewName === 'dashboard') {
         if (currentUser) {
           authView.classList.remove('hidden');
         } else {
-          openAuthModal('signin');
+          openAuthModal();
         }
       } else if (viewName === 'study') {
         studyView.classList.remove('hidden');
@@ -770,25 +731,24 @@
         if (currentUser) {
           testsView.classList.remove('hidden');
         } else {
-          openAuthModal('signin');
+          openAuthModal();
         }
       } else if (viewName === 'labs') {
         if (currentUser) {
-          studyView.classList.remove('hidden');
+          authView.classList.remove('hidden');
           const labsSection = document.getElementById('labs');
           if (labsSection) labsSection.scrollIntoView({ behavior: 'smooth' });
         } else {
-          openAuthModal('signin');
+          openAuthModal();
         }
       } else if (viewName === 'settings') {
         if (currentUser) {
           settingsView.classList.remove('hidden');
           loadSettingsFormData();
         } else {
-          openAuthModal('signin');
+          openAuthModal();
         }
       } else {
-        // Generic View Handler (e.g. Help Desk, Contact Support)
         genericView.classList.remove('hidden');
         document.getElementById('generic-title').innerText = viewName.toUpperCase();
         document.getElementById('generic-description').innerText = `Information regarding the ${viewName} page module.`;
@@ -797,44 +757,19 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function scrollToLab(labId) {
-      if (!currentUser) return openAuthModal('signin');
-      switchView('study');
-      setTimeout(() => {
-        const el = document.getElementById(labId);
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
-      // Toggle Sidebar Menu
     function toggleSidebarMenu() {
-      const drawer = document.getElementById('sidebar-drawer');
-      drawer.classList.toggle('-translate-x-full');
+      document.getElementById('sidebar-drawer').classList.toggle('-translate-x-full');
     }
 
-    // Modal Display Handlers
-    function openAuthModal(mode) {
+    function openAuthModal() {
+      toggleForgotPass(false);
       document.getElementById('auth-modal').classList.remove('hidden');
-      if (mode === 'forgot') {
-        showForgotPasswordView();
-      } else {
-        hideForgotPasswordView();
-      }
     }
 
     function closeAuthModal() {
       document.getElementById('auth-modal').classList.add('hidden');
     }
 
-    function showForgotPasswordView() {
-      document.getElementById('auth-modal-main').classList.add('hidden');
-      document.getElementById('auth-modal-forgot').classList.remove('hidden');
-    }
-
-    function hideForgotPasswordView() {
-      document.getElementById('auth-modal-forgot').classList.add('hidden');
-      document.getElementById('auth-modal-main').classList.remove('hidden');
-    }
-
-    // Update User Interface according to Authentication State
     function updateAuthUI(isLoggedIn) {
       const authContainer = document.getElementById('auth-container');
       const sidebarLinks = document.getElementById('sidebar-nav-links');
@@ -843,17 +778,14 @@
 
       if (isLoggedIn) {
         const displayName = userProfileData.username || currentUser.email.split('@')[0];
-        const avatarUrl = `https://api.dicebear.com/7.x/bottts/svg?seed=${displayName}`;
 
-        // Header Auth Control with Mini Avatar
         authContainer.innerHTML = `
           <button onclick="switchView('settings')" class="flex items-center gap-2 bg-slate-900 border border-slate-800 hover:border-slate-700 px-3 py-1.5 rounded-lg text-xs font-mono text-slate-200 transition">
-            <img src="${avatarUrl}" class="w-5 h-5 rounded-md bg-slate-950 border border-emerald-500/50">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
             <span id="header-user-display">${displayName}</span>
           </button>
         `;
 
-        // Mobile Drawer Links
         sidebarLinks.innerHTML = `
           <button onclick="switchView('home'); toggleSidebarMenu();" class="w-full text-left py-2 text-slate-300 hover:text-white">🏠 Home</button>
           <button onclick="switchView('study'); toggleSidebarMenu();" class="w-full text-left py-2 text-slate-300 hover:text-white">💎 Study Modules</button>
@@ -864,15 +796,10 @@
 
         sidebarLogoutBtn.classList.remove('hidden');
         document.getElementById('sidebar-logout-user').innerText = `(${displayName})`;
-
         authOnlyElems.forEach(el => el.classList.remove('hidden'));
-
-        if (!document.getElementById('public-landing-view').classList.contains('hidden')) {
-          switchView('home');
-        }
       } else {
         authContainer.innerHTML = `
-          <button onclick="openAuthModal('signin')" class="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition shadow-lg shadow-blue-500/20">
+          <button onclick="openAuthModal()" class="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition shadow-lg shadow-blue-500/20 font-mono">
             Sign In
           </button>
         `;
@@ -880,28 +807,25 @@
         sidebarLinks.innerHTML = `
           <button onclick="switchView('home'); toggleSidebarMenu();" class="w-full text-left py-2 text-slate-300 hover:text-white">🏠 Public Portal</button>
           <button onclick="switchView('study'); toggleSidebarMenu();" class="w-full text-left py-2 text-slate-300 hover:text-white">💎 Study Modules</button>
-          <button onclick="openAuthModal('signin'); toggleSidebarMenu();" class="w-full text-left py-2 text-blue-400 hover:text-blue-300">🔑 Sign In / Register</button>
+          <button onclick="openAuthModal(); toggleSidebarMenu();" class="w-full text-left py-2 text-blue-400 hover:text-blue-300">🔑 Sign In / Register</button>
         `;
 
         sidebarLogoutBtn.classList.add('hidden');
         authOnlyElems.forEach(el => el.classList.add('hidden'));
-
-        switchView('home');
       }
     }
 
-    // Authentication Handlers
     async function handleSignUp() {
       const email = document.getElementById('auth-email').value;
       const password = document.getElementById('auth-password').value;
 
-      if (!email || !password) return alert('Please input both an email and a password.');
+      if (!email || !password) return alert('Please input both email and password.');
 
       const { data, error } = await supabaseClient.auth.signUp({ email, password });
       if (error) {
         alert('Registration Error: ' + error.message);
       } else {
-        alert('Account created! Please sign in with your credentials.');
+        alert('Account created! Please sign in.');
         closeAuthModal();
       }
     }
@@ -917,30 +841,8 @@
         alert('Authentication Error: ' + error.message);
       } else {
         closeAuthModal();
-        const activeName = userProfileData.username || email.split('@')[0];
-        showToast(`Welcome back, ${activeName}!`);
-      }
-    }
-
-    async function handleForgotPassword() {
-      const email = document.getElementById('reset-email').value.trim();
-      const statusEl = document.getElementById('reset-status-msg');
-      statusEl.classList.remove('hidden');
-
-      if (!email) {
-        statusEl.className = "text-xs font-mono mt-2 text-red-400 text-center";
-        statusEl.innerText = "Please enter your registered email address.";
-        return;
-      }
-
-      const { error } = await supabaseClient.auth.resetPasswordForEmail(email);
-
-      if (error) {
-        statusEl.className = "text-xs font-mono mt-2 text-red-400 text-center";
-        statusEl.innerText = "Error: " + error.message;
-      } else {
-        statusEl.className = "text-xs font-mono mt-2 text-emerald-400 text-center";
-        statusEl.innerText = "Password reset instructions sent to your email!";
+        const activeName = email.split('@')[0];
+        showWelcomeToast(activeName);
       }
     }
 
@@ -949,45 +851,37 @@
       currentUser = null;
       userProfileData = { username: '', first_name: '', last_name: '', phone: '', gender: '', bio: '', points: 0, completed_modules: 0 };
       updateAuthUI(false);
+      switchView('home');
     }
 
-    // Fetch Profile Record safely using Supabase Auth User Metadata or Table fallback
     async function fetchUserProfile() {
       if (!currentUser) return;
 
       const fallbackUsername = currentUser.user_metadata?.username || currentUser.email.split('@')[0];
 
       try {
-        const { data, error } = await supabaseClient
-          .from('profiles')
-          .select('*')
-          .eq('id', currentUser.id)
-          .maybeSingle();
-
-        if (data) {
-          userProfileData = { ...userProfileData, ...data };
-        } else {
-          userProfileData.username = fallbackUsername;
-        }
+        const { data } = await supabaseClient.from('profiles').select('*').eq('id', currentUser.id).maybeSingle();
+        if (data) userProfileData = { ...userProfileData, ...data };
+        else userProfileData.username = fallbackUsername;
       } catch (err) {
         userProfileData.username = fallbackUsername;
       }
 
-      // Update UI Elements
       const activeName = userProfileData.username || fallbackUsername;
+      // Truncate user ID safely
+      const truncatedId = currentUser.id.length > 12 ? `${currentUser.id.substring(0, 12)}...` : currentUser.id;
+      
       document.getElementById('dash-username').innerText = activeName;
-      document.getElementById('dash-user-id').innerText = formatShortID(currentUser.id);
+      document.getElementById('dash-user-id').innerText = `ID: ${truncatedId}`;
       document.getElementById('dashboard-avatar').src = `https://api.dicebear.com/7.x/bottts/svg?seed=${activeName}`;
       document.getElementById('dash-user-points').innerText = `${userProfileData.points || 0} pts`;
-      document.getElementById('dash-user-modules').innerText = `${userProfileData.completed_modules || userProfileData.completedModules || 0}`;
+      document.getElementById('dash-user-modules').innerText = `${userProfileData.completed_modules || 0}`;
 
       const headerDisplay = document.getElementById('header-user-display');
       if (headerDisplay) headerDisplay.innerText = activeName;
-      const sidebarUser = document.getElementById('sidebar-logout-user');
-      if (sidebarUser) sidebarUser.innerText = `(${activeName})`;
     }
 
-    // Submit Challenge Flag (Lab 1 Default)
+    // Flag Submissions
     async function submitFlag() {
       const flagInput = document.getElementById('flag-input').value.trim();
       const statusEl = document.getElementById('lab-status');
@@ -1001,7 +895,7 @@
         statusEl.innerText = "✕ Invalid flag attempt. Double-check path enumeration.";
       }
     }
-      // Generic Modular Lab Challenge Submission Handler
+
     async function submitLabChallenge(inputId, statusId, targetFlag, labName, points) {
       const flagVal = document.getElementById(inputId).value.trim();
       const statusEl = document.getElementById(statusId);
@@ -1016,99 +910,29 @@
       }
     }
 
-    // Award Points & Update Profile
     async function awardPoints(labTitle, points) {
-      if (!currentUser) return openAuthModal('signin');
+      if (!currentUser) return alert('Please sign in to log lab completions.');
 
-      const currentPoints = userProfileData.points || 0;
-      const currentMods = userProfileData.completed_modules || userProfileData.completedModules || 0;
+      userProfileData.points = (userProfileData.points || 0) + points;
+      userProfileData.completed_modules = (userProfileData.completed_modules || 0) + 1;
 
-      userProfileData.points = currentPoints + points;
-      userProfileData.completed_modules = currentMods + 1;
-
-      const { error } = await supabaseClient
-        .from('profiles')
-        .upsert({
-          id: currentUser.id,
-          username: userProfileData.username || currentUser.email.split('@')[0],
-          points: userProfileData.points,
-          completed_modules: userProfileData.completed_modules
-        });
+      await supabaseClient.from('profiles').upsert({
+        id: currentUser.id,
+        username: userProfileData.username || currentUser.email.split('@')[0],
+        points: userProfileData.points,
+        completed_modules: userProfileData.completed_modules
+      });
 
       fetchUserProfile();
       loadLeaderboard();
     }
 
-    // Exam & Interactive Quiz Logic
-    function startExam(type) {
-      if (!currentUser) return openAuthModal('signin');
-      currentQuizIndex = 0;
-      document.getElementById('quiz-container').classList.remove('hidden');
-      renderQuizQuestion();
-      document.getElementById('quiz-container').scrollIntoView({ behavior: 'smooth' });
-    }
-
-    function renderQuizQuestion() {
-      if (currentQuizIndex >= quizQuestions.length) {
-        document.getElementById('quiz-question-title').innerText = "🎉 Assessment Completed!";
-        document.getElementById('quiz-options').innerHTML = `<p class="text-xs text-slate-300 font-mono">You have answered all evaluation questions. +100 bonus points logged!</p>`;
-        document.getElementById('quiz-next-btn').classList.add('hidden');
-        document.getElementById('quiz-feedback').classList.add('hidden');
-        awardPoints('Exam Assessment', 100);
-        return;
-      }
-
-      const q = quizQuestions[currentQuizIndex];
-      document.getElementById('quiz-badge').innerText = `Question ${currentQuizIndex + 1} of ${quizQuestions.length}`;
-      document.getElementById('quiz-question-title').innerText = q.question;
-      document.getElementById('quiz-feedback').classList.add('hidden');
-
-      const optionsContainer = document.getElementById('quiz-options');
-      optionsContainer.innerHTML = q.options.map((opt, idx) => `
-        <label class="flex items-center gap-3 p-3 bg-slate-950 border border-slate-800 rounded-xl cursor-pointer hover:border-slate-700 transition">
-          <input type="radio" name="quiz-opt" value="${idx}" class="text-blue-500 font-mono">
-          <span class="text-xs font-mono text-slate-300">${opt}</span>
-        </label>
-      `).join('');
-    }
-
-    function submitQuizAnswer() {
-      const selected = document.querySelector('input[name="quiz-opt"]:checked');
-      const feedback = document.getElementById('quiz-feedback');
-      feedback.classList.remove('hidden');
-
-      if (!selected) {
-        feedback.className = "text-xs font-mono mb-4 text-red-400";
-        feedback.innerText = "Please select an answer to continue.";
-        return;
-      }
-
-      const q = quizQuestions[currentQuizIndex];
-      if (parseInt(selected.value) === q.correct) {
-        feedback.className = "text-xs font-mono mb-4 text-emerald-400";
-        feedback.innerText = "✓ Correct Answer!";
-      } else {
-        feedback.className = "text-xs font-mono mb-4 text-red-400";
-        feedback.innerText = `✕ Incorrect. The correct answer was: ${q.options[q.correct]}`;
-      }
-
-      setTimeout(() => {
-        currentQuizIndex++;
-        renderQuizQuestion();
-      }, 1200);
-    }
-
-    // Query & Render Dynamic Leaderboard Table
     async function loadLeaderboard() {
       const tbody = document.getElementById('leaderboard-body');
       let data = null;
 
       try {
-        const res = await supabaseClient
-          .from('profiles')
-          .select('username, points, completed_modules')
-          .order('points', { ascending: false })
-          .limit(10);
+        const res = await supabaseClient.from('profiles').select('username, points, completed_modules').order('points', { ascending: false }).limit(10);
         data = res.data;
       } catch (e) {
         data = null;
@@ -1122,17 +946,10 @@
             <td class="px-6 py-3.5 text-center">12</td>
             <td class="px-6 py-3.5 text-right font-bold text-blue-400">1,250 pts</td>
           </tr>
-          <tr>
-            <td class="px-6 py-3.5 text-slate-400">#2</td>
-            <td class="px-6 py-3.5 text-slate-300">security_student_01</td>
-            <td class="px-6 py-3.5 text-center">5</td>
-            <td class="px-6 py-3.5 text-right font-bold text-blue-400">450 pts</td>
-          </tr>
         `;
         return;
       }
 
-      // Compute rank if user logged in
       if (currentUser) {
         const userRankIndex = data.findIndex(p => p.username === userProfileData.username);
         if (userRankIndex !== -1) {
@@ -1150,139 +967,93 @@
       `).join('');
     }
 
-    // Settings Navigation Tabs
+    // Interactive Exam Engine Functions
+    function startInteractiveExam() {
+      currentExamIdx = 0;
+      examScore = 0;
+      document.getElementById('exam-starter').classList.add('hidden');
+      document.getElementById('exam-result').classList.add('hidden');
+      document.getElementById('exam-runner').classList.remove('hidden');
+      renderExamQuestion();
+    }
+
+    function renderExamQuestion() {
+      const q = examQuestions[currentExamIdx];
+      document.getElementById('exam-progress').innerText = `Question ${currentExamIdx + 1} of ${examQuestions.length}`;
+      document.getElementById('exam-score-live').innerText = `Current Score: ${examScore}`;
+      document.getElementById('exam-question-text').innerText = q.question;
+
+      const optsContainer = document.getElementById('exam-options-container');
+      optsContainer.innerHTML = q.options.map((opt, i) => `
+        <button onclick="handleExamAnswer(${i})" class="w-full text-left px-4 py-3 bg-slate-950 border border-slate-800 hover:border-blue-500 hover:bg-slate-900/50 text-xs font-mono text-slate-200 rounded-xl transition">
+          ${String.fromCharCode(65 + i)}. ${opt}
+        </button>
+      `).join('');
+    }
+
+    function handleExamAnswer(selectedIdx) {
+      if (selectedIdx === examQuestions[currentExamIdx].correct) {
+        examScore++;
+      }
+      currentExamIdx++;
+
+      if (currentExamIdx < examQuestions.length) {
+        renderExamQuestion();
+      } else {
+        finishInteractiveExam();
+      }
+    }
+
+    function finishInteractiveExam() {
+      document.getElementById('exam-runner').classList.add('hidden');
+      document.getElementById('exam-result').classList.remove('hidden');
+      document.getElementById('exam-final-score').innerText = `You scored ${examScore} / ${examQuestions.length}`;
+    }
+
+    function resetInteractiveExam() {
+      document.getElementById('exam-result').classList.add('hidden');
+      document.getElementById('exam-starter').classList.remove('hidden');
+    }
+
+    // Exam Sub-tab Navigation
+    function switchTestSubTab(subTab) {
+      const buttons = ['exam', 'history', 'analytics', 'videos', 'bookmarks'];
+      buttons.forEach(b => {
+        const btn = document.getElementById(`test-sub-${b}`);
+        if (btn) btn.className = "px-3.5 py-1.5 rounded-lg text-xs font-mono bg-slate-900 text-slate-400 hover:text-white border border-slate-800 transition";
+      });
+
+      document.getElementById(`test-sub-${subTab}`).className = "px-3.5 py-1.5 rounded-lg text-xs font-mono bg-blue-600 text-white font-semibold transition";
+
+      const examContainer = document.getElementById('test-content-exam');
+      const otherContainer = document.getElementById('test-content-other');
+
+      if (subTab === 'exam') {
+        examContainer.classList.remove('hidden');
+        otherContainer.classList.add('hidden');
+      } else {
+        examContainer.classList.add('hidden');
+        otherContainer.classList.remove('hidden');
+        document.getElementById('test-other-title').innerText = subTab.toUpperCase() + " SECTION";
+        document.getElementById('test-other-desc').innerText = `Your personal ${subTab} statistics and logs will load here.`;
+      }
+    }
+
+    // Settings Navigation
     function switchSettingsTab(tab) {
       document.getElementById('tab-profile').classList.add('hidden');
       document.getElementById('tab-account').classList.add('hidden');
       document.getElementById('tab-appearance').classList.add('hidden');
 
-      document.getElementById('tab-btn-profile').className = "w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono";
-      document.getElementById('tab-btn-account').className = "w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono";
-      document.getElementById('tab-btn-appearance').className = "w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono";
-
-      if (tab === 'profile') {
-        document.getElementById('tab-profile').classList.remove('hidden');
-        document.getElementById('tab-btn-profile').className = "w-full text-left px-4 py-2.5 rounded-xl bg-blue-600 text-white font-semibold transition text-xs font-mono";
-      } else if (tab === 'account') {
-        document.getElementById('tab-account').classList.remove('hidden');
-        document.getElementById('tab-btn-account').className = "w-full text-left px-4 py-2.5 rounded-xl bg-blue-600 text-white font-semibold transition text-xs font-mono";
-      } else if (tab === 'appearance') {
-        document.getElementById('tab-appearance').classList.remove('hidden');
-        document.getElementById('tab-btn-appearance').className = "w-full text-left px-4 py-2.5 rounded-xl bg-blue-600 text-white font-semibold transition text-xs font-mono";
-      }
-    }
-
-    // Theme Switcher Mode Handler
-    function setThemeMode(mode) {
-      const darkBtn = document.getElementById('theme-btn-dark');
-      const lightBtn = document.getElementById('theme-btn-light');
-
-      if (mode === 'light') {
-        document.documentElement.classList.remove('dark');
-        lightBtn.className = "flex-1 p-4 rounded-xl border border-blue-500 bg-slate-800 text-white text-xs font-mono font-bold flex flex-col items-center gap-2";
-        darkBtn.className = "flex-1 p-4 rounded-xl border border-slate-800 bg-slate-900 text-slate-400 hover:text-white text-xs font-mono font-bold flex flex-col items-center gap-2";
-      } else {
-        document.documentElement.classList.add('dark');
-        darkBtn.className = "flex-1 p-4 rounded-xl border border-blue-500 bg-slate-950 text-white text-xs font-mono font-bold flex flex-col items-center gap-2";
-        lightBtn.className = "flex-1 p-4 rounded-xl border border-slate-800 bg-slate-900 text-slate-400 hover:text-white text-xs font-mono font-bold flex flex-col items-center gap-2";
-      }
-    }
-
-    // Settings Profile Form Loader
-    function loadSettingsFormData() {
-      if (!currentUser) return;
-
-      const fallbackName = currentUser.email.split('@')[0];
-      document.getElementById('settings-username-input').value = userProfileData.username || fallbackName;
-      document.getElementById('settings-email-input').value = currentUser.email || '';
-      document.getElementById('settings-firstname-input').value = userProfileData.first_name || '';
-      document.getElementById('settings-lastname-input').value = userProfileData.last_name || '';
-      document.getElementById('settings-phone-input').value = userProfileData.phone || '';
-      document.getElementById('settings-gender-input').value = userProfileData.gender || '';
-      document.getElementById('settings-bio-input').value = userProfileData.bio || '';
-      document.getElementById('settings-avatar-preview').src = `https://api.dicebear.com/7.x/bottts/svg?seed=${userProfileData.username || fallbackName}`;
-    }
-
-    // Handle User Profile Updates
-    async function handleProfileUpdate() {
-      const msg = document.getElementById('profile-update-msg');
-      msg.classList.remove('hidden');
-
-      const newUsername = document.getElementById('settings-username-input').value.trim();
-      const firstName = document.getElementById('settings-firstname-input').value.trim();
-      const lastName = document.getElementById('settings-lastname-input').value.trim();
-      const phone = document.getElementById('settings-phone-input').value.trim();
-      const gender = document.getElementById('settings-gender-input').value;
-      const bio = document.getElementById('settings-bio-input').value.trim();
-
-      if (!newUsername) {
-        msg.className = "text-xs font-mono mt-1 text-red-400";
-        msg.innerText = "Display username cannot be empty.";
-        return;
-      }
-
-      const { data: authData, error: authError } = await supabaseClient.auth.updateUser({
-        data: {
-          username: newUsername,
-          first_name: firstName,
-          last_name: lastName,
-          phone: phone,
-          gender: gender,
-          bio: bio
-        }
+      ['profile', 'account', 'appearance'].forEach(t => {
+        const btn = document.getElementById(`tab-btn-${t}`);
+        if (btn) btn.className = "w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono";
       });
 
-      await supabaseClient.from('profiles').upsert({
-        id: currentUser.id,
-        username: newUsername,
-        first_name: firstName,
-        last_name: lastName,
-        phone: phone,
-        gender: gender,
-        bio: bio
-      }).select();
-
-      userProfileData = {
-        ...userProfileData,
-        username: newUsername,
-        first_name: firstName,
-        last_name: lastName,
-        phone: phone,
-        gender: gender,
-        bio: bio
-      };
-
-      msg.className = "text-xs font-mono mt-1 text-emerald-400";
-      msg.innerText = "Profile updated successfully!";
-      
-      fetchUserProfile();
+      document.getElementById(`tab-${tab}`).classList.remove('hidden');
+      document.getElementById(`tab-btn-${tab}`).className = "w-full text-left px-4 py-2.5 rounded-xl bg-blue-600 text-white font-semibold transition text-xs font-mono";
     }
 
-    // Handle Password Update Requests
-    async function handlePasswordUpdate() {
-      const newPassword = document.getElementById('pwd-new').value;
-      const msg = document.getElementById('password-update-msg');
-
-      if (!newPassword || newPassword.length < 6) {
-        msg.classList.remove('hidden');
-        msg.className = "text-xs font-mono mt-1 text-red-400";
-        msg.innerText = "Password must be at least 6 characters.";
-        return;
-      }
-
-      const { error } = await supabaseClient.auth.updateUser({ password: newPassword });
-
-      msg.classList.remove('hidden');
-      if (error) {
-        msg.className = "text-xs font-mono mt-1 text-red-400";
-        msg.innerText = "Password update failed: " + error.message;
-      } else {
-        msg.className = "text-xs font-mono mt-1 text-emerald-400";
-        msg.innerText = "Password updated successfully!";
-        document.getElementById('pwd-current').value = '';
-        document.getElementById('pwd-new').value = '';
-      }
-    }
-  </script>
-</body>
-</html>
+    function setPortalTheme(theme) {
+      if (theme === 'light') {
+        document.documentElement.classList.remove('dark'
