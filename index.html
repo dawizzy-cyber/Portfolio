@@ -747,7 +747,7 @@
       currentUser = null;
       userProfileData = { username: '', first_name: '', last_name: '', phone: '', gender: '', bio: '', points: 0, completed_modules: 0 };
       updateAuthUI(false);
-    }
+        }
     async function fetchUserProfile() {
       if (!currentUser) return;
       const fallbackUsername = currentUser.user_metadata?.username || (currentUser.email ? currentUser.email.split('@')[0] : (currentUser.phone || 'Student'));
