@@ -4,61 +4,32 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Wizzy Cyber | Interactive Cloud & Security Platform</title>
-  
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Supabase Client Library -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  
   <style>
     ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-track { background: #020617; }
     ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #334155; }
     tr { transition: background-color 0.2s ease; }
-    #welcome-toast { will-change: transform, opacity; }
+    #welcome-toast, #session-toast { will-change: transform, opacity; }
 
-    /* Light mode overrides */
-    html.light {
-      background-color: #f8fafc;
-      color: #0f172a;
-    }
-    html.light body {
-      background-color: #f8fafc;
-      color: #0f172a;
-    }
-    html.light header {
-      background-color: rgba(255, 255, 255, 0.85);
-      border-color: #e2e8f0;
-    }
+    /* Light mode theme overrides */
+    html.light { background-color: #f8fafc; color: #0f172a; }
+    html.light body { background-color: #f8fafc; color: #0f172a; }
+    html.light header { background-color: rgba(255, 255, 255, 0.85); border-color: #e2e8f0; }
     html.light .bg-slate-900, html.light .bg-slate-900\/80, html.light .bg-slate-900\/60, html.light .bg-slate-900\/90 {
-      background-color: #ffffff !important;
-      border-color: #cbd5e1 !important;
-      color: #0f172a !important;
+      background-color: #ffffff !important; border-color: #cbd5e1 !important; color: #0f172a !important;
     }
-    html.light .bg-slate-950 {
-      background-color: #f1f5f9 !important;
-      border-color: #cbd5e1 !important;
-      color: #0f172a !important;
-    }
+    html.light .bg-slate-950 { background-color: #f1f5f9 !important; border-color: #cbd5e1 !important; color: #0f172a !important; }
     html.light .text-white { color: #0f172a !important; }
     html.light .text-slate-400, html.light .text-slate-300 { color: #475569 !important; }
-    html.light footer {
-      background-color: #ffffff;
-      border-color: #e2e8f0;
-    }
+    html.light footer { background-color: #ffffff; border-color: #e2e8f0; }
   </style>
   <script>
     tailwind.config = {
       darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            brand: '#3b82f6',
-            accent: '#10b981',
-          }
-        }
-      }
+      theme: { extend: { colors: { brand: '#3b82f6', accent: '#10b981' } } }
     }
   </script>
 </head>
@@ -73,7 +44,7 @@
     </div>
   </div>
 
-  <!-- Session Warning Toast -->
+  <!-- Session Inactivity Warning Toast -->
   <div id="session-toast" class="fixed bottom-5 right-5 z-50 transform translate-y-[150%] opacity-0 transition-all duration-500 ease-in-out bg-amber-950/90 border border-amber-500/40 text-white px-5 py-3.5 rounded-xl shadow-2xl flex items-center gap-3">
     <div class="w-3 h-3 rounded-full bg-amber-400 animate-ping"></div>
     <div>
@@ -81,612 +52,29 @@
       <p id="session-toast-msg" class="text-xs text-slate-200">You will be logged out soon due to inactivity.</p>
     </div>
   </div>
-    <!-- Main Top Header Bar -->
-  <header class="sticky top-0 z-40 backdrop-blur-md bg-slate-950/80 border-b border-slate-900">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between gap-4">
-      
-      <!-- Left: Logo & Drawer Menu Button -->
-      <div class="flex items-center gap-3">
-        <button id="sidebar-toggle-btn" onclick="toggleSidebarMenu()" class="p-2 text-slate-400 hover:text-white bg-slate-900 border border-slate-800 rounded-lg transition" title="Toggle Navigation Drawer">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-          </svg>
-        </button>
-        
-        <a href="javascript:void(0)" onclick="switchView('home')" class="text-lg sm:text-xl font-bold tracking-tight text-blue-500 font-mono flex items-center gap-2">
-          &lt;WizzyCyber /&gt;
-        </a>
-      </div>
 
-      <!-- Center: Navigation Tabs (Desktop) -->
-      <nav id="desktop-top-nav" class="hidden md:flex items-center space-x-1 text-xs font-mono font-medium text-slate-400">
-        <button onclick="switchView('home')" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">🔥 Home</button>
-        <button onclick="switchView('study')" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">💎 Study</button>
-        <button onclick="switchView('tests')" class="auth-only hidden px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">📝 Tests</button>
-        <button onclick="switchView('dashboard')" class="auth-only hidden px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">📊 Dashboard</button>
-      </nav>
+  <!-- Dynamic Component Containers -->
+  <div id="header-container"></div>
+  <div id="drawer-container"></div>
 
-      <!-- Right Side: Profile / Auth Actions -->
-      <div class="flex items-center gap-2 sm:gap-3">
-        <div id="auth-container" class="flex items-center gap-2"></div>
-        <a href="https://x.com/intent/follow?screen_name=bush_bean__" target="_blank" rel="noopener noreferrer" class="px-3 py-2 bg-blue-600/10 border border-blue-500/30 text-blue-400 text-xs font-semibold rounded-lg hover:bg-blue-600 hover:text-white transition hidden sm:flex items-center gap-2">
-          + Follow @bush_bean__
-        </a>
-      </div>
-
-    </div>
-  </header>
-
-  <!-- Sliding Drawer Navigation Menu -->
-  <aside id="sidebar-drawer" class="fixed top-0 left-0 bottom-0 w-72 bg-slate-950 border-r border-slate-900 z-50 transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col justify-between p-6 shadow-2xl">
-    <div>
-      <div class="flex justify-between items-center mb-8 border-b border-slate-900 pb-4">
-        <span class="text-base font-bold text-blue-500 font-mono">&lt;WizzyCyber /&gt;</span>
-        <button onclick="toggleSidebarMenu()" class="text-slate-400 hover:text-white text-base">✕</button>
-      </div>
-      <p class="text-[10px] uppercase font-mono tracking-wider text-slate-500 mb-3">Navigation Menu</p>
-      <div id="sidebar-nav-links" class="space-y-1.5 text-xs font-mono"></div>
-    </div>
-
-    <div class="pt-4 border-t border-slate-900 space-y-2">
-      <button onclick="switchView('contact'); toggleSidebarMenu();" class="w-full text-left text-xs font-mono text-slate-400 hover:text-white py-1">📞 Contact Support</button>
-      <button onclick="switchView('help'); toggleSidebarMenu();" class="w-full text-left text-xs font-mono text-slate-400 hover:text-white py-1">❓ Help Desk & AI Assistant</button>
-      <button id="sidebar-logout-btn" onclick="handleSignOut(); toggleSidebarMenu();" class="w-full text-left text-xs font-mono text-red-400 hover:text-red-300 py-2 border-t border-slate-900/80 mt-2 hidden">
-        🚪 Sign Out <span id="sidebar-logout-user"></span>
-      </button>
-    </div>
-  </aside>
-
-  <!-- App Main Content Container Opening -->
+  <!-- Main View Container -->
   <main id="app-container" class="flex-grow">
-    <!-- View 1: Public Landing -->
-    <div id="public-landing-view">
-      <section class="max-w-4xl mx-auto px-6 py-16 sm:py-20 text-center">
-        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-full text-xs font-semibold uppercase tracking-wider mb-6">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Security & Cloud Engineering Hub
-        </div>
-        <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white mb-6">
-          Wizzy Cyber Technical Portal
-        </h1>
-        <p class="text-slate-400 text-base sm:text-lg max-w-2xl mx-auto mb-8 leading-relaxed">
-          Explore cloud infrastructure, cybersecurity research, and machine learning models. Sign in to access hands-on labs, complete modules, and track your global rank.
-        </p>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl mx-auto text-left">
-          <div class="p-5 bg-slate-900/80 border border-slate-800 rounded-xl">
-            <p class="text-xs font-mono text-blue-400 mb-1">X (Twitter) Profile</p>
-            <h3 class="text-base font-bold text-white mb-2">@bush_bean__</h3>
-            <p class="text-xs text-slate-400 mb-4">Sharing updates on machine learning, cloud architecture, and security.</p>
-            <a href="https://x.com/bush_bean__" target="_blank" rel="noopener noreferrer" class="inline-block px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg transition">
-              Visit Profile →
-            </a>
-          </div>
-
-          <div class="p-5 bg-slate-900/80 border border-slate-800 rounded-xl">
-            <p class="text-xs font-mono text-emerald-400 mb-1">Student Portal</p>
-            <h3 class="text-base font-bold text-white mb-2">Interactive Learning</h3>
-            <p class="text-xs text-slate-400 mb-4">Register or sign in to verify challenge flags and maintain your score.</p>
-            <button onclick="openAuthModal()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-lg transition">
-              Sign In / Register
-            </button>
-          </div>
-        </div>
-      </section>
-  </div>
-              <!-- View 2: Authenticated Main Dashboard -->
-    <div id="authenticated-view" class="hidden">
-      
-      <!-- Green Styled Dashboard Header -->
-      <section id="dashboard-section" class="max-w-6xl mx-auto px-6 pt-8 pb-4">
-        <div class="bg-emerald-950/40 border border-emerald-500/30 p-6 rounded-2xl shadow-xl backdrop-blur-sm">
-          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-            <div class="flex items-center gap-4">
-              <div class="relative">
-                <img id="dashboard-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=wizzy" alt="Profile Picture" class="w-16 h-16 rounded-xl border-2 border-emerald-400/60 bg-slate-950 p-1 object-cover">
-                <span class="absolute bottom-0 right-0 w-4 h-4 bg-emerald-500 border-2 border-slate-900 rounded-full"></span>
-              </div>
-              <div>
-                <div class="flex items-center gap-2">
-                  <h2 id="dash-username" class="text-2xl font-bold text-white">Student</h2>
-                  <span class="text-xs font-mono bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 px-2 py-0.5 rounded">Active Session</span>
-                </div>
-                <p id="dash-user-id" class="text-xs font-mono text-emerald-400/80 mt-1">ID: Loading...</p>
-              </div>
-            </div>
-            <div class="flex gap-3">
-              <button onclick="switchView('settings')" class="px-4 py-2 bg-slate-900/80 hover:bg-slate-800 text-slate-200 text-xs font-semibold rounded-lg transition border border-emerald-500/20">
-                ⚙️ Settings
-              </button>
-              <button onclick="handleSignOut()" class="px-4 py-2 bg-slate-900/80 hover:bg-red-900/50 hover:text-red-300 text-slate-300 text-xs font-semibold rounded-lg transition border border-emerald-500/20">
-                Sign Out Account
-              </button>
-            </div>
-          </div>
-
-          <!-- Embedded Score & Stats Overview -->
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-emerald-500/20">
-            <div class="bg-slate-950/60 border border-emerald-500/20 p-4 rounded-xl flex justify-between items-center">
-              <div>
-                <p class="text-xs font-mono text-emerald-300/70">Total Score</p>
-                <p id="dash-user-points" class="text-xl font-bold font-mono text-emerald-400">0 pts</p>
-              </div>
-              <span class="text-2xl">🏆</span>
-            </div>
-            <div class="bg-slate-950/60 border border-emerald-500/20 p-4 rounded-xl flex justify-between items-center">
-              <div>
-                <p class="text-xs font-mono text-emerald-300/70">Modules Completed</p>
-                <p id="dash-user-modules" class="text-xl font-bold font-mono text-emerald-300">0</p>
-              </div>
-              <span class="text-2xl">⚡</span>
-            </div>
-            <div class="bg-slate-950/60 border border-emerald-500/20 p-4 rounded-xl flex justify-between items-center">
-              <div>
-                <p class="text-xs font-mono text-emerald-300/70">Global Rank</p>
-                <p id="dash-user-rank" class="text-xl font-bold font-mono text-purple-300">#--</p>
-              </div>
-              <span class="text-2xl">🥇</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="about" class="max-w-6xl mx-auto px-6 py-6">
-        <div class="inline-flex items-center gap-2 px-3 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-full text-xs font-semibold uppercase tracking-wider mb-4">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Live Interactive Platform • Supabase Connected
-        </div>
-        <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-4 leading-tight">
-          Interactive Cloud Engineering & <span class="text-blue-500">Cybersecurity</span> Platform.
-        </h1>
-        <p class="text-slate-400 text-base sm:text-lg max-w-3xl leading-relaxed">
-          Learn cloud architecture, machine learning pipelines, and offensive security. Solve hands-on labs, complete modules, and log your progress live.
-        </p>
-      </section>
-
-      <section id="learning" class="max-w-6xl mx-auto px-6 py-10 border-t border-slate-900">
-        <div class="mb-8">
-          <h2 class="text-2xl font-bold text-white mb-2">Technical Curriculum</h2>
-          <p class="text-slate-400 text-sm">Structured modules across cloud engineering, machine learning, and offensive security.</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-xl hover:border-slate-700 transition cursor-pointer" onclick="switchView('study')">
-            <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded">Track 01 • Security</span>
-            <h3 class="text-lg font-bold text-white mt-4 mb-2">Offensive Security & Recon</h3>
-            <p class="text-slate-400 text-xs leading-relaxed">Directory discovery, terminal navigation, web path enumeration, and interactive capture-the-flag labs.</p>
-          </div>
-
-          <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-xl hover:border-slate-700 transition cursor-pointer" onclick="switchView('study')">
-            <span class="text-xs font-mono text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded">Track 02 • Infrastructure</span>
-            <h3 class="text-lg font-bold text-white mt-4 mb-2">Cloud Computing & DevOps</h3>
-            <p class="text-slate-400 text-xs leading-relaxed">AWS S3 storage policies, Linux server administration, Docker containerization, and Netlify deployments.</p>
-          </div>
-
-          <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-xl hover:border-slate-700 transition cursor-pointer" onclick="switchView('study')">
-            <span class="text-xs font-mono text-purple-400 bg-purple-500/10 px-2.5 py-1 rounded">Track 03 • Data Science</span>
-            <h3 class="text-lg font-bold text-white mt-4 mb-2">ML & Spectral Analytics</h3>
-            <p class="text-slate-400 text-xs leading-relaxed">Python processing algorithms, bioactive metabolite classification, and GC-MS spectral research.</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Practical Labs Section -->
-      <section id="labs" class="max-w-6xl mx-auto px-6 py-12 border-t border-slate-900">
-        <div class="mb-8">
-          <h2 class="text-2xl font-bold text-white mb-2">Interactive Practical Labs</h2>
-          <p class="text-slate-400 text-sm">Submit challenge flags obtained from practical modules to update your student transcript in real time.</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-xl flex flex-col justify-between">
-            <div>
-              <div class="flex justify-between items-center mb-2">
-                <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">Cyber Security</span>
-                <span class="text-xs font-mono text-slate-400">100 pts</span>
-              </div>
-              <h3 class="text-base font-bold text-white mb-2">Web Directory Enumeration</h3>
-              <p class="text-slate-400 text-xs mb-4">Discover hidden paths using fuzzing wordlists to locate the admin token.</p>
-            </div>
-            <div>
-              <div class="flex gap-2">
-                <input id="flag-input" type="text" placeholder="WIZZY{flag_here}" class="bg-slate-950 border border-slate-700 text-slate-200 text-xs rounded-lg px-3 py-2 w-full focus:outline-none focus:border-blue-500 font-mono">
-                <button onclick="submitFlag()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs rounded-lg transition whitespace-nowrap">Submit</button>
-              </div>
-              <p id="lab-status" class="text-xs font-mono mt-2 text-slate-500"></p>
-            </div>
-          </div>
-
-          <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-xl flex flex-col justify-between">
-            <div>
-              <div class="flex justify-between items-center mb-2">
-                <span class="text-xs font-mono text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded">Cloud Infrastructure</span>
-                <span class="text-xs font-mono text-slate-400">150 pts</span>
-              </div>
-              <h3 class="text-base font-bold text-white mb-2">S3 Bucket Access Control</h3>
-              <p class="text-slate-400 text-xs mb-4">Audit unauthenticated access on misconfigured storage bucket policies.</p>
-            </div>
-            <div>
-              <div class="flex gap-2">
-                <input id="flag-input-cloud" type="text" placeholder="WIZZY{flag_here}" class="bg-slate-950 border border-slate-700 text-slate-200 text-xs rounded-lg px-3 py-2 w-full focus:outline-none focus:border-blue-500 font-mono">
-                <button onclick="submitLabChallenge('flag-input-cloud', 'lab-status-cloud', 'WIZZY{s3_bucket_sec_2026}', 'AWS S3 Access Audit', 150)" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition whitespace-nowrap">Submit</button>
-              </div>
-              <p id="lab-status-cloud" class="text-xs font-mono mt-2 text-slate-500"></p>
-            </div>
-          </div>
-
-          <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-xl flex flex-col justify-between">
-            <div>
-              <div class="flex justify-between items-center mb-2">
-                <span class="text-xs font-mono text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded">Applied ML</span>
-                <span class="text-xs font-mono text-slate-400">200 pts</span>
-              </div>
-              <h3 class="text-base font-bold text-white mb-2">Adversarial Model Poisoning</h3>
-              <p class="text-slate-400 text-xs mb-4">Detect feature manipulation techniques targeting predictive pipeline outputs.</p>
-            </div>
-            <div>
-              <div class="flex gap-2">
-                <input id="flag-input-ml" type="text" placeholder="WIZZY{flag_here}" class="bg-slate-950 border border-slate-700 text-slate-200 text-xs rounded-lg px-3 py-2 w-full focus:outline-none focus:border-blue-500 font-mono">
-                <button onclick="submitLabChallenge('flag-input-ml', 'lab-status-ml', 'WIZZY{ml_feature_clean_2026}', 'Adversarial ML Defense', 200)" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white font-semibold text-xs rounded-lg transition whitespace-nowrap">Submit</button>
-              </div>
-              <p id="lab-status-ml" class="text-xs font-mono mt-2 text-slate-500"></p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Supabase Leaderboard -->
-      <section id="leaderboard" class="max-w-6xl mx-auto px-6 py-12 border-t border-slate-900">
-        <div class="flex flex-col sm:flex-row justify-between sm:items-end mb-6 gap-2">
-          <div>
-            <h2 class="text-2xl font-bold text-white mb-1">Live Student Leaderboard</h2>
-            <p class="text-slate-400 text-sm">Real-time points and achievements synced from Supabase records.</p>
-          </div>
-          <button onclick="loadLeaderboard()" class="self-start sm:self-auto text-xs font-mono text-blue-400 bg-blue-500/10 border border-blue-500/20 px-3 py-1.5 rounded-lg hover:bg-blue-500 hover:text-white transition">
-            🔄 Refresh Scores
-          </button>
-        </div>
-
-        <div class="bg-slate-900/60 border border-slate-800 rounded-xl overflow-x-auto">
-          <table class="w-full text-left text-sm text-slate-300 min-w-[500px]">
-            <thead class="bg-slate-950 text-xs font-mono uppercase text-slate-400 border-b border-slate-800">
-              <tr>
-                <th class="px-6 py-3.5">Rank</th>
-                <th class="px-6 py-3.5">Student Account</th>
-                <th class="px-6 py-3.5 text-center">Modules Completed</th>
-                <th class="px-6 py-3.5 text-right">Total Score</th>
-              </tr>
-            </thead>
-            <tbody id="leaderboard-body" class="divide-y divide-slate-800/60 font-mono text-xs">
-              <tr>
-                <td colspan="4" class="px-6 py-6 text-center text-slate-500">Loading student scores...</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-  </div>
-      <!-- View 3: Study Modules (Includes Practical Cybersecurity, Ethical Hacking & Cloud Computing) -->
-    <div id="view-study" class="hidden max-w-6xl mx-auto px-6 py-10">
-      <div class="mb-8 border-b border-slate-900 pb-6">
-        <h2 class="text-3xl font-bold text-white mb-2">Study Modules & Learning Paths</h2>
-        <p class="text-slate-400 text-sm">Master key technical domains with structured theory and practical exercises.</p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between">
-          <div>
-            <div class="inline-block px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono rounded mb-4">Module 01</div>
-            <h3 class="text-xl font-bold text-white mb-3">Practical Cybersecurity</h3>
-            <p class="text-slate-400 text-xs leading-relaxed mb-4">Learn network scanning, offensive security fundamentals, directory brute-forcing, and vulnerability auditing techniques.</p>
-          </div>
-          <button onclick="switchView('labs')" class="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-mono text-xs font-semibold rounded-lg transition">
-            Start Cybersecurity Lab →
-          </button>
-        </div>
-
-        <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between">
-          <div>
-            <div class="inline-block px-2.5 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono rounded mb-4">Module 02</div>
-            <h3 class="text-xl font-bold text-white mb-3">Ethical Hacking & Recon</h3>
-            <p class="text-slate-400 text-xs leading-relaxed mb-4">Explore web application penetration testing, payload crafting, authorization bypasses, and security controls.</p>
-          </div>
-          <button onclick="switchView('labs')" class="w-full py-2 bg-blue-600 hover:bg-blue-500 text-white font-mono text-xs font-semibold rounded-lg transition">
-            Start Hacking Challenge →
-          </button>
-        </div>
-
-        <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between">
-          <div>
-            <div class="inline-block px-2.5 py-1 bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-mono rounded mb-4">Module 03</div>
-            <h3 class="text-xl font-bold text-white mb-3">Cloud Computing & DevOps</h3>
-            <p class="text-slate-400 text-xs leading-relaxed mb-4">Understand AWS infrastructure, IAM policies, container orchestration, server administration, and automated pipelines.</p>
-          </div>
-          <button onclick="switchView('labs')" class="w-full py-2 bg-purple-600 hover:bg-purple-500 text-white font-mono text-xs font-semibold rounded-lg transition">
-            Start Cloud Lab →
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- View 4: Assessments & Tests -->
-    <div id="view-tests" class="hidden max-w-6xl mx-auto px-6 py-10">
-      <div class="mb-8 border-b border-slate-900 pb-6">
-        <h2 class="text-3xl font-bold text-white mb-2">Assessments & Certifications</h2>
-        <p class="text-slate-400 text-sm">Verify your skills under timed conditions and earn official skill badges.</p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl">
-          <span class="text-xs font-mono text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded">Timed Exam</span>
-          <h3 class="text-lg font-bold text-white mt-4 mb-2">Cloud Security Administrator Assessment</h3>
-          <p class="text-slate-400 text-xs mb-4">30 questions covering IAM, network security groups, and storage policies.</p>
-          <button onclick="startExamModal()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg transition">
-            Begin Exam
-          </button>
-        </div>
-
-        <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl">
-          <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded">Practical Assessment</span>
-          <h3 class="text-lg font-bold text-white mt-4 mb-2">Offensive Security Practical Evaluation</h3>
-          <p class="text-slate-400 text-xs mb-4">Hands-on blackbox target evaluation. Discover flags to complete certification.</p>
-          <button onclick="spawnTargetMachine()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-lg transition">
-            Launch Target Machine
-          </button>
-        </div>
-      </div>
-
-      <!-- Live Interactive Target Terminal Output -->
-      <div id="target-machine-panel" class="mt-8 bg-slate-950 border border-slate-800 rounded-xl p-5 hidden font-mono">
-        <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-3">
-          <span class="text-xs text-emerald-400 font-bold flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Target Instance Online: 10.10.14.32
-          </span>
-          <button onclick="document.getElementById('target-machine-panel').classList.add('hidden')" class="text-slate-500 hover:text-white text-xs">Terminate Machine ✕</button>
-        </div>
-        <p class="text-xs text-slate-400 mb-2">&gt; Port scan results:</p>
-        <div class="bg-slate-900 p-3 rounded text-xs text-slate-300 space-y-1">
-          <p class="text-emerald-400">PORT 22/tcp OPEN ssh</p>
-          <p class="text-emerald-400">PORT 80/tcp OPEN http (Apache 2.4.41)</p>
-          <p class="text-emerald-400">PORT 8080/tcp OPEN http-proxy</p>
-        </div>
-        <p class="text-xs text-slate-400 mt-3">&gt; Submit target challenge flag below:</p>
-        <div class="flex gap-2 mt-2">
-          <input id="target-flag-input" type="text" placeholder="WIZZY{target_pwned_2026}" class="bg-slate-900 border border-slate-800 text-xs text-white px-3 py-1.5 rounded w-full">
-          <button onclick="submitTargetFlag()" class="px-3 py-1.5 bg-emerald-600 text-white text-xs font-semibold rounded">Verify Flag</button>
-        </div>
-        <p id="target-flag-status" class="text-xs mt-2"></p>
-      </div>
-    </div>
-
-    <!-- View 5: Profile Settings, Account Control & Theme -->
-    <div id="view-settings" class="hidden max-w-5xl mx-auto px-6 py-10">
-      <h2 class="text-2xl font-bold text-white mb-6">Settings & Account Control</h2>
-      
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div class="space-y-2">
-          <button id="tab-btn-profile" onclick="switchSettingsTab('profile')" class="w-full text-left px-4 py-2.5 rounded-xl bg-blue-600 text-white font-semibold transition text-xs font-mono">
-            👤 User Profile
-          </button>
-          <button id="tab-btn-account" onclick="switchSettingsTab('account')" class="w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono">
-            🔒 Password & Security
-          </button>
-          <button id="tab-btn-appearance" onclick="switchSettingsTab('appearance')" class="w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono">
-            🎨 Appearance & Theme
-          </button>
-          <button id="tab-btn-session" onclick="switchSettingsTab('session')" class="w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono">
-            🛡️ Session & Data Control
-          </button>
-        </div>
-
-        <div class="md:col-span-3 bg-slate-900/80 border border-slate-800 rounded-2xl p-6">
-          
-          <!-- Profile Tab -->
-          <div id="tab-profile" class="space-y-4">
-            <h3 class="text-base font-bold text-white border-b border-slate-800 pb-2">Personal Information & Profile Picture</h3>
-            
-            <div class="flex items-center gap-4">
-              <img id="settings-avatar-preview" src="https://api.dicebear.com/7.x/bottts/svg?seed=wizzy" class="w-16 h-16 rounded-xl border border-slate-700 bg-slate-950 p-1 object-cover">
-              <div class="flex-grow space-y-2">
-                <label class="block text-xs font-mono text-slate-400">Upload Profile Photo or Camera Shot</label>
-                <input type="file" id="settings-avatar-file" accept="image/*" class="block w-full text-xs text-slate-400 file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer" onchange="handleFileUpload(event)">
-                <div class="space-y-1 pt-1">
-                  <label class="block text-xs font-mono text-slate-400">Or Custom Profile Picture URL</label>
-                  <input id="settings-avatar-input" type="url" placeholder="https://example.com/avatar.jpg" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white font-mono focus:border-blue-500 focus:outline-none" oninput="previewAvatarUrl(this.value)">
-                </div>
-              </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label class="block text-xs font-mono text-slate-400 mb-1">First Name</label>
-                <input id="settings-firstname-input" type="text" placeholder="John" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:border-blue-500 focus:outline-none">
-              </div>
-              <div>
-                <label class="block text-xs font-mono text-slate-400 mb-1">Last Name</label>
-                <input id="settings-lastname-input" type="text" placeholder="Doe" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:border-blue-500 focus:outline-none">
-              </div>
-            </div>
-
-            <div>
-              <label class="block text-xs font-mono text-slate-400 mb-1">Display Username</label>
-              <input id="settings-username-input" type="text" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:border-blue-500 focus:outline-none">
-            </div>
-
-            <div>
-              <label class="block text-xs font-mono text-slate-400 mb-1">Email Address</label>
-              <input id="settings-email-input" type="email" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-400 font-mono focus:border-blue-500 focus:outline-none bg-slate-900/50" readonly>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label class="block text-xs font-mono text-slate-400 mb-1">Mobile Phone Number</label>
-                <input id="settings-phone-input" type="tel" placeholder="+1234567890" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:border-blue-500 focus:outline-none">
-              </div>
-              <div>
-                <label class="block text-xs font-mono text-slate-400 mb-1">Gender</label>
-                <select id="settings-gender-input" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:border-blue-500 focus:outline-none">
-                  <option value="">Select Gender</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                  <option value="other">Other / Prefer not to say</option>
-                </select>
-              </div>
-            </div>
-
-            <div>
-              <label class="block text-xs font-mono text-slate-400 mb-1">About / Bio</label>
-              <textarea id="settings-bio-input" rows="3" placeholder="Brief technical background..." class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:border-blue-500 focus:outline-none"></textarea>
-            </div>
-
-            <button onclick="handleProfileUpdate()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition font-mono">
-              Save Profile Changes
-            </button>
-            <p id="profile-update-msg" class="text-xs font-mono mt-1 hidden"></p>
-          </div>
-
-          <!-- Account Password Tab -->
-          <div id="tab-account" class="hidden space-y-4">
-            <h3 class="text-base font-bold text-white border-b border-slate-800 pb-2">Change Password</h3>
-            
-            <div>
-              <label class="block text-xs font-mono text-slate-400 mb-1">Current Password</label>
-              <div class="relative">
-                <input id="pwd-current" type="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-3 pr-10 py-2 text-xs text-white font-mono focus:outline-none focus:border-blue-500">
-                <button type="button" onclick="togglePasswordVisibility('pwd-current', 'eye-curr')" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white">
-                  <span id="eye-curr" class="text-xs">👁️</span>
-                </button>
-              </div>
-            </div>
-
-            <div>
-              <label class="block text-xs font-mono text-slate-400 mb-1">New Password</label>
-              <div class="relative">
-                <input id="pwd-new" type="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-3 pr-10 py-2 text-xs text-white font-mono focus:outline-none focus:border-blue-500">
-                <button type="button" onclick="togglePasswordVisibility('pwd-new', 'eye-new')" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white">
-                  <span id="eye-new" class="text-xs">👁️</span>
-                </button>
-              </div>
-            </div>
-
-            <button onclick="handlePasswordUpdate()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition font-mono">
-              Update Password
-            </button>
-            <p id="password-update-msg" class="text-xs font-mono mt-1 hidden"></p>
-          </div>
-
-          <!-- Appearance & Theme Tab -->
-          <div id="tab-appearance" class="hidden space-y-4">
-            <h3 class="text-base font-bold text-white border-b border-slate-800 pb-2">Interface Theme</h3>
-            <p class="text-xs text-slate-400">Switch between dark mode and light mode themes.</p>
-            
-            <div class="grid grid-cols-2 gap-4 max-w-sm pt-2">
-              <button onclick="setTheme('dark')" class="p-4 border border-slate-700 bg-slate-950 text-white rounded-xl text-xs font-mono hover:border-blue-500 transition text-center space-y-2">
-                <div class="text-2xl">🌙</div>
-                <div class="font-bold">Dark Theme</div>
-              </button>
-              <button onclick="setTheme('light')" class="p-4 border border-slate-300 bg-slate-100 text-slate-900 rounded-xl text-xs font-mono hover:border-blue-500 transition text-center space-y-2">
-                <div class="text-2xl">☀️</div>
-                <div class="font-bold">Light Theme</div>
-              </button>
-            </div>
-          </div>
-
-          <!-- Session & Data Tab -->
-          <div id="tab-session" class="hidden space-y-4">
-            <h3 class="text-base font-bold text-white border-b border-slate-800 pb-2">Session Security & Data Management</h3>
-            
-            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
-              <h4 class="text-xs font-mono font-bold text-blue-400">Automatic Inactivity Timeout</h4>
-              <p class="text-xs text-slate-400">Your session automatically logs out after 15 minutes of inactivity to protect your security.</p>
-              <div class="flex items-center gap-2 pt-1">
-                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span id="session-timer-display" class="text-xs font-mono text-emerald-400">Session Status: Active</span>
-              </div>
-            </div>
-
-            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
-              <h4 class="text-xs font-mono font-bold text-red-400">Clear Personal Profile Data</h4>
-              <p class="text-xs text-slate-400">Clear stored local session profile information and reset profile fields.</p>
-              <button onclick="handleClearPersonalData()" class="px-3 py-1.5 bg-red-900/40 border border-red-700/50 hover:bg-red-800 text-red-200 text-xs font-mono rounded-lg transition">
-                Clear Personal Data
-              </button>
-              <p id="data-clear-msg" class="text-xs font-mono hidden"></p>
-            </div>
-          </div>
-
-        </div>
-      </div>
-          </div>
-                <!-- View 6: Contact Support View -->
-    <div id="view-contact" class="hidden max-w-4xl mx-auto px-6 py-12">
-      <h2 class="text-3xl font-bold text-white mb-2">Contact Support</h2>
-      <p class="text-slate-400 text-sm mb-8">Get direct technical support for platform issues and learning assistance.</p>
-      
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-xl space-y-4">
-          <h3 class="text-lg font-bold text-white">Direct Support Channel</h3>
-          <div class="space-y-3 text-xs font-mono">
-            <div>
-              <p class="text-slate-500">Official Email</p>
-              <p class="text-blue-400 font-semibold text-sm">amazuwise@gmail.com</p>
-            </div>
-            <div>
-              <p class="text-slate-500">Support Phone / WhatsApp</p>
-              <p class="text-emerald-400 font-semibold text-sm">08109717133</p>
-            </div>
-            <div>
-              <p class="text-slate-500">X (Twitter)</p>
-              <p class="text-slate-200">@bush_bean__</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-xl">
-          <h3 class="text-lg font-bold text-white mb-4">Send Message</h3>
-          <form onsubmit="event.preventDefault(); alert('Message sent to support! We will respond via email.');" class="space-y-3 text-xs">
-            <div>
-              <label class="block text-slate-400 mb-1">Your Name</label>
-              <input type="text" required placeholder="John Doe" class="w-full bg-slate-950 border border-slate-800 rounded p-2 text-white">
-            </div>
-            <div>
-              <label class="block text-slate-400 mb-1">Message Detail</label>
-              <textarea required rows="3" placeholder="Describe your issue..." class="w-full bg-slate-950 border border-slate-800 rounded p-2 text-white"></textarea>
-            </div>
-            <button type="submit" class="w-full py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded">Submit Inquiry</button>
-          </form>
-        </div>
-      </div>
-    </div>
-
-    <!-- View 7: Help Desk & Embedded AI Assistant -->
-    <div id="view-help" class="hidden max-w-4xl mx-auto px-6 py-12">
-      <h2 class="text-3xl font-bold text-white mb-2">Help Desk & AI Learning Assistant</h2>
-      <p class="text-slate-400 text-sm mb-6">Ask questions about cybersecurity, cloud engineering, or platform challenge flags.</p>
-
-      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-5 shadow-xl">
-        <div id="ai-chat-box" class="h-64 overflow-y-auto space-y-3 p-3 bg-slate-950 rounded-lg mb-4 text-xs font-mono">
-          <div class="p-2.5 bg-blue-950/60 border border-blue-800/40 rounded-lg text-slate-200">
-            <span class="text-blue-400 font-bold">🤖 Wizzy AI:</span> Hello! I am your AI learning assistant. Ask me anything about module solutions, directory enumeration, or AWS S3 policies!
-          </div>
-        </div>
-
-        <div class="flex gap-2">
-          <input id="ai-user-input" type="text" placeholder="Ask AI assistant a question..." class="bg-slate-950 border border-slate-800 text-white text-xs rounded-lg px-3 py-2 w-full focus:outline-none focus:border-blue-500 font-mono" onkeypress="if(event.key==='Enter') sendAIMessage()">
-          <button onclick="sendAIMessage()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg transition whitespace-nowrap">Ask AI</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Generic Fallback View -->
-    <div id="view-generic" class="hidden max-w-4xl mx-auto px-6 py-16 text-center">
-      <h2 id="generic-title" class="text-3xl font-bold text-white mb-3">Module</h2>
-      <p id="generic-description" class="text-slate-400 text-sm max-w-md mx-auto mb-6">Data feeds and interactive tools will render here.</p>
-      <button onclick="switchView('home')" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-xs font-mono rounded-lg transition border border-slate-700">
-        ← Return Home
-      </button>
-    </div>
-
+    <div id="view-mount-point"></div>
   </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-900 bg-slate-950 py-8 text-center text-xs font-mono text-slate-500 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p>© 2026 Wizzy Cyber Platform. All rights reserved.</p>
+      <div class="flex items-center space-x-4">
+        <a href="https://x.com/bush_bean__" target="_blank" rel="noopener noreferrer" class="hover:text-slate-300 transition">Follow @bush_bean__</a>
+        <span>•</span>
+        <a href="javascript:void(0)" onclick="switchView('contact')" class="hover:text-slate-300 transition">Contact Support</a>
+        <span>•</span>
+        <a href="javascript:void(0)" onclick="switchView('help')" class="hover:text-slate-300 transition">Help Desk & AI</a>
+      </div>
+    </div>
+  </footer>
 
   <!-- Auth Modal -->
   <div id="auth-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
@@ -703,14 +91,12 @@
           📱 Phone Auth (OTP)
         </button>
       </div>
-
-      <!-- Email Auth Mode -->
+         <!-- Email Auth -->
       <div id="auth-email-container" class="space-y-4">
         <div>
           <label class="block text-xs font-medium text-slate-300 mb-1">Email Address</label>
           <input id="auth-email" type="email" placeholder="student@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
         </div>
-        
         <div>
           <label class="block text-xs font-medium text-slate-300 mb-1">Password</label>
           <div class="relative">
@@ -720,31 +106,21 @@
             </button>
           </div>
         </div>
-
         <div class="flex gap-3 pt-2">
           <button onclick="handleSignUp()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition">Sign Up</button>
           <button onclick="handleSignIn()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg transition">Sign In</button>
         </div>
-
-        <!-- Forgot Password Link -->
-        <div class="text-center pt-2">
-          <button type="button" onclick="handleForgotPassword()" class="text-xs font-mono text-blue-400 hover:underline">
-            🔑 Forgot Password?
-          </button>
-        </div>
       </div>
 
-      <!-- Phone Auth Mode -->
+      <!-- Phone Auth -->
       <div id="auth-phone-container" class="space-y-4 hidden">
         <div>
           <label class="block text-xs font-medium text-slate-300 mb-1">Mobile Phone Number (with Country Code)</label>
           <input id="auth-phone-num" type="tel" placeholder="+1234567890" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2 text-sm text-white font-mono focus:outline-none focus:border-blue-500">
         </div>
-
         <button id="send-otp-btn" onclick="handleSendPhoneOTP()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition">
           Send Verification SMS Code
         </button>
-
         <div id="otp-verify-section" class="space-y-3 pt-2 border-t border-slate-800/80 hidden">
           <div>
             <label class="block text-xs font-medium text-emerald-400 mb-1">Enter 6-Digit SMS Code</label>
@@ -755,164 +131,64 @@
           </button>
         </div>
       </div>
-
     </div>
   </div>
 
-  <!-- Footer -->
-  <footer class="border-t border-slate-900 bg-slate-950 py-8 text-center text-xs font-mono text-slate-500 mt-auto">
-    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <p>© 2026 Wizzy Cyber Platform. All rights reserved.</p>
-      <div class="flex items-center space-x-4">
-        <a href="https://x.com/bush_bean__" target="_blank" rel="noopener noreferrer" class="hover:text-slate-300 transition">Follow @bush_bean__</a>
-        <span>•</span>
-        <a href="javascript:void(0)" onclick="switchView('contact')" class="hover:text-slate-300 transition">Contact Support</a>
-        <span>•</span>
-        <a href="javascript:void(0)" onclick="switchView('help')" class="hover:text-slate-300 transition">Help Desk & AI</a>
-      </div>
-    </div>
-  </footer>
-  <!-- Combined Application Scripts -->
+  <!-- Global Application Runtime Scripts -->
   <script>
-    // Supabase Credentials
     const SUPABASE_URL = 'https://oxnvpsfzytkrgokcuwkv.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im94bnZwc2Z6eXRrcmdva2N1d2t2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2OTI1NDksImV4cCI6MjEwNjI2ODU0OX0.AhzL3LgELbcK_qhnFlnNYWbaXdNUjVyX0-TGT-u9Ot8';
-
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     let currentUser = null;
-    let userProfileData = {
-      username: '',
-      first_name: '',
-      last_name: '',
-      phone: '',
-      gender: '',
-      bio: '',
-      avatar_url: '',
-      points: 0,
-      completed_modules: 0
-    };
+    let userProfileData = { username: '', first_name: '', last_name: '', phone: '', gender: '', bio: '', avatar_url: '', points: 0, completed_modules: 0 };
 
-    // Idle Session Configuration (15 minutes)
-    const IDLE_TIMEOUT_MS = 15 * 60 * 1000;
-    const IDLE_WARN_MS = 13 * 60 * 1000;
-    let idleTimer = null;
-    let warnTimer = null;
+    async function loadComponent(url, elementId) {
+      const response = await fetch(url);
+      const text = await response.text();
+      document.getElementById(elementId).innerHTML = text;
+    }
+
+    async function switchView(viewName) {
+      const viewMap = {
+        'home': 'home.html',
+        'dashboard': 'dashboard.html',
+        'study': 'study.html',
+        'tests': 'tests.html',
+        'settings': 'settings.html',
+        'contact': 'contact.html',
+        'help': 'help.html'
+      };
+
+      if ((viewName === 'dashboard' || viewName === 'tests' || viewName === 'settings') && !currentUser) {
+        openAuthModal();
+        return;
+      }
+
+      const file = viewMap[viewName] || 'home.html';
+      await loadComponent(file, 'view-mount-point');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      if (viewName === 'dashboard') {
+        fetchUserProfile();
+        loadLeaderboard();
+      } else if (viewName === 'settings') {
+        loadSettingsFormData();
+      }
+    }
 
     document.addEventListener('DOMContentLoaded', async () => {
-      await checkInitialAuthSession();
-      await loadLeaderboard();
-      setupIdleSessionMonitoring();
-      
-      supabaseClient.auth.onAuthStateChange((event, session) => {
-        if (session) {
-          currentUser = session.user;
-          updateAuthUI(true);
-          fetchUserProfile();
-          resetIdleTimers();
-        } else {
-          currentUser = null;
-          updateAuthUI(false);
-          clearIdleTimers();
-        }
-      });
+      await loadComponent('navbar.html', 'header-container');
+      await switchView('home');
+      checkInitialAuthSession();
     });
-
-    // Helper: Convert UUID / ID into concise 6-digit numeric ID
-    function formatNumericId(rawId) {
-      if (!rawId) return '100001';
-      let num = 0;
-      for (let i = 0; i < rawId.length; i++) {
-        num = (num + rawId.charCodeAt(i)) % 900000;
-      }
-      return (100000 + num).toString();
-    }
-
-    // Password Eye Toggle
-    function togglePasswordVisibility(inputId, eyeIconId) {
-      const input = document.getElementById(inputId);
-      const icon = document.getElementById(eyeIconId);
-      if (input.type === 'password') {
-        input.type = 'text';
-        icon.innerText = '🙈';
-      } else {
-        input.type = 'password';
-        icon.innerText = '👁️';
-      }
-    }
-
-    // Theme Switcher (Dark / Light)
-    function setTheme(mode) {
-      const root = document.getElementById('html-root');
-      if (mode === 'light') {
-        root.classList.remove('dark');
-        root.classList.add('light');
-      } else {
-        root.classList.remove('light');
-        root.classList.add('dark');
-      }
-    }
-
-    // Session Idle Timers
-    function setupIdleSessionMonitoring() {
-      const activityEvents = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'];
-      activityEvents.forEach(evt => {
-        window.addEventListener(evt, () => {
-          if (currentUser) resetIdleTimers();
-        });
-      });
-    }
-
-    function resetIdleTimers() {
-      clearIdleTimers();
-      hideSessionToast();
-      
-      warnTimer = setTimeout(() => {
-        showSessionToast("Warning: Logged out in 2 mins due to inactivity.");
-      }, IDLE_WARN_MS);
-
-      idleTimer = setTimeout(() => {
-        alert("Session expired due to 15 minutes of inactivity.");
-        handleSignOut();
-      }, IDLE_TIMEOUT_MS);
-    }
-
-    function clearIdleTimers() {
-      if (idleTimer) clearTimeout(idleTimer);
-      if (warnTimer) clearTimeout(warnTimer);
-    }
-
-    function showSessionToast(msg) {
-      const toast = document.getElementById('session-toast');
-      document.getElementById('session-toast-msg').innerText = msg;
-      toast.classList.remove('translate-y-[150%]', 'opacity-0');
-      toast.classList.add('translate-y-0', 'opacity-100');
-    }
-
-    function hideSessionToast() {
-      const toast = document.getElementById('session-toast');
-      toast.classList.remove('translate-y-0', 'opacity-100');
-      toast.classList.add('translate-y-[150%]', 'opacity-0');
-    }
-
-    function showWelcomeToast(username) {
-      const toast = document.getElementById('welcome-toast');
-      const toastMsg = document.getElementById('welcome-toast-msg');
-      toastMsg.innerText = `Welcome back, ${username}!`;
-      toast.classList.remove('translate-y-[-150%]', 'opacity-0');
-      toast.classList.add('translate-y-0', 'opacity-100');
-      setTimeout(() => {
-        toast.classList.remove('translate-y-0', 'opacity-100');
-        toast.classList.add('translate-y-[-150%]', 'opacity-0');
-      }, 4000);
-    }
 
     async function checkInitialAuthSession() {
       const { data: { session } } = await supabaseClient.auth.getSession();
       if (session) {
         currentUser = session.user;
         updateAuthUI(true);
-        await fetchUserProfile();
+        fetchUserProfile();
       } else {
         updateAuthUI(false);
       }
@@ -920,498 +196,355 @@
 
     function openAuthModal() { document.getElementById('auth-modal').classList.remove('hidden'); }
     function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); }
-
-    function switchAuthMode(mode) {
-      const emailTab = document.getElementById('auth-tab-email');
-      const phoneTab = document.getElementById('auth-tab-phone');
-      const emailContainer = document.getElementById('auth-email-container');
-      const phoneContainer = document.getElementById('auth-phone-container');
-
-      if (mode === 'email') {
-        emailTab.className = "flex-1 py-2 text-xs font-mono font-bold border-b-2 border-blue-500 text-blue-400 transition";
-        phoneTab.className = "flex-1 py-2 text-xs font-mono text-slate-400 border-b-2 border-transparent hover:text-slate-200 transition";
-        emailContainer.classList.remove('hidden');
-        phoneContainer.classList.add('hidden');
-      } else {
-        phoneTab.className = "flex-1 py-2 text-xs font-mono font-bold border-b-2 border-blue-500 text-blue-400 transition";
-        emailTab.className = "flex-1 py-2 text-xs font-mono text-slate-400 border-b-2 border-transparent hover:text-slate-200 transition";
-        phoneContainer.classList.remove('hidden');
-        emailContainer.classList.add('hidden');
-      }
-    }
-
-    function updateAuthUI(isLoggedIn) {
-      const authContainer = document.getElementById('auth-container');
-      const sidebarLinks = document.getElementById('sidebar-nav-links');
-      const sidebarLogoutBtn = document.getElementById('sidebar-logout-btn');
-      const authOnlyElems = document.querySelectorAll('.auth-only');
-
-      if (isLoggedIn) {
-        const displayName = userProfileData.username || (currentUser.email ? currentUser.email.split('@')[0] : (currentUser.phone || 'Student'));
-
-        authContainer.innerHTML = `
-          <button onclick="switchView('settings')" class="flex items-center gap-2 bg-slate-900 border border-slate-800 hover:border-slate-700 px-3 py-1.5 rounded-lg text-xs font-mono text-slate-200 transition">
-            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-            <span id="header-user-display">${displayName}</span>
-          </button>
-        `;
-
-        sidebarLinks.innerHTML = `
-          <button onclick="switchView('home'); toggleSidebarMenu();" class="w-full text-left py-2 text-slate-300 hover:text-white">🏠 Home</button>
-          <button onclick="switchView('study'); toggleSidebarMenu();" class="w-full text-left py-2 text-slate-300 hover:text-white">💎 Study Modules</button>
-          <button onclick="switchView('tests'); toggleSidebarMenu();" class="w-full text-left py-2 text-slate-300 hover:text-white">📝 Tests & Exams</button>
-          <button onclick="switchView('dashboard'); toggleSidebarMenu();" class="w-full text-left py-2 text-slate-300 hover:text-white">📊 Student Dashboard</button>
-          <button onclick="switchView('settings'); toggleSidebarMenu();" class="w-full text-left py-2 text-slate-300 hover:text-white">⚙ Account Settings</button>
-        `;
-        sidebarLogoutBtn.classList.remove('hidden');
-        document.getElementById('sidebar-logout-user').innerText = `(${displayName})`;
-        authOnlyElems.forEach(el => el.classList.remove('hidden'));
-
-        if (!document.getElementById('public-landing-view').classList.contains('hidden')) {
-          switchView('home');
-        }
-      } else {
-        authContainer.innerHTML = `
-          <button onclick="openAuthModal()" class="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition shadow-lg shadow-blue-500/20">
-            Sign In
-          </button>
-        `;
-
-        sidebarLinks.innerHTML = `
-          <button onclick="switchView('home'); toggleSidebarMenu();" class="w-full text-left py-2 text-slate-300 hover:text-white">🏠 Home</button>
-          <button onclick="switchView('study'); toggleSidebarMenu();" class="w-full text-left py-2 text-slate-300 hover:text-white">💎 Study Modules</button>
-          <button onclick="openAuthModal(); toggleSidebarMenu();" class="w-full text-left py-2 text-blue-400 hover:text-blue-300">🔑 Sign In / Register</button>
-        `;
-
-        sidebarLogoutBtn.classList.add('hidden');
-        authOnlyElems.forEach(el => el.classList.add('hidden'));
-
-        switchView('home');
-      }
-    }
-
-    async function handleSignUp() {
-      const email = document.getElementById('auth-email').value;
-      const password = document.getElementById('auth-password').value;
-      if (!email || !password) return alert('Please input both an email and a password.');
-      const { data, error } = await supabaseClient.auth.signUp({ email, password });
-      if (error) alert('Registration Error: ' + error.message);
-      else { alert('Account created! Please sign in.'); closeAuthModal(); }
-    }
-
-    async function handleSignIn() {
-      const email = document.getElementById('auth-email').value;
-      const password = document.getElementById('auth-password').value;
-      if (!email || !password) return alert('Please enter both email and password.');
-      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-      if (error) alert('Authentication Error: ' + error.message);
-      else { closeAuthModal(); showWelcomeToast(email.split('@')[0]); }
-    }
-
-    async function handleForgotPassword() {
-      const email = prompt("Enter your account email address to receive password reset instructions:");
-      if (!email) return;
-      const { error } = await supabaseClient.auth.resetPasswordForEmail(email);
-      if (error) alert("Password Reset Error: " + error.message);
-      else alert("Password reset link sent to " + email);
-    }
-
-    async function handleSendPhoneOTP() {
-      const phoneNum = document.getElementById('auth-phone-num').value.trim();
-      if (!phoneNum || !phoneNum.startsWith('+')) return alert('Please enter a valid phone number with country code.');
-      const btn = document.getElementById('send-otp-btn');
-      btn.innerText = "Sending SMS Code...";
-      const { data, error } = await supabaseClient.auth.signInWithOtp({ phone: phoneNum });
-      btn.innerText = "Send Verification SMS Code";
-      if (error) alert('Error sending SMS: ' + error.message);
-      else { alert('OTP verification code sent to ' + phoneNum); document.getElementById('otp-verify-section').classList.remove('hidden'); }
-    }
-
-    async function handleVerifyPhoneOTP() {
-      const phoneNum = document.getElementById('auth-phone-num').value.trim();
-      const token = document.getElementById('auth-phone-otp').value.trim();
-      if (!token || token.length < 6) return alert('Please enter the 6-digit SMS code.');
-      const { data, error } = await supabaseClient.auth.verifyOtp({ phone: phoneNum, token: token, type: 'sms' });
-      if (error) alert('Verification failed: ' + error.message);
-      else { closeAuthModal(); showWelcomeToast(phoneNum); }
-    }
-
-    async function handleSignOut() {
-      clearIdleTimers();
-      hideSessionToast();
-      await supabaseClient.auth.signOut();
-      currentUser = null;
-      userProfileData = { username: '', first_name: '', last_name: '', phone: '', gender: '', bio: '', avatar_url: '', points: 0, completed_modules: 0 };
-      updateAuthUI(false);
-    }
-
-    async function fetchUserProfile() {
-      if (!currentUser) return;
-      const fallbackUsername = currentUser.user_metadata?.username || (currentUser.email ? currentUser.email.split('@')[0] : (currentUser.phone || 'Student'));
-      try {
-        const { data } = await supabaseClient.from('profiles').select('*').eq('id', currentUser.id).maybeSingle();
-        if (data) userProfileData = { ...userProfileData, ...data };
-        else userProfileData.username = fallbackUsername;
-      } catch (err) {
-        userProfileData.username = fallbackUsername;
-      }
-
-      const activeName = userProfileData.username || fallbackUsername;
-      const activeAvatar = userProfileData.avatar_url || `https://api.dicebear.com/7.x/bottts/svg?seed=${activeName}`;
-      
-      document.getElementById('dash-username').innerText = activeName;
-      document.getElementById('dash-user-id').innerText = `ID: ${formatNumericId(currentUser.id)}`;
-      document.getElementById('dashboard-avatar').src = activeAvatar;
-      document.getElementById('dash-user-points').innerText = `${userProfileData.points || 0} pts`;
-      document.getElementById('dash-user-modules').innerText = `${userProfileData.completed_modules || 0}`;
-
-      const headerDisplay = document.getElementById('header-user-display');
-      if (headerDisplay) headerDisplay.innerText = activeName;
-      const sidebarUser = document.getElementById('sidebar-logout-user');
-      if (sidebarUser) sidebarUser.innerText = `(${activeName})`;
-    }
-
-    function previewAvatarUrl(url) {
-      const preview = document.getElementById('settings-avatar-preview');
-      const fallback = `https://api.dicebear.com/7.x/bottts/svg?seed=${userProfileData.username || 'student'}`;
-      preview.src = url.trim() ? url.trim() : fallback;
-    }
-
-    function handleFileUpload(event) {
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          const base64Url = e.target.result;
-          document.getElementById('settings-avatar-input').value = base64Url;
-          previewAvatarUrl(base64Url);
-        };
-        reader.readAsDataURL(file);
-      }
-    }
-
-    async function handleProfileUpdate() {
-      const msg = document.getElementById('profile-update-msg');
-      msg.classList.remove('hidden');
-      const newUsername = document.getElementById('settings-username-input').value.trim();
-      const firstName = document.getElementById('settings-firstname-input').value.trim();
-      const lastName = document.getElementById('settings-lastname-input').value.trim();
-      const phone = document.getElementById('settings-phone-input').value.trim();
-      const gender = document.getElementById('settings-gender-input').value;
-      const bio = document.getElementById('settings-bio-input').value.trim();
-      const avatarUrl = document.getElementById('settings-avatar-input').value.trim();
-
-      if (!newUsername) {
-        msg.className = "text-xs font-mono mt-1 text-red-400";
-        msg.innerText = "Display username cannot be empty.";
-        return;
-      }
-
-      await supabaseClient.auth.updateUser({ data: { username: newUsername, first_name: firstName, last_name: lastName, phone: phone, gender: gender, bio: bio, avatar_url: avatarUrl } });
-      await supabaseClient.from('profiles').upsert({ id: currentUser.id, username: newUsername, first_name: firstName, last_name: lastName, phone: phone, gender: gender, bio: bio, avatar_url: avatarUrl }).select();
-
-      userProfileData = { ...userProfileData, username: newUsername, first_name: firstName, last_name: lastName, phone: phone, gender: gender, bio: bio, avatar_url: avatarUrl };
-      msg.className = "text-xs font-mono mt-1 text-emerald-400";
-      msg.innerText = "Profile updated successfully!";
-      fetchUserProfile();
-    }
-
-    async function handlePasswordUpdate() {
-      const newPassword = document.getElementById('pwd-new').value;
-      const msg = document.getElementById('password-update-msg');
-      if (!newPassword || newPassword.length < 6) {
-        msg.classList.remove('hidden');
-        msg.className = "text-xs font-mono mt-1 text-red-400";
-        msg.innerText = "Password must be at least 6 characters.";
-        return;
-      }
-      const { error } = await supabaseClient.auth.updateUser({ password: newPassword });
-      msg.classList.remove('hidden');
-      if (error) {
-        msg.className = "text-xs font-mono mt-1 text-red-400";
-        msg.innerText = "Password update failed: " + error.message;
-      } else {
-        msg.className = "text-xs font-mono mt-1 text-emerald-400";
-        msg.innerText = "Password updated successfully!";
-        document.getElementById('pwd-current').value = '';
-        document.getElementById('pwd-new').value = '';
-      }
-    }
-
-    async function handleClearPersonalData() {
-      const msg = document.getElementById('data-clear-msg');
-      msg.classList.remove('hidden');
-      if (!currentUser) return;
-
-      try {
-        await supabaseClient.from('profiles').update({ first_name: '', last_name: '', bio: '', gender: '', avatar_url: '' }).eq('id', currentUser.id);
-        userProfileData.first_name = '';
-        userProfileData.last_name = '';
-        userProfileData.bio = '';
-        userProfileData.gender = '';
-        userProfileData.avatar_url = '';
-        
-        loadSettingsFormData();
-        fetchUserProfile();
-
-        msg.className = "text-xs font-mono text-emerald-400";
-        msg.innerText = "Personal data fields reset successfully.";
-      } catch (err) {
-        msg.className = "text-xs font-mono text-red-400";
-        msg.innerText = "Error clearing personal data.";
-      }
-      }
-    function switchView(viewName) {
-      const publicView = document.getElementById('public-landing-view');
-      const authView = document.getElementById('authenticated-view');
-      const studyView = document.getElementById('view-study');
-      const testsView = document.getElementById('view-tests');
-      const settingsView = document.getElementById('view-settings');
-      const contactView = document.getElementById('view-contact');
-      const helpView = document.getElementById('view-help');
-      const genericView = document.getElementById('view-generic');
-
-      publicView.classList.add('hidden');
-      authView.classList.add('hidden');
-      studyView.classList.add('hidden');
-      testsView.classList.add('hidden');
-      settingsView.classList.add('hidden');
-      contactView.classList.add('hidden');
-      helpView.classList.add('hidden');
-      genericView.classList.add('hidden');
-
-      if (viewName === 'home') {
-        if (currentUser) authView.classList.remove('hidden');
-        else publicView.classList.remove('hidden');
-      } else if (viewName === 'dashboard') {
-        if (currentUser) authView.classList.remove('hidden');
-        else openAuthModal();
-      } else if (viewName === 'study') {
-        studyView.classList.remove('hidden');
-      } else if (viewName === 'tests') {
-        if (currentUser) testsView.classList.remove('hidden');
-        else openAuthModal();
-      } else if (viewName === 'labs') {
-        if (currentUser) {
-          authView.classList.remove('hidden');
-          const labsSection = document.getElementById('labs');
-          if (labsSection) labsSection.scrollIntoView({ behavior: 'smooth' });
-        } else openAuthModal();
-      } else if (viewName === 'settings') {
-        if (currentUser) {
-          settingsView.classList.remove('hidden');
-          loadSettingsFormData();
-        } else openAuthModal();
-      } else if (viewName === 'contact') {
-        contactView.classList.remove('hidden');
-      } else if (viewName === 'help') {
-        helpView.classList.remove('hidden');
-      } else {
-        genericView.classList.remove('hidden');
-        document.getElementById('generic-title').innerText = viewName.toUpperCase();
-        document.getElementById('generic-description').innerText = `Information regarding the ${viewName} page module.`;
-      }
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function toggleSidebarMenu() {
-      document.getElementById('sidebar-drawer').classList.toggle('-translate-x-full');
-    }
-
-    async function submitFlag() {
-      const flagInput = document.getElementById('flag-input').value.trim();
-      const statusEl = document.getElementById('lab-status');
-      if (flagInput === 'WIZZY{web_enum_master_2026}') {
-        statusEl.className = "text-xs font-mono mt-2 text-emerald-400";
-        statusEl.innerText = "✓ Valid Flag! +100 Points Awarded.";
-        await awardPoints('Web Directory Enumeration', 100);
-      } else {
-        statusEl.className = "text-xs font-mono mt-2 text-red-400";
-        statusEl.innerText = "✕ Invalid flag attempt. Double-check path enumeration.";
-      }
-    }
-
-    async function submitLabChallenge(inputId, statusId, targetFlag, labName, points) {
-      const flagVal = document.getElementById(inputId).value.trim();
-      const statusEl = document.getElementById(statusId);
-      if (flagVal === targetFlag) {
-        statusEl.className = "text-xs font-mono mt-2 text-emerald-400";
-        statusEl.innerText = `✓ Valid Flag! +${points} Points Awarded.`;
-        await awardPoints(labName, points);
-      } else {
-        statusEl.className = "text-xs font-mono mt-2 text-red-400";
-        statusEl.innerText = "✕ Invalid flag token. Audit parameters and retry.";
-      }
-    }
-
-    async function awardPoints(labTitle, points) {
-      if (!currentUser) return alert('Please sign in to log lab completions.');
-      const currentPoints = userProfileData.points || 0;
-      const currentMods = userProfileData.completed_modules || 0;
-
-      userProfileData.points = currentPoints + points;
-      userProfileData.completed_modules = currentMods + 1;
-
-      await supabaseClient.from('profiles').upsert({
-        id: currentUser.id,
-        username: userProfileData.username || (currentUser.email ? currentUser.email.split('@')[0] : 'Student'),
-        points: userProfileData.points,
-        completed_modules: userProfileData.completed_modules
-      });
-
-      fetchUserProfile();
-      loadLeaderboard();
-    }
-
-    async function loadLeaderboard() {
-      const tbody = document.getElementById('leaderboard-body');
-      let data = null;
-      try {
-        const res = await supabaseClient.from('profiles').select('username, points, completed_modules').order('points', { ascending: false }).limit(10);
-        data = res.data;
-      } catch (e) { data = null; }
-
-      if (!data || data.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td class="px-6 py-3.5 text-emerald-400 font-bold">#1</td>
-            <td class="px-6 py-3.5 text-white">bush_bean__ (Lead)</td>
-            <td class="px-6 py-3.5 text-center">12</td>
-            <td class="px-6 py-3.5 text-right font-bold text-blue-400">1,250 pts</td>
-          </tr>
-          <tr>
-            <td class="px-6 py-3.5 text-slate-400">#2</td>
-            <td class="px-6 py-3.5 text-slate-300">security_student_01</td>
-            <td class="px-6 py-3.5 text-center">5</td>
-            <td class="px-6 py-3.5 text-right font-bold text-blue-400">450 pts</td>
-          </tr>
-        `;
-        return;
-      }
-
-      if (currentUser) {
-        const userRankIndex = data.findIndex(p => p.username === userProfileData.username);
-        if (userRankIndex !== -1) {
-          document.getElementById('dash-user-rank').innerText = `#${userRankIndex + 1}`;
-        }
-      }
-
-      tbody.innerHTML = data.map((record, idx) => `
-        <tr class="hover:bg-slate-900/40 transition">
-          <td class="px-6 py-3.5 ${idx === 0 ? 'text-emerald-400 font-bold' : 'text-slate-400'}">#${idx + 1}</td>
-          <td class="px-6 py-3.5 text-white">${record.username || 'Anonymous'}</td>
-          <td class="px-6 py-3.5 text-center text-slate-300">${record.completed_modules || 0}</td>
-          <td class="px-6 py-3.5 text-right font-bold text-blue-400">${record.points || 0} pts</td>
-        </tr>
-      `).join('');
-    }
-
-    function switchSettingsTab(tab) {
-      document.getElementById('tab-profile').classList.add('hidden');
-      document.getElementById('tab-account').classList.add('hidden');
-      document.getElementById('tab-appearance').classList.add('hidden');
-      document.getElementById('tab-session').classList.add('hidden');
-
-      document.getElementById('tab-btn-profile').className = "w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono";
-      document.getElementById('tab-btn-account').className = "w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono";
-      document.getElementById('tab-btn-appearance').className = "w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono";
-      document.getElementById('tab-btn-session').className = "w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono";
-
-      if (tab === 'profile') {
-        document.getElementById('tab-profile').classList.remove('hidden');
-        document.getElementById('tab-btn-profile').className = "w-full text-left px-4 py-2.5 rounded-xl bg-blue-600 text-white font-semibold transition text-xs font-mono";
-      } else if (tab === 'account') {
-        document.getElementById('tab-account').classList.remove('hidden');
-        document.getElementById('tab-btn-account').className = "w-full text-left px-4 py-2.5 rounded-xl bg-blue-600 text-white font-semibold transition text-xs font-mono";
-      } else if (tab === 'appearance') {
-        document.getElementById('tab-appearance').classList.remove('hidden');
-        document.getElementById('tab-btn-appearance').className = "w-full text-left px-4 py-2.5 rounded-xl bg-blue-600 text-white font-semibold transition text-xs font-mono";
-      } else {
-        document.getElementById('tab-session').classList.remove('hidden');
-        document.getElementById('tab-btn-session').className = "w-full text-left px-4 py-2.5 rounded-xl bg-blue-600 text-white font-semibold transition text-xs font-mono";
-      }
-    }
-
-    function loadSettingsFormData() {
-      if (!currentUser) return;
-      const fallbackName = currentUser.email ? currentUser.email.split('@')[0] : (currentUser.phone || 'Student');
-      document.getElementById('settings-username-input').value = userProfileData.username || fallbackName;
-      document.getElementById('settings-email-input').value = currentUser.email || 'N/A (Phone Auth)';
-      document.getElementById('settings-firstname-input').value = userProfileData.first_name || '';
-      document.getElementById('settings-lastname-input').value = userProfileData.last_name || '';
-      document.getElementById('settings-phone-input').value = userProfileData.phone || currentUser.phone || '';
-      document.getElementById('settings-gender-input').value = userProfileData.gender || '';
-      document.getElementById('settings-bio-input').value = userProfileData.bio || '';
-      document.getElementById('settings-avatar-input').value = userProfileData.avatar_url || '';
-      
-      const avatarSrc = userProfileData.avatar_url || `https://api.dicebear.com/7.x/bottts/svg?seed=${userProfileData.username || fallbackName}`;
-      document.getElementById('settings-avatar-preview').src = avatarSrc;
-    }
-
-    // Assessment & Target Machine Interactive Handlers
-    function startExamModal() {
-      const q1 = prompt("Question 1/2: Which AWS service is primarily used for object storage?\n(A) EC2\n(B) S3\n(C) RDS\n(D) Lambda");
-      if (q1 && q1.toUpperCase() === 'B') {
-        alert("Correct! +50 Exam Points.");
-        awardPoints('Cloud Admin Assessment', 50);
-      } else {
-        alert("Incorrect response or assessment cancelled.");
-      }
-    }
-
-    function spawnTargetMachine() {
-      document.getElementById('target-machine-panel').classList.remove('hidden');
-    }
-
-    async function submitTargetFlag() {
-      const flag = document.getElementById('target-flag-input').value.trim();
-      const status = document.getElementById('target-flag-status');
-      if (flag === 'WIZZY{target_pwned_2026}') {
-        status.className = "text-xs font-mono text-emerald-400";
-        status.innerText = "✓ Target Rooted! +300 Assessment Points Awarded.";
-        await awardPoints('Target Machine Blackbox', 300);
-      } else {
-        status.className = "text-xs font-mono text-red-400";
-        status.innerText = "✕ Flag incorrect. Inspect target HTTP proxy on port 8080.";
-      }
-    }
-
-    // Interactive AI Help Assistant
-    function sendAIMessage() {
-      const input = document.getElementById('ai-user-input');
-      const text = input.value.trim();
-      if (!text) return;
-
-      const chatBox = document.getElementById('ai-chat-box');
-      
-      // User Message
-      const userMsg = document.createElement('div');
-      userMsg.className = "p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-slate-100 text-right font-mono";
-      userMsg.innerHTML = `<span class="text-emerald-400 font-bold">You:</span> ${text}`;
-      chatBox.appendChild(userMsg);
-
-      input.value = '';
-
-      // Simulated AI Assistant Response
-      setTimeout(() => {
-        let response = "I can assist you with web directory enumeration, AWS S3 bucket auditing, or machine learning model defenses!";
-        const lower = text.toLowerCase();
-
-        if (lower.includes('directory') || lower.includes('enum') || lower.includes('flag')) {
-          response = "For the Web Directory Enumeration challenge, try testing hidden path tokens like 'WIZZY{web_enum_master_2026}'!";
-        } else if (lower.includes('s3') || lower.includes('cloud')) {
-          response = "For S3 Bucket access controls, verify public read permissions and use the flag token 'WIZZY{s3_bucket_sec_2026}'.";
-        } else if (lower.includes('contact') || lower.includes('email') || lower.includes('phone')) {
-          response = "You can reach human support directly at amazwise@gmail.com or call 08109719458.";
-        }
-
-        const aiMsg = document.createElement('div');
-        aiMsg.className = "p-2.5 bg-blue-950/60 border border-blue-800/40 rounded-lg text-slate-200 font-mono";
-        aiMsg.innerHTML = `<span class="text-blue-400 font-bold">🤖 Wizzy AI:</span> ${response}`;
-        chatBox.appendChild(aiMsg);
-        chatBox.scrollTop = chatBox.scrollHeight;
-      }, 500);
-    }
   </script>
 </body>
 </html>
+<!-- Main Top Navigation Header -->
+<header class="sticky top-0 z-40 backdrop-blur-md bg-slate-950/80 border-b border-slate-900">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between gap-4">
+    
+    <!-- Left: Drawer Toggle & Brand -->
+    <div class="flex items-center gap-3">
+      <button id="sidebar-toggle-btn" onclick="toggleSidebarMenu()" class="p-2 text-slate-400 hover:text-white bg-slate-900 border border-slate-800 rounded-lg transition" title="Toggle Menu">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+      <a href="javascript:void(0)" onclick="switchView('home')" class="text-lg sm:text-xl font-bold tracking-tight text-blue-500 font-mono flex items-center gap-2">
+        &lt;WizzyCyber /&gt;
+      </a>
+    </div>
+
+    <!-- Center: Desktop Navigation Bar -->
+    <nav id="desktop-top-nav" class="hidden md:flex items-center space-x-1 text-xs font-mono font-medium text-slate-400">
+      <button onclick="switchView('home')" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">🔥 Home</button>
+      <button onclick="switchView('study')" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">💎 Study</button>
+      <button onclick="switchView('tests')" class="auth-only hidden px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">📝 Tests</button>
+      <button onclick="switchView('dashboard')" class="auth-only hidden px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">📊 Dashboard</button>
+    </nav>
+
+    <!-- Right: Auth State Actions -->
+    <div class="flex items-center gap-2 sm:gap-3">
+      <div id="auth-container" class="flex items-center gap-2"></div>
+      <a href="https://x.com/intent/follow?screen_name=bush_bean__" target="_blank" rel="noopener noreferrer" class="px-3 py-2 bg-blue-600/10 border border-blue-500/30 text-blue-400 text-xs font-semibold rounded-lg hover:bg-blue-600 hover:text-white transition hidden sm:flex items-center gap-2">
+        + Follow @bush_bean__
+      </a>
+    </div>
+
+  </div>
+</header>
+
+<!-- Sliding Navigation Drawer -->
+<aside id="sidebar-drawer" class="fixed top-0 left-0 bottom-0 w-72 bg-slate-950 border-r border-slate-900 z-50 transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col justify-between p-6 shadow-2xl">
+  <div>
+    <div class="flex justify-between items-center mb-8 border-b border-slate-900 pb-4">
+      <span class="text-base font-bold text-blue-500 font-mono">&lt;WizzyCyber /&gt;</span>
+      <button onclick="toggleSidebarMenu()" class="text-slate-400 hover:text-white text-base">✕</button>
+    </div>
+    <p class="text-[10px] uppercase font-mono tracking-wider text-slate-500 mb-3">Navigation Menu</p>
+    <div id="sidebar-nav-links" class="space-y-1.5 text-xs font-mono"></div>
+  </div>
+
+  <div class="pt-4 border-t border-slate-900 space-y-2">
+    <button onclick="switchView('contact'); toggleSidebarMenu();" class="w-full text-left text-xs font-mono text-slate-400 hover:text-white py-1">📞 Contact Support</button>
+    <button onclick="switchView('help'); toggleSidebarMenu();" class="w-full text-left text-xs font-mono text-slate-400 hover:text-white py-1">❓ Help Desk & AI Assistant</button>
+    <button id="sidebar-logout-btn" onclick="handleSignOut(); toggleSidebarMenu();" class="w-full text-left text-xs font-mono text-red-400 hover:text-red-300 py-2 border-t border-slate-900/80 mt-2 hidden">
+      🚪 Sign Out <span id="sidebar-logout-user"></span>
+    </button>
+  </div>
+</aside>
+<div id="public-landing-view">
+  <section class="max-w-4xl mx-auto px-6 py-16 sm:py-20 text-center">
+    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-full text-xs font-semibold uppercase tracking-wider mb-6">
+      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Security & Cloud Engineering Hub
+    </div>
+    <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white mb-6">
+      Wizzy Cyber Technical Portal
+    </h1>
+    <p class="text-slate-400 text-base sm:text-lg max-w-2xl mx-auto mb-8 leading-relaxed">
+      Explore cloud infrastructure, cybersecurity research, and machine learning models. Sign in to access hands-on labs, complete modules, and track your global rank.
+    </p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl mx-auto text-left">
+      <div class="p-5 bg-slate-900/80 border border-slate-800 rounded-xl">
+        <p class="text-xs font-mono text-blue-400 mb-1">X (Twitter) Profile</p>
+        <h3 class="text-base font-bold text-white mb-2">@bush_bean__</h3>
+        <p class="text-xs text-slate-400 mb-4">Sharing updates on machine learning, cloud architecture, and security.</p>
+        <a href="https://x.com/bush_bean__" target="_blank" rel="noopener noreferrer" class="inline-block px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg transition">
+          Visit Profile →
+        </a>
+      </div>
+
+      <div class="p-5 bg-slate-900/80 border border-slate-800 rounded-xl">
+        <p class="text-xs font-mono text-emerald-400 mb-1">Student Portal</p>
+        <h3 class="text-base font-bold text-white mb-2">Interactive Learning</h3>
+        <p class="text-xs text-slate-400 mb-4">Register or sign in to verify challenge flags and maintain your score.</p>
+        <button onclick="openAuthModal()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-lg transition">
+          Sign In / Register
+        </button>
+      </div>
+    </div>
+  </section>
+</div>
+<div id="authenticated-view" class="max-w-6xl mx-auto px-6 py-8">
+  <!-- Dashboard Header -->
+  <section id="dashboard-section" class="mb-8">
+    <div class="bg-emerald-950/40 border border-emerald-500/30 p-6 rounded-2xl shadow-xl backdrop-blur-sm">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+        <div class="flex items-center gap-4">
+          <div class="relative">
+            <img id="dashboard-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=wizzy" alt="Profile Picture" class="w-16 h-16 rounded-xl border-2 border-emerald-400/60 bg-slate-950 p-1 object-cover">
+            <span class="absolute bottom-0 right-0 w-4 h-4 bg-emerald-500 border-2 border-slate-900 rounded-full"></span>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 id="dash-username" class="text-2xl font-bold text-white">Student</h2>
+              <span class="text-xs font-mono bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 px-2 py-0.5 rounded">Active Session</span>
+            </div>
+            <p id="dash-user-id" class="text-xs font-mono text-emerald-400/80 mt-1">ID: Loading...</p>
+          </div>
+        </div>
+        <div class="flex gap-3">
+          <button onclick="switchView('settings')" class="px-4 py-2 bg-slate-900/80 hover:bg-slate-800 text-slate-200 text-xs font-semibold rounded-lg transition border border-emerald-500/20">
+            ⚙️ Settings
+          </button>
+          <button onclick="handleSignOut()" class="px-4 py-2 bg-slate-900/80 hover:bg-red-900/50 hover:text-red-300 text-slate-300 text-xs font-semibold rounded-lg transition border border-emerald-500/20">
+            Sign Out Account
+          </button>
+        </div>
+      </div>
+
+      <!-- Stat Counters -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-emerald-500/20">
+        <div class="bg-slate-950/60 border border-emerald-500/20 p-4 rounded-xl flex justify-between items-center">
+          <div>
+            <p class="text-xs font-mono text-emerald-300/70">Total Score</p>
+            <p id="dash-user-points" class="text-xl font-bold font-mono text-emerald-400">0 pts</p>
+          </div>
+          <span class="text-2xl">🏆</span>
+        </div>
+        <div class="bg-slate-950/60 border border-emerald-500/20 p-4 rounded-xl flex justify-between items-center">
+          <div>
+            <p class="text-xs font-mono text-emerald-300/70">Modules Completed</p>
+            <p id="dash-user-modules" class="text-xl font-bold font-mono text-emerald-300">0</p>
+          </div>
+          <span class="text-2xl">⚡</span>
+        </div>
+        <div class="bg-slate-950/60 border border-emerald-500/20 p-4 rounded-xl flex justify-between items-center">
+          <div>
+            <p class="text-xs font-mono text-emerald-300/70">Global Rank</p>
+            <p id="dash-user-rank" class="text-xl font-bold font-mono text-purple-300">#--</p>
+          </div>
+          <span class="text-2xl">🥇</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Live Student Leaderboard -->
+  <section id="leaderboard" class="py-6 border-t border-slate-900">
+    <div class="flex flex-col sm:flex-row justify-between sm:items-end mb-6 gap-2">
+      <div>
+        <h2 class="text-2xl font-bold text-white mb-1">Live Student Leaderboard</h2>
+        <p class="text-slate-400 text-sm">Real-time ranking updated live from Supabase record databases.</p>
+      </div>
+      <button onclick="loadLeaderboard()" class="text-xs font-mono text-blue-400 bg-blue-500/10 border border-blue-500/20 px-3 py-1.5 rounded-lg hover:bg-blue-500 hover:text-white transition">
+        🔄 Refresh Scores
+      </button>
+    </div>
+
+    <div class="bg-slate-900/60 border border-slate-800 rounded-xl overflow-x-auto">
+      <table class="w-full text-left text-sm text-slate-300 min-w-[500px]">
+        <thead class="bg-slate-950 text-xs font-mono uppercase text-slate-400 border-b border-slate-800">
+          <tr>
+            <th class="px-6 py-3.5">Rank</th>
+            <th class="px-6 py-3.5">Student Account</th>
+            <th class="px-6 py-3.5 text-center">Modules Completed</th>
+            <th class="px-6 py-3.5 text-right">Total Score</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboard-body" class="divide-y divide-slate-800/60 font-mono text-xs">
+          <tr><td colspan="4" class="px-6 py-6 text-center text-slate-500">Loading student rankings...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+<div id="view-study" class="max-w-6xl mx-auto px-6 py-10">
+  <div class="mb-8 border-b border-slate-900 pb-6">
+    <h2 class="text-3xl font-bold text-white mb-2">Study Modules & Learning Paths</h2>
+    <p class="text-slate-400 text-sm">Master technical domains with structured theoretical concepts and practical labs.</p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- Module 01 -->
+    <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between">
+      <div>
+        <div class="inline-block px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono rounded mb-4">Module 01</div>
+        <h3 class="text-xl font-bold text-white mb-3">Practical Cybersecurity</h3>
+        <p class="text-slate-400 text-xs leading-relaxed mb-4">Network scanning, offensive security fundamentals, directory brute-forcing, and vulnerability auditing.</p>
+      </div>
+      <button onclick="switchView('dashboard')" class="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-mono text-xs font-semibold rounded-lg transition">
+        Start Cybersecurity Lab →
+      </button>
+    </div>
+
+    <!-- Module 02 -->
+    <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between">
+      <div>
+        <div class="inline-block px-2.5 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono rounded mb-4">Module 02</div>
+        <h3 class="text-xl font-bold text-white mb-3">Ethical Hacking & Recon</h3>
+        <p class="text-slate-400 text-xs leading-relaxed mb-4">Web application penetration testing, payload crafting, authorization bypasses, and security controls.</p>
+      </div>
+      <button onclick="switchView('dashboard')" class="w-full py-2 bg-blue-600 hover:bg-blue-500 text-white font-mono text-xs font-semibold rounded-lg transition">
+        Start Hacking Challenge →
+      </button>
+    </div>
+
+    <!-- Module 03 -->
+    <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between">
+      <div>
+        <div class="inline-block px-2.5 py-1 bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-mono rounded mb-4">Module 03</div>
+        <h3 class="text-xl font-bold text-white mb-3">Cloud Computing & DevOps</h3>
+        <p class="text-slate-400 text-xs leading-relaxed mb-4">AWS infrastructure, IAM policies, container orchestration, Linux server administration, and CI/CD pipelines.</p>
+      </div>
+      <button onclick="switchView('dashboard')" class="w-full py-2 bg-purple-600 hover:bg-purple-500 text-white font-mono text-xs font-semibold rounded-lg transition">
+        Start Cloud Lab →
+      </button>
+    </div>
+  </div>
+</div>
+<div id="view-tests" class="max-w-6xl mx-auto px-6 py-10">
+  <div class="mb-8 border-b border-slate-900 pb-6">
+    <h2 class="text-3xl font-bold text-white mb-2">Assessments & Certifications</h2>
+    <p class="text-slate-400 text-sm">Verify your skills under timed conditions and earn official skill badges.</p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Exam 1 -->
+    <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl">
+      <span class="text-xs font-mono text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded">Timed Exam</span>
+      <h3 class="text-lg font-bold text-white mt-4 mb-2">Cloud Security Administrator Assessment</h3>
+      <p class="text-slate-400 text-xs mb-4">30 questions covering IAM, network security groups, and storage policies.</p>
+      <button onclick="startExamModal()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg transition">
+        Begin Exam
+      </button>
+    </div>
+
+    <!-- Exam 2 -->
+    <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl">
+      <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded">Practical Assessment</span>
+      <h3 class="text-lg font-bold text-white mt-4 mb-2">Offensive Security Practical Evaluation</h3>
+      <p class="text-slate-400 text-xs mb-4">Hands-on target machine evaluation. Discover flags to complete certification.</p>
+      <button onclick="spawnTargetMachine()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-lg transition">
+        Launch Target Machine
+      </button>
+    </div>
+  </div>
+
+  <!-- Terminal Emulator Panel -->
+  <div id="target-machine-panel" class="mt-8 bg-slate-950 border border-slate-800 rounded-xl p-5 hidden font-mono">
+    <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-3">
+      <span class="text-xs text-emerald-400 font-bold flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Target Instance Online: 10.10.14.32
+      </span>
+      <button onclick="document.getElementById('target-machine-panel').classList.add('hidden')" class="text-slate-500 hover:text-white text-xs">Terminate Machine ✕</button>
+    </div>
+    <p class="text-xs text-slate-400 mb-2">&gt; Port scan results:</p>
+    <div class="bg-slate-900 p-3 rounded text-xs text-slate-300 space-y-1">
+      <p class="text-emerald-400">PORT 22/tcp OPEN ssh</p>
+      <p class="text-emerald-400">PORT 80/tcp OPEN http (Apache 2.4.41)</p>
+      <p class="text-emerald-400">PORT 8080/tcp OPEN http-proxy</p>
+    </div>
+    <p class="text-xs text-slate-400 mt-3">&gt; Submit target challenge flag below:</p>
+    <div class="flex gap-2 mt-2">
+      <input id="target-flag-input" type="text" placeholder="WIZZY{target_pwned_2026}" class="bg-slate-900 border border-slate-800 text-xs text-white px-3 py-1.5 rounded w-full">
+      <button onclick="submitTargetFlag()" class="px-3 py-1.5 bg-emerald-600 text-white text-xs font-semibold rounded">Verify Flag</button>
+    </div>
+    <p id="target-flag-status" class="text-xs mt-2"></p>
+  </div>
+</div>
+<div id="view-settings" class="max-w-5xl mx-auto px-6 py-10">
+  <h2 class="text-2xl font-bold text-white mb-6">Settings & Account Control</h2>
+  
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+    <!-- Side Nav Tabs -->
+    <div class="space-y-2">
+      <button id="tab-btn-profile" onclick="switchSettingsTab('profile')" class="w-full text-left px-4 py-2.5 rounded-xl bg-blue-600 text-white font-semibold transition text-xs font-mono">
+        👤 User Profile
+      </button>
+      <button id="tab-btn-account" onclick="switchSettingsTab('account')" class="w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono">
+        🔒 Password & Security
+      </button>
+      <button id="tab-btn-appearance" onclick="switchSettingsTab('appearance')" class="w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono">
+        🎨 Appearance & Theme
+      </button>
+      <button id="tab-btn-session" onclick="switchSettingsTab('session')" class="w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono">
+        🛡️ Session & Data Control
+      </button>
+    </div>
+
+    <!-- Active Tab Box -->
+    <div class="md:col-span-3 bg-slate-900/80 border border-slate-800 rounded-2xl p-6">
+      
+      <!-- Profile Tab -->
+      <div id="tab-profile" class="space-y-4">
+        <h3 class="text-base font-bold text-white border-b border-slate-800 pb-2">Personal Information</h3>
+        
+        <div class="flex items-center gap-4">
+          <img id="settings-avatar-preview" src="https://api.dicebear.com/7.x/bottts/svg?seed=wizzy" class="w-16 h-16 rounded-xl border border-slate-700 bg-slate-950 p-1 object-cover">
+          <div class="flex-grow space-y-2">
+            <label class="block text-xs font-mono text-slate-400">Upload Profile Photo</label>
+            <input type="file" id="settings-avatar-file" accept="image/*" class="block w-full text-xs text-slate-400 file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer" onchange="handleFileUpload(event)">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-mono text-slate-400 mb-1">First Name</label>
+            <input id="settings-firstname-input" type="text" placeholder="John" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:border-blue-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-mono text-slate-400 mb-1">Last Name</label>
+            <input id="settings-lastname-input" type="text" placeholder="Doe" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:border-blue-500 focus:outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-mono text-slate-400 mb-1">Display Username</label>
+          <input id="settings-username-input" type="text" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:border-blue-500 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-mono text-slate-400 mb-1">Email Address</label>
+          <input id="settings-email-input" type="email" value="amazwize@gmail.com" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-400 font-mono focus:border-blue-500 focus:outline-none bg-slate-900/50" readonly>
+        </div>
+
+        <div>
+          <label class="block text-xs font-mono text-slate-400 mb-1">Mobile Phone Number</label>
+          <input id="settings-phone-input" type="tel" value="08109719458" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:border-blue-500 focus:outline-none">
+        </div>
+
+        <button onclick="handleProfileUpdate()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition font-mono">
+          Save Profile Changes
+        </button>
+      </div>
+
+      <!-- Theme Controls -->
+      <div id="tab-appearance" class="hidden space-y-4">
+        <h3 class="text-base font-bold text-white border-b border-slate-800 pb-2">Interface Theme</h3>
+        <div class="grid grid-cols-2 gap-4 max-w-sm pt-2">
+          <button onclick="setTheme('dark')" class="p-4 border border-slate-700 bg-slate-950 text-white rounded-xl text-xs font-mono hover:border-blue-500 transition text-center space-y-2">
+            <div class="text-2xl">🌙</div>
+            <div class="font-bold">Dark Theme</div>
+          </button>
+          <button onclick="setTheme('light')" class="p-4 border border-slate-300 bg-slate-100 text-slate-900 rounded-xl text-xs font-mono hover:border-blue-500 transition text-center space-y-2">
+            <div class="text-2xl">☀️</div>
+            <div class="font-bold">Light Theme</div>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
