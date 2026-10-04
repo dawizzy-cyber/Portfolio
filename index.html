@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="dark scroll-smooth">
+<html lang="en" class="dark scroll-smooth" id="html-root">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,6 +17,36 @@
     ::-webkit-scrollbar-thumb:hover { background: #334155; }
     tr { transition: background-color 0.2s ease; }
     #welcome-toast { will-change: transform, opacity; }
+
+    /* Light mode overrides */
+    html.light {
+      background-color: #f8fafc;
+      color: #0f172a;
+    }
+    html.light body {
+      background-color: #f8fafc;
+      color: #0f172a;
+    }
+    html.light header {
+      background-color: rgba(255, 255, 255, 0.85);
+      border-color: #e2e8f0;
+    }
+    html.light .bg-slate-900, html.light .bg-slate-900\/80, html.light .bg-slate-900\/60, html.light .bg-slate-900\/90 {
+      background-color: #ffffff !important;
+      border-color: #cbd5e1 !important;
+      color: #0f172a !important;
+    }
+    html.light .bg-slate-950 {
+      background-color: #f1f5f9 !important;
+      border-color: #cbd5e1 !important;
+      color: #0f172a !important;
+    }
+    html.light .text-white { color: #0f172a !important; }
+    html.light .text-slate-400, html.light .text-slate-300 { color: #475569 !important; }
+    html.light footer {
+      background-color: #ffffff;
+      border-color: #e2e8f0;
+    }
   </style>
   <script>
     tailwind.config = {
@@ -51,8 +81,7 @@
       <p id="session-toast-msg" class="text-xs text-slate-200">You will be logged out soon due to inactivity.</p>
     </div>
   </div>
-
-  <!-- Main Top Header Bar -->
+    <!-- Main Top Header Bar -->
   <header class="sticky top-0 z-40 backdrop-blur-md bg-slate-950/80 border-b border-slate-900">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between gap-4">
       
@@ -101,7 +130,7 @@
 
     <div class="pt-4 border-t border-slate-900 space-y-2">
       <button onclick="switchView('contact'); toggleSidebarMenu();" class="w-full text-left text-xs font-mono text-slate-400 hover:text-white py-1">📞 Contact Support</button>
-      <button onclick="switchView('help'); toggleSidebarMenu();" class="w-full text-left text-xs font-mono text-slate-400 hover:text-white py-1">❓ Help Desk</button>
+      <button onclick="switchView('help'); toggleSidebarMenu();" class="w-full text-left text-xs font-mono text-slate-400 hover:text-white py-1">❓ Help Desk & AI Assistant</button>
       <button id="sidebar-logout-btn" onclick="handleSignOut(); toggleSidebarMenu();" class="w-full text-left text-xs font-mono text-red-400 hover:text-red-300 py-2 border-t border-slate-900/80 mt-2 hidden">
         🚪 Sign Out <span id="sidebar-logout-user"></span>
       </button>
@@ -110,7 +139,7 @@
 
   <!-- App Main Content Container Opening -->
   <main id="app-container" class="flex-grow">
-        <!-- View 1: Public Landing -->
+    <!-- View 1: Public Landing -->
     <div id="public-landing-view">
       <section class="max-w-4xl mx-auto px-6 py-16 sm:py-20 text-center">
         <div class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-full text-xs font-semibold uppercase tracking-wider mb-6">
@@ -143,61 +172,60 @@
           </div>
         </div>
       </section>
-    </div>
-
-    <!-- View 2: Authenticated Main Dashboard -->
+  </div>
+              <!-- View 2: Authenticated Main Dashboard -->
     <div id="authenticated-view" class="hidden">
       
+      <!-- Green Styled Dashboard Header -->
       <section id="dashboard-section" class="max-w-6xl mx-auto px-6 pt-8 pb-4">
-        <div class="bg-slate-900/90 border border-slate-800 p-6 rounded-2xl shadow-xl">
-          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="bg-emerald-950/40 border border-emerald-500/30 p-6 rounded-2xl shadow-xl backdrop-blur-sm">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
             <div class="flex items-center gap-4">
               <div class="relative">
-                <img id="dashboard-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=wizzy" alt="Profile Picture" class="w-16 h-16 rounded-xl border-2 border-blue-500/50 bg-slate-950 p-1 object-cover">
+                <img id="dashboard-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=wizzy" alt="Profile Picture" class="w-16 h-16 rounded-xl border-2 border-emerald-400/60 bg-slate-950 p-1 object-cover">
                 <span class="absolute bottom-0 right-0 w-4 h-4 bg-emerald-500 border-2 border-slate-900 rounded-full"></span>
               </div>
               <div>
                 <div class="flex items-center gap-2">
                   <h2 id="dash-username" class="text-2xl font-bold text-white">Student</h2>
-                  <span class="text-xs font-mono bg-blue-500/10 border border-blue-500/20 text-blue-400 px-2 py-0.5 rounded">Active Session</span>
+                  <span class="text-xs font-mono bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 px-2 py-0.5 rounded">Active Session</span>
                 </div>
-                <p id="dash-user-id" class="text-xs font-mono text-slate-400 mt-1">ID: Loading...</p>
+                <p id="dash-user-id" class="text-xs font-mono text-emerald-400/80 mt-1">ID: Loading...</p>
               </div>
             </div>
             <div class="flex gap-3">
-              <button onclick="switchView('settings')" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg transition border border-slate-700">
+              <button onclick="switchView('settings')" class="px-4 py-2 bg-slate-900/80 hover:bg-slate-800 text-slate-200 text-xs font-semibold rounded-lg transition border border-emerald-500/20">
                 ⚙️ Settings
               </button>
-              <button onclick="handleSignOut()" class="px-4 py-2 bg-slate-800 hover:bg-red-900/50 hover:text-red-300 text-slate-300 text-xs font-semibold rounded-lg transition border border-slate-700">
+              <button onclick="handleSignOut()" class="px-4 py-2 bg-slate-900/80 hover:bg-red-900/50 hover:text-red-300 text-slate-300 text-xs font-semibold rounded-lg transition border border-emerald-500/20">
                 Sign Out Account
               </button>
             </div>
           </div>
-        </div>
-      </section>
 
-      <section id="student-overview-container" class="max-w-6xl mx-auto px-6 py-4">
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl flex justify-between items-center">
-            <div>
-              <p class="text-xs font-mono text-slate-400">Total Score</p>
-              <p id="dash-user-points" class="text-xl font-bold font-mono text-blue-400">0 pts</p>
+          <!-- Embedded Score & Stats Overview -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-emerald-500/20">
+            <div class="bg-slate-950/60 border border-emerald-500/20 p-4 rounded-xl flex justify-between items-center">
+              <div>
+                <p class="text-xs font-mono text-emerald-300/70">Total Score</p>
+                <p id="dash-user-points" class="text-xl font-bold font-mono text-emerald-400">0 pts</p>
+              </div>
+              <span class="text-2xl">🏆</span>
             </div>
-            <span class="text-2xl">🏆</span>
-          </div>
-          <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl flex justify-between items-center">
-            <div>
-              <p class="text-xs font-mono text-slate-400">Modules Completed</p>
-              <p id="dash-user-modules" class="text-xl font-bold font-mono text-emerald-400">0</p>
+            <div class="bg-slate-950/60 border border-emerald-500/20 p-4 rounded-xl flex justify-between items-center">
+              <div>
+                <p class="text-xs font-mono text-emerald-300/70">Modules Completed</p>
+                <p id="dash-user-modules" class="text-xl font-bold font-mono text-emerald-300">0</p>
+              </div>
+              <span class="text-2xl">⚡</span>
             </div>
-            <span class="text-2xl">⚡</span>
-          </div>
-          <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl flex justify-between items-center">
-            <div>
-              <p class="text-xs font-mono text-slate-400">Global Rank</p>
-              <p id="dash-user-rank" class="text-xl font-bold font-mono text-purple-400">#--</p>
+            <div class="bg-slate-950/60 border border-emerald-500/20 p-4 rounded-xl flex justify-between items-center">
+              <div>
+                <p class="text-xs font-mono text-emerald-300/70">Global Rank</p>
+                <p id="dash-user-rank" class="text-xl font-bold font-mono text-purple-300">#--</p>
+              </div>
+              <span class="text-2xl">🥇</span>
             </div>
-            <span class="text-2xl">🥇</span>
           </div>
         </div>
       </section>
@@ -213,7 +241,8 @@
           Learn cloud architecture, machine learning pipelines, and offensive security. Solve hands-on labs, complete modules, and log your progress live.
         </p>
       </section>
-            <section id="learning" class="max-w-6xl mx-auto px-6 py-10 border-t border-slate-900">
+
+      <section id="learning" class="max-w-6xl mx-auto px-6 py-10 border-t border-slate-900">
         <div class="mb-8">
           <h2 class="text-2xl font-bold text-white mb-2">Technical Curriculum</h2>
           <p class="text-slate-400 text-sm">Structured modules across cloud engineering, machine learning, and offensive security.</p>
@@ -335,8 +364,8 @@
         </div>
       </section>
 
-                </div>
-                    <!-- View 3: Study Modules -->
+  </div>
+      <!-- View 3: Study Modules (Includes Practical Cybersecurity, Ethical Hacking & Cloud Computing) -->
     <div id="view-study" class="hidden max-w-6xl mx-auto px-6 py-10">
       <div class="mb-8 border-b border-slate-900 pb-6">
         <h2 class="text-3xl font-bold text-white mb-2">Study Modules & Learning Paths</h2>
@@ -391,7 +420,7 @@
           <span class="text-xs font-mono text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded">Timed Exam</span>
           <h3 class="text-lg font-bold text-white mt-4 mb-2">Cloud Security Administrator Assessment</h3>
           <p class="text-slate-400 text-xs mb-4">30 questions covering IAM, network security groups, and storage policies.</p>
-          <button onclick="alert('Assessment environment preparing...')" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg transition">
+          <button onclick="startExamModal()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg transition">
             Begin Exam
           </button>
         </div>
@@ -400,14 +429,36 @@
           <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded">Practical Assessment</span>
           <h3 class="text-lg font-bold text-white mt-4 mb-2">Offensive Security Practical Evaluation</h3>
           <p class="text-slate-400 text-xs mb-4">Hands-on blackbox target evaluation. Discover flags to complete certification.</p>
-          <button onclick="alert('Target environment spawning...')" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-lg transition">
+          <button onclick="spawnTargetMachine()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-lg transition">
             Launch Target Machine
           </button>
         </div>
       </div>
+
+      <!-- Live Interactive Target Terminal Output -->
+      <div id="target-machine-panel" class="mt-8 bg-slate-950 border border-slate-800 rounded-xl p-5 hidden font-mono">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-3">
+          <span class="text-xs text-emerald-400 font-bold flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Target Instance Online: 10.10.14.32
+          </span>
+          <button onclick="document.getElementById('target-machine-panel').classList.add('hidden')" class="text-slate-500 hover:text-white text-xs">Terminate Machine ✕</button>
+        </div>
+        <p class="text-xs text-slate-400 mb-2">&gt; Port scan results:</p>
+        <div class="bg-slate-900 p-3 rounded text-xs text-slate-300 space-y-1">
+          <p class="text-emerald-400">PORT 22/tcp OPEN ssh</p>
+          <p class="text-emerald-400">PORT 80/tcp OPEN http (Apache 2.4.41)</p>
+          <p class="text-emerald-400">PORT 8080/tcp OPEN http-proxy</p>
+        </div>
+        <p class="text-xs text-slate-400 mt-3">&gt; Submit target challenge flag below:</p>
+        <div class="flex gap-2 mt-2">
+          <input id="target-flag-input" type="text" placeholder="WIZZY{target_pwned_2026}" class="bg-slate-900 border border-slate-800 text-xs text-white px-3 py-1.5 rounded w-full">
+          <button onclick="submitTargetFlag()" class="px-3 py-1.5 bg-emerald-600 text-white text-xs font-semibold rounded">Verify Flag</button>
+        </div>
+        <p id="target-flag-status" class="text-xs mt-2"></p>
+      </div>
     </div>
 
-    <!-- View 5: Profile Settings & Account Control -->
+    <!-- View 5: Profile Settings, Account Control & Theme -->
     <div id="view-settings" class="hidden max-w-5xl mx-auto px-6 py-10">
       <h2 class="text-2xl font-bold text-white mb-6">Settings & Account Control</h2>
       
@@ -418,6 +469,9 @@
           </button>
           <button id="tab-btn-account" onclick="switchSettingsTab('account')" class="w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono">
             🔒 Password & Security
+          </button>
+          <button id="tab-btn-appearance" onclick="switchSettingsTab('appearance')" class="w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono">
+            🎨 Appearance & Theme
           </button>
           <button id="tab-btn-session" onclick="switchSettingsTab('session')" class="w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono">
             🛡️ Session & Data Control
@@ -432,10 +486,13 @@
             
             <div class="flex items-center gap-4">
               <img id="settings-avatar-preview" src="https://api.dicebear.com/7.x/bottts/svg?seed=wizzy" class="w-16 h-16 rounded-xl border border-slate-700 bg-slate-950 p-1 object-cover">
-              <div class="flex-grow space-y-1">
-                <label class="block text-xs font-mono text-slate-400">Custom Profile Picture URL</label>
-                <input id="settings-avatar-input" type="url" placeholder="https://example.com/avatar.jpg" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white font-mono focus:border-blue-500 focus:outline-none" oninput="previewAvatarUrl(this.value)">
-                <p class="text-[11px] text-slate-500">Leave blank to use auto-generated avatar.</p>
+              <div class="flex-grow space-y-2">
+                <label class="block text-xs font-mono text-slate-400">Upload Profile Photo or Camera Shot</label>
+                <input type="file" id="settings-avatar-file" accept="image/*" class="block w-full text-xs text-slate-400 file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer" onchange="handleFileUpload(event)">
+                <div class="space-y-1 pt-1">
+                  <label class="block text-xs font-mono text-slate-400">Or Custom Profile Picture URL</label>
+                  <input id="settings-avatar-input" type="url" placeholder="https://example.com/avatar.jpg" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white font-mono focus:border-blue-500 focus:outline-none" oninput="previewAvatarUrl(this.value)">
+                </div>
               </div>
             </div>
 
@@ -517,6 +574,23 @@
             <p id="password-update-msg" class="text-xs font-mono mt-1 hidden"></p>
           </div>
 
+          <!-- Appearance & Theme Tab -->
+          <div id="tab-appearance" class="hidden space-y-4">
+            <h3 class="text-base font-bold text-white border-b border-slate-800 pb-2">Interface Theme</h3>
+            <p class="text-xs text-slate-400">Switch between dark mode and light mode themes.</p>
+            
+            <div class="grid grid-cols-2 gap-4 max-w-sm pt-2">
+              <button onclick="setTheme('dark')" class="p-4 border border-slate-700 bg-slate-950 text-white rounded-xl text-xs font-mono hover:border-blue-500 transition text-center space-y-2">
+                <div class="text-2xl">🌙</div>
+                <div class="font-bold">Dark Theme</div>
+              </button>
+              <button onclick="setTheme('light')" class="p-4 border border-slate-300 bg-slate-100 text-slate-900 rounded-xl text-xs font-mono hover:border-blue-500 transition text-center space-y-2">
+                <div class="text-2xl">☀️</div>
+                <div class="font-bold">Light Theme</div>
+              </button>
+            </div>
+          </div>
+
           <!-- Session & Data Tab -->
           <div id="tab-session" class="hidden space-y-4">
             <h3 class="text-base font-bold text-white border-b border-slate-800 pb-2">Session Security & Data Management</h3>
@@ -542,6 +616,65 @@
 
         </div>
       </div>
+          </div>
+                <!-- View 6: Contact Support View -->
+    <div id="view-contact" class="hidden max-w-4xl mx-auto px-6 py-12">
+      <h2 class="text-3xl font-bold text-white mb-2">Contact Support</h2>
+      <p class="text-slate-400 text-sm mb-8">Get direct technical support for platform issues and learning assistance.</p>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-xl space-y-4">
+          <h3 class="text-lg font-bold text-white">Direct Support Channel</h3>
+          <div class="space-y-3 text-xs font-mono">
+            <div>
+              <p class="text-slate-500">Official Email</p>
+              <p class="text-blue-400 font-semibold text-sm">amazuwise@gmail.com</p>
+            </div>
+            <div>
+              <p class="text-slate-500">Support Phone / WhatsApp</p>
+              <p class="text-emerald-400 font-semibold text-sm">08109717133</p>
+            </div>
+            <div>
+              <p class="text-slate-500">X (Twitter)</p>
+              <p class="text-slate-200">@bush_bean__</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-xl">
+          <h3 class="text-lg font-bold text-white mb-4">Send Message</h3>
+          <form onsubmit="event.preventDefault(); alert('Message sent to support! We will respond via email.');" class="space-y-3 text-xs">
+            <div>
+              <label class="block text-slate-400 mb-1">Your Name</label>
+              <input type="text" required placeholder="John Doe" class="w-full bg-slate-950 border border-slate-800 rounded p-2 text-white">
+            </div>
+            <div>
+              <label class="block text-slate-400 mb-1">Message Detail</label>
+              <textarea required rows="3" placeholder="Describe your issue..." class="w-full bg-slate-950 border border-slate-800 rounded p-2 text-white"></textarea>
+            </div>
+            <button type="submit" class="w-full py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded">Submit Inquiry</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- View 7: Help Desk & Embedded AI Assistant -->
+    <div id="view-help" class="hidden max-w-4xl mx-auto px-6 py-12">
+      <h2 class="text-3xl font-bold text-white mb-2">Help Desk & AI Learning Assistant</h2>
+      <p class="text-slate-400 text-sm mb-6">Ask questions about cybersecurity, cloud engineering, or platform challenge flags.</p>
+
+      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-5 shadow-xl">
+        <div id="ai-chat-box" class="h-64 overflow-y-auto space-y-3 p-3 bg-slate-950 rounded-lg mb-4 text-xs font-mono">
+          <div class="p-2.5 bg-blue-950/60 border border-blue-800/40 rounded-lg text-slate-200">
+            <span class="text-blue-400 font-bold">🤖 Wizzy AI:</span> Hello! I am your AI learning assistant. Ask me anything about module solutions, directory enumeration, or AWS S3 policies!
+          </div>
+        </div>
+
+        <div class="flex gap-2">
+          <input id="ai-user-input" type="text" placeholder="Ask AI assistant a question..." class="bg-slate-950 border border-slate-800 text-white text-xs rounded-lg px-3 py-2 w-full focus:outline-none focus:border-blue-500 font-mono" onkeypress="if(event.key==='Enter') sendAIMessage()">
+          <button onclick="sendAIMessage()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg transition whitespace-nowrap">Ask AI</button>
+        </div>
+      </div>
     </div>
 
     <!-- Generic Fallback View -->
@@ -554,6 +687,7 @@
     </div>
 
   </main>
+
   <!-- Auth Modal -->
   <div id="auth-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl max-w-md w-full relative shadow-2xl">
@@ -591,6 +725,13 @@
           <button onclick="handleSignUp()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition">Sign Up</button>
           <button onclick="handleSignIn()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg transition">Sign In</button>
         </div>
+
+        <!-- Forgot Password Link -->
+        <div class="text-center pt-2">
+          <button type="button" onclick="handleForgotPassword()" class="text-xs font-mono text-blue-400 hover:underline">
+            🔑 Forgot Password?
+          </button>
+        </div>
       </div>
 
       <!-- Phone Auth Mode -->
@@ -625,13 +766,12 @@
       <div class="flex items-center space-x-4">
         <a href="https://x.com/bush_bean__" target="_blank" rel="noopener noreferrer" class="hover:text-slate-300 transition">Follow @bush_bean__</a>
         <span>•</span>
-        <a href="javascript:void(0)" onclick="switchView('contact')" class="hover:text-slate-300 transition">Contact</a>
+        <a href="javascript:void(0)" onclick="switchView('contact')" class="hover:text-slate-300 transition">Contact Support</a>
         <span>•</span>
-        <a href="javascript:void(0)" onclick="switchView('help')" class="hover:text-slate-300 transition">Help Desk</a>
+        <a href="javascript:void(0)" onclick="switchView('help')" class="hover:text-slate-300 transition">Help Desk & AI</a>
       </div>
     </div>
   </footer>
-
   <!-- Combined Application Scripts -->
   <script>
     // Supabase Credentials
@@ -677,6 +817,17 @@
         }
       });
     });
+
+    // Helper: Convert UUID / ID into concise 6-digit numeric ID
+    function formatNumericId(rawId) {
+      if (!rawId) return '100001';
+      let num = 0;
+      for (let i = 0; i < rawId.length; i++) {
+        num = (num + rawId.charCodeAt(i)) % 900000;
+      }
+      return (100000 + num).toString();
+    }
+
     // Password Eye Toggle
     function togglePasswordVisibility(inputId, eyeIconId) {
       const input = document.getElementById(inputId);
@@ -687,6 +838,18 @@
       } else {
         input.type = 'password';
         icon.innerText = '👁️';
+      }
+    }
+
+    // Theme Switcher (Dark / Light)
+    function setTheme(mode) {
+      const root = document.getElementById('html-root');
+      if (mode === 'light') {
+        root.classList.remove('dark');
+        root.classList.add('light');
+      } else {
+        root.classList.remove('light');
+        root.classList.add('dark');
       }
     }
 
@@ -800,7 +963,6 @@
           <button onclick="switchView('dashboard'); toggleSidebarMenu();" class="w-full text-left py-2 text-slate-300 hover:text-white">📊 Student Dashboard</button>
           <button onclick="switchView('settings'); toggleSidebarMenu();" class="w-full text-left py-2 text-slate-300 hover:text-white">⚙ Account Settings</button>
         `;
-
         sidebarLogoutBtn.classList.remove('hidden');
         document.getElementById('sidebar-logout-user').innerText = `(${displayName})`;
         authOnlyElems.forEach(el => el.classList.remove('hidden'));
@@ -816,7 +978,7 @@
         `;
 
         sidebarLinks.innerHTML = `
-          <button onclick="switchView('home'); toggleSidebarMenu();" class="w-full text-left py-2 text-slate-300 hover:text-white">🏠 Public Portal</button>
+          <button onclick="switchView('home'); toggleSidebarMenu();" class="w-full text-left py-2 text-slate-300 hover:text-white">🏠 Home</button>
           <button onclick="switchView('study'); toggleSidebarMenu();" class="w-full text-left py-2 text-slate-300 hover:text-white">💎 Study Modules</button>
           <button onclick="openAuthModal(); toggleSidebarMenu();" class="w-full text-left py-2 text-blue-400 hover:text-blue-300">🔑 Sign In / Register</button>
         `;
@@ -844,6 +1006,14 @@
       const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
       if (error) alert('Authentication Error: ' + error.message);
       else { closeAuthModal(); showWelcomeToast(email.split('@')[0]); }
+    }
+
+    async function handleForgotPassword() {
+      const email = prompt("Enter your account email address to receive password reset instructions:");
+      if (!email) return;
+      const { error } = await supabaseClient.auth.resetPasswordForEmail(email);
+      if (error) alert("Password Reset Error: " + error.message);
+      else alert("Password reset link sent to " + email);
     }
 
     async function handleSendPhoneOTP() {
@@ -890,7 +1060,7 @@
       const activeAvatar = userProfileData.avatar_url || `https://api.dicebear.com/7.x/bottts/svg?seed=${activeName}`;
       
       document.getElementById('dash-username').innerText = activeName;
-      document.getElementById('dash-user-id').innerText = `ID: ${currentUser.id.substring(0, 18)}...`;
+      document.getElementById('dash-user-id').innerText = `ID: ${formatNumericId(currentUser.id)}`;
       document.getElementById('dashboard-avatar').src = activeAvatar;
       document.getElementById('dash-user-points').innerText = `${userProfileData.points || 0} pts`;
       document.getElementById('dash-user-modules').innerText = `${userProfileData.completed_modules || 0}`;
@@ -905,6 +1075,19 @@
       const preview = document.getElementById('settings-avatar-preview');
       const fallback = `https://api.dicebear.com/7.x/bottts/svg?seed=${userProfileData.username || 'student'}`;
       preview.src = url.trim() ? url.trim() : fallback;
+    }
+
+    function handleFileUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const base64Url = e.target.result;
+          document.getElementById('settings-avatar-input').value = base64Url;
+          previewAvatarUrl(base64Url);
+        };
+        reader.readAsDataURL(file);
+      }
     }
 
     async function handleProfileUpdate() {
@@ -932,6 +1115,7 @@
       msg.innerText = "Profile updated successfully!";
       fetchUserProfile();
     }
+
     async function handlePasswordUpdate() {
       const newPassword = document.getElementById('pwd-new').value;
       const msg = document.getElementById('password-update-msg');
@@ -976,14 +1160,15 @@
         msg.className = "text-xs font-mono text-red-400";
         msg.innerText = "Error clearing personal data.";
       }
-    }
-
+      }
     function switchView(viewName) {
       const publicView = document.getElementById('public-landing-view');
       const authView = document.getElementById('authenticated-view');
       const studyView = document.getElementById('view-study');
       const testsView = document.getElementById('view-tests');
       const settingsView = document.getElementById('view-settings');
+      const contactView = document.getElementById('view-contact');
+      const helpView = document.getElementById('view-help');
       const genericView = document.getElementById('view-generic');
 
       publicView.classList.add('hidden');
@@ -991,6 +1176,8 @@
       studyView.classList.add('hidden');
       testsView.classList.add('hidden');
       settingsView.classList.add('hidden');
+      contactView.classList.add('hidden');
+      helpView.classList.add('hidden');
       genericView.classList.add('hidden');
 
       if (viewName === 'home') {
@@ -1015,6 +1202,10 @@
           settingsView.classList.remove('hidden');
           loadSettingsFormData();
         } else openAuthModal();
+      } else if (viewName === 'contact') {
+        contactView.classList.remove('hidden');
+      } else if (viewName === 'help') {
+        helpView.classList.remove('hidden');
       } else {
         genericView.classList.remove('hidden');
         document.getElementById('generic-title').innerText = viewName.toUpperCase();
@@ -1118,10 +1309,12 @@
     function switchSettingsTab(tab) {
       document.getElementById('tab-profile').classList.add('hidden');
       document.getElementById('tab-account').classList.add('hidden');
+      document.getElementById('tab-appearance').classList.add('hidden');
       document.getElementById('tab-session').classList.add('hidden');
 
       document.getElementById('tab-btn-profile').className = "w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono";
       document.getElementById('tab-btn-account').className = "w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono";
+      document.getElementById('tab-btn-appearance').className = "w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono";
       document.getElementById('tab-btn-session').className = "w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono";
 
       if (tab === 'profile') {
@@ -1130,6 +1323,9 @@
       } else if (tab === 'account') {
         document.getElementById('tab-account').classList.remove('hidden');
         document.getElementById('tab-btn-account').className = "w-full text-left px-4 py-2.5 rounded-xl bg-blue-600 text-white font-semibold transition text-xs font-mono";
+      } else if (tab === 'appearance') {
+        document.getElementById('tab-appearance').classList.remove('hidden');
+        document.getElementById('tab-btn-appearance').className = "w-full text-left px-4 py-2.5 rounded-xl bg-blue-600 text-white font-semibold transition text-xs font-mono";
       } else {
         document.getElementById('tab-session').classList.remove('hidden');
         document.getElementById('tab-btn-session').className = "w-full text-left px-4 py-2.5 rounded-xl bg-blue-600 text-white font-semibold transition text-xs font-mono";
@@ -1150,6 +1346,71 @@
       
       const avatarSrc = userProfileData.avatar_url || `https://api.dicebear.com/7.x/bottts/svg?seed=${userProfileData.username || fallbackName}`;
       document.getElementById('settings-avatar-preview').src = avatarSrc;
+    }
+
+    // Assessment & Target Machine Interactive Handlers
+    function startExamModal() {
+      const q1 = prompt("Question 1/2: Which AWS service is primarily used for object storage?\n(A) EC2\n(B) S3\n(C) RDS\n(D) Lambda");
+      if (q1 && q1.toUpperCase() === 'B') {
+        alert("Correct! +50 Exam Points.");
+        awardPoints('Cloud Admin Assessment', 50);
+      } else {
+        alert("Incorrect response or assessment cancelled.");
+      }
+    }
+
+    function spawnTargetMachine() {
+      document.getElementById('target-machine-panel').classList.remove('hidden');
+    }
+
+    async function submitTargetFlag() {
+      const flag = document.getElementById('target-flag-input').value.trim();
+      const status = document.getElementById('target-flag-status');
+      if (flag === 'WIZZY{target_pwned_2026}') {
+        status.className = "text-xs font-mono text-emerald-400";
+        status.innerText = "✓ Target Rooted! +300 Assessment Points Awarded.";
+        await awardPoints('Target Machine Blackbox', 300);
+      } else {
+        status.className = "text-xs font-mono text-red-400";
+        status.innerText = "✕ Flag incorrect. Inspect target HTTP proxy on port 8080.";
+      }
+    }
+
+    // Interactive AI Help Assistant
+    function sendAIMessage() {
+      const input = document.getElementById('ai-user-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const chatBox = document.getElementById('ai-chat-box');
+      
+      // User Message
+      const userMsg = document.createElement('div');
+      userMsg.className = "p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-slate-100 text-right font-mono";
+      userMsg.innerHTML = `<span class="text-emerald-400 font-bold">You:</span> ${text}`;
+      chatBox.appendChild(userMsg);
+
+      input.value = '';
+
+      // Simulated AI Assistant Response
+      setTimeout(() => {
+        let response = "I can assist you with web directory enumeration, AWS S3 bucket auditing, or machine learning model defenses!";
+        const lower = text.toLowerCase();
+
+        if (lower.includes('directory') || lower.includes('enum') || lower.includes('flag')) {
+          response = "For the Web Directory Enumeration challenge, try testing hidden path tokens like 'WIZZY{web_enum_master_2026}'!";
+        } else if (lower.includes('s3') || lower.includes('cloud')) {
+          response = "For S3 Bucket access controls, verify public read permissions and use the flag token 'WIZZY{s3_bucket_sec_2026}'.";
+        } else if (lower.includes('contact') || lower.includes('email') || lower.includes('phone')) {
+          response = "You can reach human support directly at amazwise@gmail.com or call 08109719458.";
+        }
+
+        const aiMsg = document.createElement('div');
+        aiMsg.className = "p-2.5 bg-blue-950/60 border border-blue-800/40 rounded-lg text-slate-200 font-mono";
+        aiMsg.innerHTML = `<span class="text-blue-400 font-bold">🤖 Wizzy AI:</span> ${response}`;
+        chatBox.appendChild(aiMsg);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }, 500);
     }
   </script>
 </body>
