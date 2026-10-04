@@ -11,540 +11,658 @@
     ::-webkit-scrollbar-track { background: #020617; }
     ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #334155; }
-    tr { transition: background-color 0.2s ease; }
-    #welcome-toast, #session-toast { will-change: transform, opacity; }
-
-    /* Light mode theme overrides */
-    html.light { background-color: #f8fafc; color: #0f172a; }
-    html.light body { background-color: #f8fafc; color: #0f172a; }
-    html.light header { background-color: rgba(255, 255, 255, 0.85); border-color: #e2e8f0; }
-    html.light .bg-slate-900, html.light .bg-slate-900\/80, html.light .bg-slate-900\/60, html.light .bg-slate-900\/90 {
-      background-color: #ffffff !important; border-color: #cbd5e1 !important; color: #0f172a !important;
-    }
-    html.light .bg-slate-950 { background-color: #f1f5f9 !important; border-color: #cbd5e1 !important; color: #0f172a !important; }
-    html.light .text-white { color: #0f172a !important; }
-    html.light .text-slate-400, html.light .text-slate-300 { color: #475569 !important; }
-    html.light footer { background-color: #ffffff; border-color: #e2e8f0; }
   </style>
   <script>
     tailwind.config = {
       darkMode: 'class',
-      theme: { extend: { colors: { brand: '#3b82f6', accent: '#10b981' } } }
+      theme: {
+        extend: {
+          colors: {
+            brand: '#6366f1',
+            accent: '#06b6d4',
+            emeraldCustom: '#10b981'
+          }
+        }
+      }
     }
   </script>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans antialiased selection:bg-blue-500 selection:text-white min-h-screen flex flex-col">
+<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col">
 
-  <!-- Welcome Toast Notification -->
-  <div id="welcome-toast" class="fixed top-5 right-5 z-50 transform translate-y-[-150%] opacity-0 transition-all duration-500 ease-in-out bg-slate-900 border border-emerald-500/40 text-white px-5 py-3.5 rounded-xl shadow-2xl flex items-center gap-3">
-    <div class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></div>
-    <div>
-      <p class="text-xs font-mono text-emerald-400 font-bold uppercase tracking-wider">Authentication Successful</p>
-      <p id="welcome-toast-msg" class="text-sm font-semibold text-slate-100">Welcome back!</p>
-    </div>
-  </div>
-
-  <!-- Session Inactivity Warning Toast -->
-  <div id="session-toast" class="fixed bottom-5 right-5 z-50 transform translate-y-[150%] opacity-0 transition-all duration-500 ease-in-out bg-amber-950/90 border border-amber-500/40 text-white px-5 py-3.5 rounded-xl shadow-2xl flex items-center gap-3">
-    <div class="w-3 h-3 rounded-full bg-amber-400 animate-ping"></div>
-    <div>
-      <p class="text-xs font-mono text-amber-400 font-bold uppercase tracking-wider">Session Inactivity Warning</p>
-      <p id="session-toast-msg" class="text-xs text-slate-200">You will be logged out soon due to inactivity.</p>
-    </div>
-  </div>
-
-  <!-- Dynamic Component Containers -->
-  <div id="header-container"></div>
-  <div id="drawer-container"></div>
-
-  <!-- Main View Container -->
-  <main id="app-container" class="flex-grow">
-    <div id="view-mount-point"></div>
-  </main>
-
-  <!-- Footer -->
-  <footer class="border-t border-slate-900 bg-slate-950 py-8 text-center text-xs font-mono text-slate-500 mt-auto">
-    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <p>© 2026 Wizzy Cyber Platform. All rights reserved.</p>
-      <div class="flex items-center space-x-4">
-        <a href="https://x.com/bush_bean__" target="_blank" rel="noopener noreferrer" class="hover:text-slate-300 transition">Follow @bush_bean__</a>
-        <span>•</span>
-        <a href="javascript:void(0)" onclick="switchView('contact')" class="hover:text-slate-300 transition">Contact Support</a>
-        <span>•</span>
-        <a href="javascript:void(0)" onclick="switchView('help')" class="hover:text-slate-300 transition">Help Desk & AI</a>
-      </div>
-    </div>
-  </footer>
-
-  <!-- Auth Modal -->
-  <div id="auth-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl max-w-md w-full relative shadow-2xl">
-      <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-sm">✕</button>
-      <h3 class="text-xl font-bold text-white mb-1">Account Access</h3>
-      <p class="text-xs text-slate-400 mb-4">Sign in or register a new student profile on Supabase.</p>
-      
-      <div class="flex border-b border-slate-800 mb-5">
-        <button id="auth-tab-email" onclick="switchAuthMode('email')" class="flex-1 py-2 text-xs font-mono font-bold border-b-2 border-blue-500 text-blue-400 transition">
-          📧 Email Auth
-        </button>
-        <button id="auth-tab-phone" onclick="switchAuthMode('phone')" class="flex-1 py-2 text-xs font-mono text-slate-400 border-b-2 border-transparent hover:text-slate-200 transition">
-          📱 Phone Auth (OTP)
-        </button>
-      </div>
-         <!-- Email Auth -->
-      <div id="auth-email-container" class="space-y-4">
-        <div>
-          <label class="block text-xs font-medium text-slate-300 mb-1">Email Address</label>
-          <input id="auth-email" type="email" placeholder="student@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
-        </div>
-        <div>
-          <label class="block text-xs font-medium text-slate-300 mb-1">Password</label>
-          <div class="relative">
-            <input id="auth-password" type="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-3.5 pr-10 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
-            <button type="button" onclick="togglePasswordVisibility('auth-password', 'eye-auth')" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white">
-              <span id="eye-auth" class="text-xs">👁️</span>
-            </button>
-          </div>
-        </div>
-        <div class="flex gap-3 pt-2">
-          <button onclick="handleSignUp()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition">Sign Up</button>
-          <button onclick="handleSignIn()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg transition">Sign In</button>
-        </div>
-      </div>
-
-      <!-- Phone Auth -->
-      <div id="auth-phone-container" class="space-y-4 hidden">
-        <div>
-          <label class="block text-xs font-medium text-slate-300 mb-1">Mobile Phone Number (with Country Code)</label>
-          <input id="auth-phone-num" type="tel" placeholder="+1234567890" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2 text-sm text-white font-mono focus:outline-none focus:border-blue-500">
-        </div>
-        <button id="send-otp-btn" onclick="handleSendPhoneOTP()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition">
-          Send Verification SMS Code
-        </button>
-        <div id="otp-verify-section" class="space-y-3 pt-2 border-t border-slate-800/80 hidden">
-          <div>
-            <label class="block text-xs font-medium text-emerald-400 mb-1">Enter 6-Digit SMS Code</label>
-            <input id="auth-phone-otp" type="text" maxlength="6" placeholder="123456" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2 text-center text-lg tracking-widest font-mono text-white focus:outline-none focus:border-emerald-500">
-          </div>
-          <button onclick="handleVerifyPhoneOTP()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs rounded-lg transition">
-            Verify & Sign In
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Global Application Runtime Scripts -->
-  <script>
-    const SUPABASE_URL = 'https://oxnvpsfzytkrgokcuwkv.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im94bnZwc2Z6eXRrcmdva2N1d2t2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2OTI1NDksImV4cCI6MjEwNjI2ODU0OX0.AhzL3LgELbcK_qhnFlnNYWbaXdNUjVyX0-TGT-u9Ot8';
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    let currentUser = null;
-    let userProfileData = { username: '', first_name: '', last_name: '', phone: '', gender: '', bio: '', avatar_url: '', points: 0, completed_modules: 0 };
-
-    async function loadComponent(url, elementId) {
-      const response = await fetch(url);
-      const text = await response.text();
-      document.getElementById(elementId).innerHTML = text;
-    }
-
-    async function switchView(viewName) {
-      const viewMap = {
-        'home': 'home.html',
-        'dashboard': 'dashboard.html',
-        'study': 'study.html',
-        'tests': 'tests.html',
-        'settings': 'settings.html',
-        'contact': 'contact.html',
-        'help': 'help.html'
-      };
-
-      if ((viewName === 'dashboard' || viewName === 'tests' || viewName === 'settings') && !currentUser) {
-        openAuthModal();
-        return;
-      }
-
-      const file = viewMap[viewName] || 'home.html';
-      await loadComponent(file, 'view-mount-point');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-
-      if (viewName === 'dashboard') {
-        fetchUserProfile();
-        loadLeaderboard();
-      } else if (viewName === 'settings') {
-        loadSettingsFormData();
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', async () => {
-      await loadComponent('navbar.html', 'header-container');
-      await switchView('home');
-      checkInitialAuthSession();
-    });
-
-    async function checkInitialAuthSession() {
-      const { data: { session } } = await supabaseClient.auth.getSession();
-      if (session) {
-        currentUser = session.user;
-        updateAuthUI(true);
-        fetchUserProfile();
-      } else {
-        updateAuthUI(false);
-      }
-    }
-
-    function openAuthModal() { document.getElementById('auth-modal').classList.remove('hidden'); }
-    function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); }
-  </script>
-</body>
-</html>
-<!-- Main Top Navigation Header -->
-<header class="sticky top-0 z-40 backdrop-blur-md bg-slate-950/80 border-b border-slate-900">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between gap-4">
-    
-    <!-- Left: Drawer Toggle & Brand -->
-    <div class="flex items-center gap-3">
-      <button id="sidebar-toggle-btn" onclick="toggleSidebarMenu()" class="p-2 text-slate-400 hover:text-white bg-slate-900 border border-slate-800 rounded-lg transition" title="Toggle Menu">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-        </svg>
-      </button>
-      <a href="javascript:void(0)" onclick="switchView('home')" class="text-lg sm:text-xl font-bold tracking-tight text-blue-500 font-mono flex items-center gap-2">
-        &lt;WizzyCyber /&gt;
-      </a>
-    </div>
-
-    <!-- Center: Desktop Navigation Bar -->
-    <nav id="desktop-top-nav" class="hidden md:flex items-center space-x-1 text-xs font-mono font-medium text-slate-400">
-      <button onclick="switchView('home')" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">🔥 Home</button>
-      <button onclick="switchView('study')" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">💎 Study</button>
-      <button onclick="switchView('tests')" class="auth-only hidden px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">📝 Tests</button>
-      <button onclick="switchView('dashboard')" class="auth-only hidden px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">📊 Dashboard</button>
-    </nav>
-
-    <!-- Right: Auth State Actions -->
-    <div class="flex items-center gap-2 sm:gap-3">
-      <div id="auth-container" class="flex items-center gap-2"></div>
-      <a href="https://x.com/intent/follow?screen_name=bush_bean__" target="_blank" rel="noopener noreferrer" class="px-3 py-2 bg-blue-600/10 border border-blue-500/30 text-blue-400 text-xs font-semibold rounded-lg hover:bg-blue-600 hover:text-white transition hidden sm:flex items-center gap-2">
-        + Follow @bush_bean__
-      </a>
-    </div>
-
-  </div>
-</header>
-
-<!-- Sliding Navigation Drawer -->
-<aside id="sidebar-drawer" class="fixed top-0 left-0 bottom-0 w-72 bg-slate-950 border-r border-slate-900 z-50 transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col justify-between p-6 shadow-2xl">
-  <div>
-    <div class="flex justify-between items-center mb-8 border-b border-slate-900 pb-4">
-      <span class="text-base font-bold text-blue-500 font-mono">&lt;WizzyCyber /&gt;</span>
-      <button onclick="toggleSidebarMenu()" class="text-slate-400 hover:text-white text-base">✕</button>
-    </div>
-    <p class="text-[10px] uppercase font-mono tracking-wider text-slate-500 mb-3">Navigation Menu</p>
-    <div id="sidebar-nav-links" class="space-y-1.5 text-xs font-mono"></div>
-  </div>
-
-  <div class="pt-4 border-t border-slate-900 space-y-2">
-    <button onclick="switchView('contact'); toggleSidebarMenu();" class="w-full text-left text-xs font-mono text-slate-400 hover:text-white py-1">📞 Contact Support</button>
-    <button onclick="switchView('help'); toggleSidebarMenu();" class="w-full text-left text-xs font-mono text-slate-400 hover:text-white py-1">❓ Help Desk & AI Assistant</button>
-    <button id="sidebar-logout-btn" onclick="handleSignOut(); toggleSidebarMenu();" class="w-full text-left text-xs font-mono text-red-400 hover:text-red-300 py-2 border-t border-slate-900/80 mt-2 hidden">
-      🚪 Sign Out <span id="sidebar-logout-user"></span>
-    </button>
-  </div>
-</aside>
-<div id="public-landing-view">
-  <section class="max-w-4xl mx-auto px-6 py-16 sm:py-20 text-center">
-    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-full text-xs font-semibold uppercase tracking-wider mb-6">
-      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Security & Cloud Engineering Hub
-    </div>
-    <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white mb-6">
-      Wizzy Cyber Technical Portal
-    </h1>
-    <p class="text-slate-400 text-base sm:text-lg max-w-2xl mx-auto mb-8 leading-relaxed">
-      Explore cloud infrastructure, cybersecurity research, and machine learning models. Sign in to access hands-on labs, complete modules, and track your global rank.
-    </p>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl mx-auto text-left">
-      <div class="p-5 bg-slate-900/80 border border-slate-800 rounded-xl">
-        <p class="text-xs font-mono text-blue-400 mb-1">X (Twitter) Profile</p>
-        <h3 class="text-base font-bold text-white mb-2">@bush_bean__</h3>
-        <p class="text-xs text-slate-400 mb-4">Sharing updates on machine learning, cloud architecture, and security.</p>
-        <a href="https://x.com/bush_bean__" target="_blank" rel="noopener noreferrer" class="inline-block px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg transition">
-          Visit Profile →
+  <!-- Header Navigation Bar -->
+  <header class="sticky top-0 z-40 backdrop-blur-md bg-slate-950/80 border-b border-indigo-900/40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="text-lg sm:text-xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-cyan-400 to-emerald-400 font-mono">
+          &lt;WizzyCyber /&gt;
         </a>
       </div>
 
-      <div class="p-5 bg-slate-900/80 border border-slate-800 rounded-xl">
-        <p class="text-xs font-mono text-emerald-400 mb-1">Student Portal</p>
-        <h3 class="text-base font-bold text-white mb-2">Interactive Learning</h3>
-        <p class="text-xs text-slate-400 mb-4">Register or sign in to verify challenge flags and maintain your score.</p>
-        <button onclick="openAuthModal()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-lg transition">
+      <nav class="hidden md:flex items-center space-x-2 text-xs font-mono font-medium text-slate-300">
+        <a href="index.html" class="px-3 py-1.5 rounded-lg bg-indigo-600/20 text-indigo-300 border border-indigo-500/30">🔥 Home</a>
+        <a href="study.html" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">💎 Study</a>
+        <a href="tests.html" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">📝 Tests</a>
+        <a href="dashboard.html" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">📊 Dashboard</a>
+        <a href="support.html" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">❓ Help Desk</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <button onclick="openAuthModal()" class="px-4 py-2 bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 text-white font-semibold text-xs rounded-lg transition shadow-lg shadow-indigo-500/20">
           Sign In / Register
         </button>
       </div>
     </div>
-  </section>
-</div>
-<div id="authenticated-view" class="max-w-6xl mx-auto px-6 py-8">
-  <!-- Dashboard Header -->
-  <section id="dashboard-section" class="mb-8">
-    <div class="bg-emerald-950/40 border border-emerald-500/30 p-6 rounded-2xl shadow-xl backdrop-blur-sm">
-      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-        <div class="flex items-center gap-4">
-          <div class="relative">
-            <img id="dashboard-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=wizzy" alt="Profile Picture" class="w-16 h-16 rounded-xl border-2 border-emerald-400/60 bg-slate-950 p-1 object-cover">
-            <span class="absolute bottom-0 right-0 w-4 h-4 bg-emerald-500 border-2 border-slate-900 rounded-full"></span>
-          </div>
-          <div>
-            <div class="flex items-center gap-2">
-              <h2 id="dash-username" class="text-2xl font-bold text-white">Student</h2>
-              <span class="text-xs font-mono bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 px-2 py-0.5 rounded">Active Session</span>
-            </div>
-            <p id="dash-user-id" class="text-xs font-mono text-emerald-400/80 mt-1">ID: Loading...</p>
-          </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main class="flex-grow">
+    <section class="max-w-4xl mx-auto px-6 py-16 sm:py-24 text-center">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-gradient-to-r from-indigo-500/10 to-cyan-500/10 border border-indigo-500/30 text-indigo-300 rounded-full text-xs font-semibold uppercase tracking-wider mb-6">
+        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span> Security & Cloud Engineering Hub
+      </div>
+      <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white mb-6 leading-tight">
+        Next-Gen Cyber & <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-cyan-400 to-emerald-400">Cloud Academy</span>
+      </h1>
+      <p class="text-slate-400 text-base sm:text-lg max-w-2xl mx-auto mb-10 leading-relaxed">
+        Master cloud infrastructure, ethical hacking, and machine learning pipelines through interactive hands-on labs and real-time assessments.
+      </p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl mx-auto text-left">
+        <div class="p-6 bg-slate-900/90 border border-indigo-900/50 rounded-2xl shadow-xl hover:border-indigo-500/50 transition">
+          <p class="text-xs font-mono text-cyan-400 mb-1">X (Twitter) Profile</p>
+          <h3 class="text-base font-bold text-white mb-2">@bush_bean__</h3>
+          <p class="text-xs text-slate-400 mb-4">Sharing updates on machine learning, cloud architecture, and security research.</p>
+          <a href="https://x.com/bush_bean__" target="_blank" rel="noopener noreferrer" class="inline-block px-3.5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-lg transition">
+            Visit Profile →
+          </a>
         </div>
-        <div class="flex gap-3">
-          <button onclick="switchView('settings')" class="px-4 py-2 bg-slate-900/80 hover:bg-slate-800 text-slate-200 text-xs font-semibold rounded-lg transition border border-emerald-500/20">
-            ⚙️ Settings
-          </button>
-          <button onclick="handleSignOut()" class="px-4 py-2 bg-slate-900/80 hover:bg-red-900/50 hover:text-red-300 text-slate-300 text-xs font-semibold rounded-lg transition border border-emerald-500/20">
-            Sign Out Account
+
+        <div class="p-6 bg-slate-900/90 border border-indigo-900/50 rounded-2xl shadow-xl hover:border-emerald-500/50 transition">
+          <p class="text-xs font-mono text-emerald-400 mb-1">Student Portal</p>
+          <h3 class="text-base font-bold text-white mb-2">Interactive Learning</h3>
+          <p class="text-xs text-slate-400 mb-4">Register or sign in to verify challenge flags and climb the student leaderboard.</p>
+          <button onclick="openAuthModal()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-lg transition">
+            Access Portal
           </button>
         </div>
       </div>
+    </section>
+  </main>
 
-      <!-- Stat Counters -->
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-emerald-500/20">
-        <div class="bg-slate-950/60 border border-emerald-500/20 p-4 rounded-xl flex justify-between items-center">
+  <!-- Auth Modal -->
+  <div id="auth-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-indigo-900/60 p-6 rounded-2xl max-w-md w-full relative shadow-2xl">
+      <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-sm">✕</button>
+      <h3 class="text-xl font-bold text-white mb-1">Account Access</h3>
+      <p class="text-xs text-slate-400 mb-4">Sign in to sync your score and open interactive labs.</p>
+      
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">Email Address</label>
+          <input id="auth-email" type="email" placeholder="student@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">Password</label>
+          <input id="auth-password" type="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+        </div>
+        <button onclick="window.location.href='dashboard.html'" class="w-full py-2.5 bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 text-white font-semibold text-xs rounded-lg transition">
+          Sign In & Go to Dashboard
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="border-t border-slate-900 bg-slate-950 py-8 text-center text-xs font-mono text-slate-500 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p>© 2026 Wizzy Cyber Platform. All rights reserved.</p>
+      <div class="flex items-center space-x-4">
+        <a href="support.html" class="hover:text-slate-300 transition">Contact Support</a>
+        <span>•</span>
+        <a href="support.html" class="hover:text-slate-300 transition">Help Desk & AI Assistant</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function openAuthModal() { document.getElementById('auth-modal').classList.remove('hidden'); }
+    function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); }
+  </script>
+</body>
+          </html>
+  <!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | Wizzy Cyber</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col">
+
+  <header class="sticky top-0 z-40 backdrop-blur-md bg-slate-950/80 border-b border-indigo-900/40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between gap-4">
+      <a href="index.html" class="text-xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400 font-mono">
+        &lt;WizzyCyber /&gt;
+      </a>
+      <nav class="flex items-center space-x-2 text-xs font-mono font-medium text-slate-300">
+        <a href="index.html" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">🏠 Home</a>
+        <a href="study.html" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">💎 Study</a>
+        <a href="tests.html" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">📝 Tests</a>
+        <a href="dashboard.html" class="px-3 py-1.5 rounded-lg bg-indigo-600/20 text-indigo-300 border border-indigo-500/30">📊 Dashboard</a>
+        <a href="settings.html" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">⚙️ Settings</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-6 py-8 flex-grow space-y-10">
+    
+    <!-- Student Header & Metrics Card -->
+    <section class="bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 border border-indigo-500/30 p-6 rounded-2xl shadow-2xl">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+        <div class="flex items-center gap-4">
+          <img src="https://api.dicebear.com/7.x/bottts/svg?seed=wizzy" class="w-16 h-16 rounded-xl border-2 border-cyan-400 bg-slate-950 p-1">
           <div>
-            <p class="text-xs font-mono text-emerald-300/70">Total Score</p>
-            <p id="dash-user-points" class="text-xl font-bold font-mono text-emerald-400">0 pts</p>
+            <div class="flex items-center gap-2">
+              <h2 id="dash-username" class="text-2xl font-bold text-white">Student User</h2>
+              <span class="text-xs font-mono bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 px-2 py-0.5 rounded">Active Session</span>
+            </div>
+            <p class="text-xs font-mono text-slate-400 mt-1">ID: 100249</p>
+          </div>
+        </div>
+        <div class="flex gap-2">
+          <a href="settings.html" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-xs font-semibold rounded-lg border border-slate-700 transition">⚙️ Settings</a>
+          <a href="index.html" class="px-4 py-2 bg-red-950/60 hover:bg-red-900 text-red-300 text-xs font-semibold rounded-lg border border-red-800/40 transition">Sign Out</a>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-indigo-900/50">
+        <div class="bg-slate-950/70 border border-indigo-500/20 p-4 rounded-xl flex justify-between items-center">
+          <div>
+            <p class="text-xs font-mono text-indigo-300">Total Score</p>
+            <p id="dash-user-points" class="text-2xl font-bold font-mono text-cyan-400">100 pts</p>
           </div>
           <span class="text-2xl">🏆</span>
         </div>
-        <div class="bg-slate-950/60 border border-emerald-500/20 p-4 rounded-xl flex justify-between items-center">
+        <div class="bg-slate-950/70 border border-indigo-500/20 p-4 rounded-xl flex justify-between items-center">
           <div>
-            <p class="text-xs font-mono text-emerald-300/70">Modules Completed</p>
-            <p id="dash-user-modules" class="text-xl font-bold font-mono text-emerald-300">0</p>
+            <p class="text-xs font-mono text-indigo-300">Modules Completed</p>
+            <p id="dash-user-modules" class="text-2xl font-bold font-mono text-emerald-400">1</p>
           </div>
           <span class="text-2xl">⚡</span>
         </div>
-        <div class="bg-slate-950/60 border border-emerald-500/20 p-4 rounded-xl flex justify-between items-center">
+        <div class="bg-slate-950/70 border border-indigo-500/20 p-4 rounded-xl flex justify-between items-center">
           <div>
-            <p class="text-xs font-mono text-emerald-300/70">Global Rank</p>
-            <p id="dash-user-rank" class="text-xl font-bold font-mono text-purple-300">#--</p>
+            <p class="text-xs font-mono text-indigo-300">Global Rank</p>
+            <p class="text-2xl font-bold font-mono text-amber-300">#2</p>
           </div>
           <span class="text-2xl">🥇</span>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Live Student Leaderboard -->
-  <section id="leaderboard" class="py-6 border-t border-slate-900">
-    <div class="flex flex-col sm:flex-row justify-between sm:items-end mb-6 gap-2">
-      <div>
-        <h2 class="text-2xl font-bold text-white mb-1">Live Student Leaderboard</h2>
-        <p class="text-slate-400 text-sm">Real-time ranking updated live from Supabase record databases.</p>
+    <!-- Interactive Challenge Labs -->
+    <section>
+      <div class="mb-6">
+        <h2 class="text-2xl font-bold text-white mb-1">Interactive Challenge Labs</h2>
+        <p class="text-slate-400 text-sm">Submit challenge flags to increase your transcript rank in real time.</p>
       </div>
-      <button onclick="loadLeaderboard()" class="text-xs font-mono text-blue-400 bg-blue-500/10 border border-blue-500/20 px-3 py-1.5 rounded-lg hover:bg-blue-500 hover:text-white transition">
-        🔄 Refresh Scores
-      </button>
-    </div>
 
-    <div class="bg-slate-900/60 border border-slate-800 rounded-xl overflow-x-auto">
-      <table class="w-full text-left text-sm text-slate-300 min-w-[500px]">
-        <thead class="bg-slate-950 text-xs font-mono uppercase text-slate-400 border-b border-slate-800">
-          <tr>
-            <th class="px-6 py-3.5">Rank</th>
-            <th class="px-6 py-3.5">Student Account</th>
-            <th class="px-6 py-3.5 text-center">Modules Completed</th>
-            <th class="px-6 py-3.5 text-right">Total Score</th>
-          </tr>
-        </thead>
-        <tbody id="leaderboard-body" class="divide-y divide-slate-800/60 font-mono text-xs">
-          <tr><td colspan="4" class="px-6 py-6 text-center text-slate-500">Loading student rankings...</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-</div>
-<div id="view-study" class="max-w-6xl mx-auto px-6 py-10">
-  <div class="mb-8 border-b border-slate-900 pb-6">
-    <h2 class="text-3xl font-bold text-white mb-2">Study Modules & Learning Paths</h2>
-    <p class="text-slate-400 text-sm">Master technical domains with structured theoretical concepts and practical labs.</p>
-  </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-slate-900/90 border border-slate-800 p-6 rounded-xl flex flex-col justify-between hover:border-emerald-500/40 transition">
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">Cyber Security</span>
+              <span class="text-xs font-mono text-slate-400">100 pts</span>
+            </div>
+            <h3 class="text-base font-bold text-white mb-2">Web Directory Enumeration</h3>
+            <p class="text-slate-400 text-xs mb-4">Locate hidden administrative directories using brute-forcing flags.</p>
+          </div>
+          <div>
+            <div class="flex gap-2">
+              <input id="flag-input-1" type="text" placeholder="WIZZY{flag_here}" class="bg-slate-950 border border-slate-700 text-slate-200 text-xs rounded-lg px-3 py-2 w-full font-mono">
+              <button onclick="submitFlag('flag-input-1', 'status-1', 'WIZZY{web_enum_master_2026}', 100)" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs rounded-lg transition">Submit</button>
+            </div>
+            <p id="status-1" class="text-xs font-mono mt-2 text-slate-500"></p>
+          </div>
+        </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-    <!-- Module 01 -->
-    <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between">
-      <div>
-        <div class="inline-block px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono rounded mb-4">Module 01</div>
-        <h3 class="text-xl font-bold text-white mb-3">Practical Cybersecurity</h3>
-        <p class="text-slate-400 text-xs leading-relaxed mb-4">Network scanning, offensive security fundamentals, directory brute-forcing, and vulnerability auditing.</p>
+        <div class="bg-slate-900/90 border border-slate-800 p-6 rounded-xl flex flex-col justify-between hover:border-cyan-500/40 transition">
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-xs font-mono text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded">Cloud Infrastructure</span>
+              <span class="text-xs font-mono text-slate-400">150 pts</span>
+            </div>
+            <h3 class="text-base font-bold text-white mb-2">S3 Bucket Access Control</h3>
+            <p class="text-slate-400 text-xs mb-4">Audit unauthenticated access on misconfigured storage bucket policies.</p>
+          </div>
+          <div>
+            <div class="flex gap-2">
+              <input id="flag-input-2" type="text" placeholder="WIZZY{flag_here}" class="bg-slate-950 border border-slate-700 text-slate-200 text-xs rounded-lg px-3 py-2 w-full font-mono">
+              <button onclick="submitFlag('flag-input-2', 'status-2', 'WIZZY{s3_bucket_sec_2026}', 150)" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white font-semibold text-xs rounded-lg transition">Submit</button>
+            </div>
+            <p id="status-2" class="text-xs font-mono mt-2 text-slate-500"></p>
+          </div>
+        </div>
+
+        <div class="bg-slate-900/90 border border-slate-800 p-6 rounded-xl flex flex-col justify-between hover:border-indigo-500/40 transition">
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-xs font-mono text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded">Applied ML</span>
+              <span class="text-xs font-mono text-slate-400">200 pts</span>
+            </div>
+            <h3 class="text-base font-bold text-white mb-2">Adversarial Model Poisoning</h3>
+            <p class="text-slate-400 text-xs mb-4">Detect feature manipulation techniques targeting predictive pipeline outputs.</p>
+          </div>
+          <div>
+            <div class="flex gap-2">
+              <input id="flag-input-3" type="text" placeholder="WIZZY{flag_here}" class="bg-slate-950 border border-slate-700 text-slate-200 text-xs rounded-lg px-3 py-2 w-full font-mono">
+              <button onclick="submitFlag('flag-input-3', 'status-3', 'WIZZY{ml_feature_clean_2026}', 200)" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs rounded-lg transition">Submit</button>
+            </div>
+            <p id="status-3" class="text-xs font-mono mt-2 text-slate-500"></p>
+          </div>
+        </div>
       </div>
-      <button onclick="switchView('dashboard')" class="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-mono text-xs font-semibold rounded-lg transition">
-        Start Cybersecurity Lab →
-      </button>
-    </div>
+    </section>
 
-    <!-- Module 02 -->
-    <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between">
-      <div>
-        <div class="inline-block px-2.5 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono rounded mb-4">Module 02</div>
-        <h3 class="text-xl font-bold text-white mb-3">Ethical Hacking & Recon</h3>
-        <p class="text-slate-400 text-xs leading-relaxed mb-4">Web application penetration testing, payload crafting, authorization bypasses, and security controls.</p>
+    <!-- Student Leaderboard -->
+    <section class="bg-slate-900/60 border border-slate-800 rounded-2xl p-6">
+      <h2 class="text-xl font-bold text-white mb-4">Student Leaderboard</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs font-mono text-slate-300">
+          <thead class="bg-slate-950 text-slate-400 uppercase border-b border-slate-800">
+            <tr>
+              <th class="px-4 py-3">Rank</th>
+              <th class="px-4 py-3">Student Account</th>
+              <th class="px-4 py-3 text-center">Modules</th>
+              <th class="px-4 py-3 text-right">Score</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800/60">
+            <tr>
+              <td class="px-4 py-3 text-amber-400 font-bold">#1</td>
+              <td class="px-4 py-3 text-white">bush_bean__ (Lead)</td>
+              <td class="px-4 py-3 text-center">12</td>
+              <td class="px-4 py-3 text-right font-bold text-cyan-400">1,250 pts</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3 text-emerald-400 font-bold">#2</td>
+              <td class="px-4 py-3 text-slate-200">security_student_01</td>
+              <td class="px-4 py-3 text-center">5</td>
+              <td class="px-4 py-3 text-right font-bold text-cyan-400">450 pts</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <button onclick="switchView('dashboard')" class="w-full py-2 bg-blue-600 hover:bg-blue-500 text-white font-mono text-xs font-semibold rounded-lg transition">
-        Start Hacking Challenge →
-      </button>
+    </section>
+
+  </main>
+
+  <script>
+    function submitFlag(inputId, statusId, correctFlag, pts) {
+      const val = document.getElementById(inputId).value.trim();
+      const status = document.getElementById(statusId);
+      if (val === correctFlag) {
+        status.className = "text-xs font-mono mt-2 text-emerald-400";
+        status.innerText = `✓ Valid Flag! +${pts} Points Awarded.`;
+      } else {
+        status.className = "text-xs font-mono mt-2 text-red-400";
+        status.innerText = "✕ Invalid flag attempt. Double-check your solution.";
+      }
+    }
+  </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study Modules | Wizzy Cyber</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col">
+
+  <header class="sticky top-0 z-40 backdrop-blur-md bg-slate-950/80 border-b border-indigo-900/40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between gap-4">
+      <a href="index.html" class="text-xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400 font-mono">
+        &lt;WizzyCyber /&gt;
+      </a>
+      <nav class="flex items-center space-x-2 text-xs font-mono font-medium text-slate-300">
+        <a href="index.html" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">🏠 Home</a>
+        <a href="study.html" class="px-3 py-1.5 rounded-lg bg-indigo-600/20 text-indigo-300 border border-indigo-500/30">💎 Study</a>
+        <a href="tests.html" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">📝 Tests</a>
+        <a href="dashboard.html" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">📊 Dashboard</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-6 py-10 flex-grow">
+    <div class="mb-8 border-b border-slate-900 pb-6">
+      <h2 class="text-3xl font-bold text-white mb-2">Study Modules & Learning Paths</h2>
+      <p class="text-slate-400 text-sm">Master key technical domains with structured theory and practical exercises.</p>
     </div>
 
-    <!-- Module 03 -->
-    <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between">
-      <div>
-        <div class="inline-block px-2.5 py-1 bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-mono rounded mb-4">Module 03</div>
-        <h3 class="text-xl font-bold text-white mb-3">Cloud Computing & DevOps</h3>
-        <p class="text-slate-400 text-xs leading-relaxed mb-4">AWS infrastructure, IAM policies, container orchestration, Linux server administration, and CI/CD pipelines.</p>
-      </div>
-      <button onclick="switchView('dashboard')" class="w-full py-2 bg-purple-600 hover:bg-purple-500 text-white font-mono text-xs font-semibold rounded-lg transition">
-        Start Cloud Lab →
-      </button>
-    </div>
-  </div>
-</div>
-<div id="view-tests" class="max-w-6xl mx-auto px-6 py-10">
-  <div class="mb-8 border-b border-slate-900 pb-6">
-    <h2 class="text-3xl font-bold text-white mb-2">Assessments & Certifications</h2>
-    <p class="text-slate-400 text-sm">Verify your skills under timed conditions and earn official skill badges.</p>
-  </div>
-
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <!-- Exam 1 -->
-    <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl">
-      <span class="text-xs font-mono text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded">Timed Exam</span>
-      <h3 class="text-lg font-bold text-white mt-4 mb-2">Cloud Security Administrator Assessment</h3>
-      <p class="text-slate-400 text-xs mb-4">30 questions covering IAM, network security groups, and storage policies.</p>
-      <button onclick="startExamModal()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg transition">
-        Begin Exam
-      </button>
-    </div>
-
-    <!-- Exam 2 -->
-    <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl">
-      <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded">Practical Assessment</span>
-      <h3 class="text-lg font-bold text-white mt-4 mb-2">Offensive Security Practical Evaluation</h3>
-      <p class="text-slate-400 text-xs mb-4">Hands-on target machine evaluation. Discover flags to complete certification.</p>
-      <button onclick="spawnTargetMachine()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-lg transition">
-        Launch Target Machine
-      </button>
-    </div>
-  </div>
-
-  <!-- Terminal Emulator Panel -->
-  <div id="target-machine-panel" class="mt-8 bg-slate-950 border border-slate-800 rounded-xl p-5 hidden font-mono">
-    <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-3">
-      <span class="text-xs text-emerald-400 font-bold flex items-center gap-2">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Target Instance Online: 10.10.14.32
-      </span>
-      <button onclick="document.getElementById('target-machine-panel').classList.add('hidden')" class="text-slate-500 hover:text-white text-xs">Terminate Machine ✕</button>
-    </div>
-    <p class="text-xs text-slate-400 mb-2">&gt; Port scan results:</p>
-    <div class="bg-slate-900 p-3 rounded text-xs text-slate-300 space-y-1">
-      <p class="text-emerald-400">PORT 22/tcp OPEN ssh</p>
-      <p class="text-emerald-400">PORT 80/tcp OPEN http (Apache 2.4.41)</p>
-      <p class="text-emerald-400">PORT 8080/tcp OPEN http-proxy</p>
-    </div>
-    <p class="text-xs text-slate-400 mt-3">&gt; Submit target challenge flag below:</p>
-    <div class="flex gap-2 mt-2">
-      <input id="target-flag-input" type="text" placeholder="WIZZY{target_pwned_2026}" class="bg-slate-900 border border-slate-800 text-xs text-white px-3 py-1.5 rounded w-full">
-      <button onclick="submitTargetFlag()" class="px-3 py-1.5 bg-emerald-600 text-white text-xs font-semibold rounded">Verify Flag</button>
-    </div>
-    <p id="target-flag-status" class="text-xs mt-2"></p>
-  </div>
-</div>
-<div id="view-settings" class="max-w-5xl mx-auto px-6 py-10">
-  <h2 class="text-2xl font-bold text-white mb-6">Settings & Account Control</h2>
-  
-  <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-    <!-- Side Nav Tabs -->
-    <div class="space-y-2">
-      <button id="tab-btn-profile" onclick="switchSettingsTab('profile')" class="w-full text-left px-4 py-2.5 rounded-xl bg-blue-600 text-white font-semibold transition text-xs font-mono">
-        👤 User Profile
-      </button>
-      <button id="tab-btn-account" onclick="switchSettingsTab('account')" class="w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono">
-        🔒 Password & Security
-      </button>
-      <button id="tab-btn-appearance" onclick="switchSettingsTab('appearance')" class="w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono">
-        🎨 Appearance & Theme
-      </button>
-      <button id="tab-btn-session" onclick="switchSettingsTab('session')" class="w-full text-left px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition text-xs font-mono">
-        🛡️ Session & Data Control
-      </button>
-    </div>
-
-    <!-- Active Tab Box -->
-    <div class="md:col-span-3 bg-slate-900/80 border border-slate-800 rounded-2xl p-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       
-      <!-- Profile Tab -->
-      <div id="tab-profile" class="space-y-4">
-        <h3 class="text-base font-bold text-white border-b border-slate-800 pb-2">Personal Information</h3>
-        
-        <div class="flex items-center gap-4">
-          <img id="settings-avatar-preview" src="https://api.dicebear.com/7.x/bottts/svg?seed=wizzy" class="w-16 h-16 rounded-xl border border-slate-700 bg-slate-950 p-1 object-cover">
-          <div class="flex-grow space-y-2">
-            <label class="block text-xs font-mono text-slate-400">Upload Profile Photo</label>
-            <input type="file" id="settings-avatar-file" accept="image/*" class="block w-full text-xs text-slate-400 file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer" onchange="handleFileUpload(event)">
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-xs font-mono text-slate-400 mb-1">First Name</label>
-            <input id="settings-firstname-input" type="text" placeholder="John" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:border-blue-500 focus:outline-none">
-          </div>
-          <div>
-            <label class="block text-xs font-mono text-slate-400 mb-1">Last Name</label>
-            <input id="settings-lastname-input" type="text" placeholder="Doe" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:border-blue-500 focus:outline-none">
-          </div>
-        </div>
-
+      <!-- Module 1 -->
+      <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between hover:border-emerald-500/50 transition">
         <div>
-          <label class="block text-xs font-mono text-slate-400 mb-1">Display Username</label>
-          <input id="settings-username-input" type="text" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:border-blue-500 focus:outline-none">
+          <div class="inline-block px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono rounded mb-4">Module 01</div>
+          <h3 class="text-xl font-bold text-white mb-3">Practical Cybersecurity</h3>
+          <p class="text-slate-400 text-xs leading-relaxed mb-4">Learn network scanning, offensive security fundamentals, directory brute-forcing, and vulnerability auditing techniques.</p>
         </div>
+        <a href="dashboard.html" class="w-full text-center py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-mono text-xs font-semibold rounded-lg transition">
+          Launch Lab Module →
+        </a>
+      </div>
 
+      <!-- Module 2 -->
+      <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between hover:border-cyan-500/50 transition">
         <div>
-          <label class="block text-xs font-mono text-slate-400 mb-1">Email Address</label>
-          <input id="settings-email-input" type="email" value="amazwize@gmail.com" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-400 font-mono focus:border-blue-500 focus:outline-none bg-slate-900/50" readonly>
+          <div class="inline-block px-2.5 py-1 bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-mono rounded mb-4">Module 02</div>
+          <h3 class="text-xl font-bold text-white mb-3">Ethical Hacking & Recon</h3>
+          <p class="text-slate-400 text-xs leading-relaxed mb-4">Explore web application penetration testing, payload crafting, authorization bypasses, and security controls.</p>
         </div>
+        <a href="dashboard.html" class="w-full text-center py-2.5 bg-cyan-600 hover:bg-cyan-500 text-white font-mono text-xs font-semibold rounded-lg transition">
+          Launch Recon Lab →
+        </a>
+      </div>
 
+      <!-- Module 3 -->
+      <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between hover:border-indigo-500/50 transition">
         <div>
-          <label class="block text-xs font-mono text-slate-400 mb-1">Mobile Phone Number</label>
-          <input id="settings-phone-input" type="tel" value="08109719458" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:border-blue-500 focus:outline-none">
+          <div class="inline-block px-2.5 py-1 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-mono rounded mb-4">Module 03</div>
+          <h3 class="text-xl font-bold text-white mb-3">Cloud Computing & DevOps</h3>
+          <p class="text-slate-400 text-xs leading-relaxed mb-4">Understand AWS infrastructure, IAM policies, container orchestration, server administration, and automated pipelines.</p>
         </div>
+        <a href="dashboard.html" class="w-full text-center py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-mono text-xs font-semibold rounded-lg transition">
+          Launch Cloud Lab →
+        </a>
+      </div>
 
-        <button onclick="handleProfileUpdate()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition font-mono">
-          Save Profile Changes
+    </div>
+  </main>
+
+  <footer class="border-t border-slate-900 bg-slate-950 py-6 text-center text-xs font-mono text-slate-500">
+    © 2026 Wizzy Cyber Platform. All rights reserved.
+  </footer>
+</body>
+  </html>
+  <!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assessments & Certification Exams | Wizzy Cyber</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col">
+
+  <header class="sticky top-0 z-40 backdrop-blur-md bg-slate-950/80 border-b border-indigo-900/40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between gap-4">
+      <a href="index.html" class="text-xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400 font-mono">
+        &lt;WizzyCyber /&gt;
+      </a>
+      <nav class="flex items-center space-x-2 text-xs font-mono font-medium text-slate-300">
+        <a href="index.html" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">🏠 Home</a>
+        <a href="study.html" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">💎 Study</a>
+        <a href="tests.html" class="px-3 py-1.5 rounded-lg bg-indigo-600/20 text-indigo-300 border border-indigo-500/30">📝 Tests</a>
+        <a href="dashboard.html" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">📊 Dashboard</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-6 py-10 flex-grow space-y-8">
+    <div class="border-b border-slate-900 pb-6">
+      <h2 class="text-3xl font-bold text-white mb-2">Assessments & Certifications</h2>
+      <p class="text-slate-400 text-sm">Verify your skills under timed conditions and earn official skill certificates.</p>
+    </div>
+
+    <!-- Assessment Options -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl hover:border-cyan-500/40 transition">
+        <span class="text-xs font-mono text-cyan-400 bg-cyan-500/10 px-2.5 py-1 rounded">Timed Exam</span>
+        <h3 class="text-lg font-bold text-white mt-4 mb-2">Cloud Security Administrator Assessment</h3>
+        <p class="text-slate-400 text-xs mb-4">30 questions covering IAM, network security groups, and storage policies under a 45-minute countdown timer.</p>
+        <button onclick="startTimedExam()" class="px-4 py-2 bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 text-white text-xs font-semibold rounded-lg transition">
+          Begin Timed Exam
         </button>
       </div>
 
-      <!-- Theme Controls -->
-      <div id="tab-appearance" class="hidden space-y-4">
-        <h3 class="text-base font-bold text-white border-b border-slate-800 pb-2">Interface Theme</h3>
-        <div class="grid grid-cols-2 gap-4 max-w-sm pt-2">
-          <button onclick="setTheme('dark')" class="p-4 border border-slate-700 bg-slate-950 text-white rounded-xl text-xs font-mono hover:border-blue-500 transition text-center space-y-2">
-            <div class="text-2xl">🌙</div>
-            <div class="font-bold">Dark Theme</div>
-          </button>
-          <button onclick="setTheme('light')" class="p-4 border border-slate-300 bg-slate-100 text-slate-900 rounded-xl text-xs font-mono hover:border-blue-500 transition text-center space-y-2">
-            <div class="text-2xl">☀️</div>
-            <div class="font-bold">Light Theme</div>
-          </button>
+      <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl hover:border-emerald-500/40 transition">
+        <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded">Practical Assessment</span>
+        <h3 class="text-lg font-bold text-white mt-4 mb-2">Offensive Security Blackbox Evaluation</h3>
+        <p class="text-slate-400 text-xs mb-4">Hands-on blackbox target instance. Discover flags across open ports to verify practical mastery.</p>
+        <button onclick="spawnTargetMachine()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-lg transition">
+          Launch Target Machine
+        </button>
+      </div>
+    </div>
+
+    <!-- Live Target Terminal Output Panel -->
+    <div id="target-machine-panel" class="bg-slate-950 border border-indigo-900/60 rounded-xl p-5 hidden font-mono shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-3">
+        <span class="text-xs text-emerald-400 font-bold flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span> Target Instance Online: 10.10.14.32
+        </span>
+        <button onclick="document.getElementById('target-machine-panel').classList.add('hidden')" class="text-slate-500 hover:text-white text-xs">Terminate Machine ✕</button>
+      </div>
+      <p class="text-xs text-slate-400 mb-2">&gt; Port scan results:</p>
+      <div class="bg-slate-900 p-3 rounded text-xs text-slate-300 space-y-1">
+        <p class="text-emerald-400">PORT 22/tcp OPEN ssh</p>
+        <p class="text-emerald-400">PORT 80/tcp OPEN http (Apache 2.4.41)</p>
+        <p class="text-emerald-400">PORT 8080/tcp OPEN http-proxy</p>
+      </div>
+      <p class="text-xs text-slate-400 mt-3">&gt; Submit target challenge flag below:</p>
+      <div class="flex gap-2 mt-2">
+        <input id="target-flag-input" type="text" placeholder="WIZZY{target_pwned_2026}" class="bg-slate-900 border border-slate-800 text-xs text-white px-3 py-2 rounded w-full">
+        <button onclick="submitTargetFlag()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded transition">Verify Flag</button>
+      </div>
+      <p id="target-flag-status" class="text-xs mt-2 font-mono"></p>
+    </div>
+  </main>
+
+  <script>
+    function startTimedExam() {
+      const q1 = prompt("Question 1/30: Which AWS service is explicitly designed for object storage?\n(A) EC2\n(B) S3\n(C) RDS\n(D) Lambda");
+      if (q1 && q1.toUpperCase() === 'B') {
+        alert("Correct! Answer recorded for timed assessment.");
+      } else {
+        alert("Incorrect response or assessment cancelled.");
+      }
+    }
+
+    function spawnTargetMachine() {
+      document.getElementById('target-machine-panel').classList.remove('hidden');
+    }
+
+    function submitTargetFlag() {
+      const flag = document.getElementById('target-flag-input').value.trim();
+      const status = document.getElementById('target-flag-status');
+      if (flag === 'WIZZY{target_pwned_2026}') {
+        status.className = "text-xs font-mono text-emerald-400";
+        status.innerText = "✓ Target Rooted! +300 Assessment Points Awarded.";
+      } else {
+        status.className = "text-xs font-mono text-red-400";
+        status.innerText = "✕ Flag incorrect. Inspect target HTTP proxy on port 8080.";
+      }
+    }
+  </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth" id="html-root">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings | Wizzy Cyber</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col">
+
+  <header class="sticky top-0 z-40 backdrop-blur-md bg-slate-950/80 border-b border-indigo-900/40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between gap-4">
+      <a href="index.html" class="text-xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400 font-mono">
+        &lt;WizzyCyber /&gt;
+      </a>
+      <nav class="flex items-center space-x-2 text-xs font-mono font-medium text-slate-300">
+        <a href="dashboard.html" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">📊 Dashboard</a>
+        <a href="settings.html" class="px-3 py-1.5 rounded-lg bg-indigo-600/20 text-indigo-300 border border-indigo-500/30">⚙️ Settings</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-6 py-10 flex-grow space-y-6">
+    <h2 class="text-2xl font-bold text-white border-b border-slate-900 pb-4">Settings & Profile Control</h2>
+
+    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 space-y-4">
+      <h3 class="text-base font-bold text-indigo-300">Personal Information</h3>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-mono text-slate-400 mb-1">Display Username</label>
+          <input type="text" value="Student_User" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
+        </div>
+        <div>
+          <label class="block text-xs font-mono text-slate-400 mb-1">Email Address</label>
+          <input type="email" value="amazwize@gmail.com" readonly class="w-full bg-slate-950/50 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-400">
         </div>
       </div>
 
+      <div>
+        <label class="block text-xs font-mono text-slate-400 mb-1">Mobile Phone Number</label>
+        <input type="text" value="08109719458" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white">
+      </div>
+
+      <button onclick="alert('Profile details updated!')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-mono text-xs rounded-lg transition">
+        Save Profile
+      </button>
     </div>
-  </div>
-</div>
+
+    <!-- Theme Selection -->
+    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6">
+      <h3 class="text-base font-bold text-indigo-300 mb-2">Appearance Theme</h3>
+      <div class="flex gap-4">
+        <button onclick="alert('Dark Mode Active')" class="px-4 py-2 bg-slate-950 border border-indigo-500/50 text-white rounded-lg text-xs font-mono">🌙 Dark Mode</button>
+        <button onclick="alert('Light Mode Selected')" class="px-4 py-2 bg-slate-200 border border-slate-300 text-slate-900 rounded-lg text-xs font-mono">☀️ Light Mode</button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="border-t border-slate-900 bg-slate-950 py-6 text-center text-xs font-mono text-slate-500">
+    © 2026 Wizzy Cyber Platform. All rights reserved.
+  </footer>
+</body>
+  </html>
+  <!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Help Desk & AI Support | Wizzy Cyber</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col">
+
+  <header class="sticky top-0 z-40 backdrop-blur-md bg-slate-950/80 border-b border-indigo-900/40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between gap-4">
+      <a href="index.html" class="text-xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400 font-mono">
+        &lt;WizzyCyber /&gt;
+      </a>
+      <nav class="flex items-center space-x-2 text-xs font-mono font-medium text-slate-300">
+        <a href="index.html" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">🏠 Home</a>
+        <a href="study.html" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">💎 Study</a>
+        <a href="tests.html" class="px-3 py-1.5 rounded-lg hover:text-white hover:bg-slate-900 transition">📝 Tests</a>
+        <a href="support.html" class="px-3 py-1.5 rounded-lg bg-indigo-600/20 text-indigo-300 border border-indigo-500/30">❓ Help Desk</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 py-10 flex-grow space-y-10">
+    
+    <!-- Contact Details -->
+    <section>
+      <h2 class="text-3xl font-bold text-white mb-2">Technical Support Channels</h2>
+      <p class="text-slate-400 text-sm mb-6">Reach out to human technical assistance for account or platform help.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl space-y-4">
+          <h3 class="text-base font-bold text-indigo-300">Direct Contact</h3>
+          <div class="space-y-3 text-xs font-mono">
+            <div>
+              <p class="text-slate-500">Official Email</p>
+              <p class="text-cyan-400 font-semibold text-sm">amazwize@gmail.com</p>
+            </div>
+            <div>
+              <p class="text-slate-500">Support Phone / WhatsApp</p>
+              <p class="text-emerald-400 font-semibold text-sm">08109719458</p>
+            </div>
+            <div>
+              <p class="text-slate-500">X (Twitter)</p>
+              <p class="text-slate-200">@bush_bean__</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl">
+          <h3 class="text-base font-bold text-indigo-300 mb-3">Inquiry Form</h3>
+          <form onsubmit="event.preventDefault(); alert('Inquiry submitted!');" class="space-y-3 text-xs">
+            <div>
+              <label class="block text-slate-400 mb-1">Your Name</label>
+              <input type="text" required placeholder="John Doe" class="w-full bg-slate-950 border border-slate-800 rounded p-2 text-white">
+            </div>
+            <div>
+              <label class="block text-slate-400 mb-1">Message</label>
+              <textarea required rows="3" placeholder="Describe your question..." class="w-full bg-slate-950 border border-slate-800 rounded p-2 text-white"></textarea>
+            </div>
+            <button type="submit" class="w-full py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded">Send Message</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Embedded AI Help Desk -->
+    <section class="bg-slate-900/90 border border-indigo-900/50 rounded-2xl p-6 shadow-xl">
+      <h3 class="text-xl font-bold text-white mb-1">AI Cyber Learning Assistant</h3>
+      <p class="text-xs text-slate-400 mb-4">Ask questions regarding cybersecurity labs, directory enumeration, or AWS S3 policies.</p>
+
+      <div id="ai-chat-box" class="h-60 overflow-y-auto space-y-3 p-4 bg-slate-950 rounded-xl mb-4 text-xs font-mono border border-slate-800">
+        <div class="p-2.5 bg-indigo-950/60 border border-indigo-800/40 rounded-lg text-slate-200">
+          <span class="text-cyan-400 font-bold">🤖 Wizzy AI:</span> Hello! I am your AI learning assistant. Ask me anything about challenge flags, network scanning, or AWS security policies!
+        </div>
+      </div>
+
+      <div class="flex gap-2">
+        <input id="ai-input" type="text" placeholder="Ask a question..." class="bg-slate-950 border border-slate-800 text-white text-xs rounded-lg px-3 py-2 w-full font-mono">
+        <button onclick="sendAIMessage()" class="px-4 py-2 bg-gradient-to-r from-indigo-600 to-cyan-600 text-white text-xs font-semibold rounded-lg transition">Ask AI</button>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    function sendAIMessage() {
+      const input = document.getElementById('ai-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const chatBox = document.getElementById('ai-chat-box');
+      const userMsg = document.createElement('div');
+      userMsg.className = "p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-slate-100 text-right font-mono";
+      userMsg.innerHTML = `<span class="text-emerald-400 font-bold">You:</span> ${text}`;
+      chatBox.appendChild(userMsg);
+      input.value = '';
+
+      setTimeout(() => {
+        const aiMsg = document.createElement('div');
+        aiMsg.className = "p-2.5 bg-indigo-950/60 border border-indigo-800/40 rounded-lg text-slate-200 font-mono";
+        aiMsg.innerHTML = `<span class="text-cyan-400 font-bold">🤖 Wizzy AI:</span> For platform assistance, try testing lab flags on your dashboard or contact human support at amazwize@gmail.com!`;
+        chatBox.appendChild(aiMsg);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }, 500);
+    }
+  </script>
+</body>
+  </html>
+        
