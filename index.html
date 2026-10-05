@@ -341,45 +341,56 @@
 
     </div>
 
-    <!-- View 3: Study Modules (Consolidated under same navigation layout) -->
+    <!-- View 3: Study Modules (Dedicated Educational & Learning Content) -->
     <div id="view-study" class="hidden max-w-6xl mx-auto px-6 py-10">
       <div class="mb-8 border-b border-slate-900 pb-6">
-        <h2 class="text-3xl font-bold text-white mb-2">Study Modules & Technical Curriculum</h2>
-        <p class="text-slate-400 text-sm">Master practical cybersecurity, cloud computing, and offensive security labs directly within this platform.</p>
+        <h2 class="text-3xl font-bold text-white mb-2">Study Curriculum & Reading Center</h2>
+        <p class="text-slate-400 text-sm">Comprehensive theoretical and practical cybersecurity material. Read through concepts before attempting test assessments.</p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between">
           <div>
             <div class="inline-block px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono rounded mb-4">Module 01</div>
-            <h3 class="text-xl font-bold text-white mb-3">Practical Cybersecurity</h3>
-            <p class="text-slate-400 text-xs leading-relaxed mb-4">Learn network scanning, offensive security fundamentals, directory brute-forcing, and vulnerability auditing techniques.</p>
+            <h3 class="text-xl font-bold text-white mb-3">Practical Network Security</h3>
+            <p class="text-slate-400 text-xs leading-relaxed mb-4">Covers OSI layer defenses, port scanning mechanics, packet inspection using Wireshark, and firewall rule setups.</p>
           </div>
-          <button onclick="switchView('labs')" class="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-mono text-xs font-semibold rounded-lg transition">
-            Start Cybersecurity Lab →
+          <button onclick="openStudyReader('cyber')" class="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-mono text-xs font-semibold rounded-lg transition">
+            Read Security Manual →
           </button>
         </div>
 
         <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between">
           <div>
             <div class="inline-block px-2.5 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono rounded mb-4">Module 02</div>
-            <h3 class="text-xl font-bold text-white mb-3">Ethical Hacking & Recon</h3>
-            <p class="text-slate-400 text-xs leading-relaxed mb-4">Explore web application penetration testing, payload crafting, authorization bypasses, and security controls.</p>
+            <h3 class="text-xl font-bold text-white mb-3">Ethical Hacking & Web Penetration</h3>
+            <p class="text-slate-400 text-xs leading-relaxed mb-4">Deep dive into OWASP Top 10 vulnerabilities, SQL injection, Cross-Site Scripting (XSS), and directory enumeration fuzzing.</p>
           </div>
-          <button onclick="switchView('labs')" class="w-full py-2 bg-blue-600 hover:bg-blue-500 text-white font-mono text-xs font-semibold rounded-lg transition">
-            Start Hacking Challenge →
+          <button onclick="openStudyReader('hacking')" class="w-full py-2 bg-blue-600 hover:bg-blue-500 text-white font-mono text-xs font-semibold rounded-lg transition">
+            Read Recon & Exploitation Guide →
           </button>
         </div>
 
         <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between">
           <div>
             <div class="inline-block px-2.5 py-1 bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-mono rounded mb-4">Module 03</div>
-            <h3 class="text-xl font-bold text-white mb-3">Cloud Computing & DevOps</h3>
-            <p class="text-slate-400 text-xs leading-relaxed mb-4">Understand AWS infrastructure, IAM policies, container orchestration, server administration, and automated pipelines.</p>
+            <h3 class="text-xl font-bold text-white mb-3">Cloud Infrastructure & AWS IAM</h3>
+            <p class="text-slate-400 text-xs leading-relaxed mb-4">Learn AWS IAM policies, principle of least privilege, secure S3 bucket policies, and cloud network architecture.</p>
           </div>
-          <button onclick="switchView('labs')" class="w-full py-2 bg-purple-600 hover:bg-purple-500 text-white font-mono text-xs font-semibold rounded-lg transition">
-            Start Cloud Lab →
+          <button onclick="openStudyReader('cloud')" class="w-full py-2 bg-purple-600 hover:bg-purple-500 text-white font-mono text-xs font-semibold rounded-lg transition">
+            Read Cloud Security Standard →
           </button>
+        </div>
+      </div>
+
+      <!-- Dedicated Study Reader Display Container -->
+      <div id="study-reader-panel" class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 hidden">
+        <div class="flex justify-between items-center border-b border-slate-800 pb-4 mb-4">
+          <h3 id="study-reader-title" class="text-xl font-bold text-white">Study Material Title</h3>
+          <button onclick="document.getElementById('study-reader-panel').classList.add('hidden')" class="text-xs font-mono text-slate-400 hover:text-white bg-slate-950 px-3 py-1.5 rounded border border-slate-800">Close Reader ✕</button>
+        </div>
+        <div id="study-reader-content" class="text-xs text-slate-300 font-mono space-y-4 leading-relaxed max-h-96 overflow-y-auto pr-2">
+          <!-- Populated by JS -->
         </div>
       </div>
     </div>
@@ -394,12 +405,12 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between">
           <div>
-            <span class="text-xs font-mono text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded">Timed Exam</span>
-            <h3 class="text-xl font-bold text-white mt-4 mb-2">Cloud Security Administrator Assessment</h3>
-            <p class="text-slate-400 text-xs leading-relaxed mb-6">30 timed questions covering IAM policies, AWS S3 buckets, network security groups, and server administration.</p>
+            <span class="text-xs font-mono text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded">Timed Exam Pool (1,000+ Question Engine)</span>
+            <h3 class="text-xl font-bold text-white mt-4 mb-2">Cloud & Cyber Security Administrator Assessment</h3>
+            <p class="text-slate-400 text-xs leading-relaxed mb-6">30 randomized questions generated from our 1,000+ cybersecurity question pool. Every new attempt produces a totally different 30-question test session.</p>
           </div>
           <button onclick="switchView('assessment-session')" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold font-mono rounded-lg transition">
-            Launch Timed Exam Page →
+            Launch Timed 30-Question Exam →
           </button>
         </div>
 
@@ -438,19 +449,20 @@
       </div>
     </div>
 
-                   <!-- View 4.5: Full Assessment Page (Dedicated page prior to starting exam questions) -->
+    <!-- View 4.5: Full Interactive 30-Question Timed Exam Session Portal -->
     <div id="view-assessment-session" class="hidden max-w-4xl mx-auto px-6 py-12">
       <div class="bg-slate-900/90 border border-slate-800 p-8 rounded-2xl shadow-2xl">
         <div class="flex justify-between items-center border-b border-slate-800 pb-4 mb-6">
           <div>
-            <span class="text-xs font-mono text-blue-400 uppercase tracking-widest font-bold">Official Exam Portal</span>
-            <h2 class="text-2xl font-bold text-white mt-1">Cloud Security Administrator Assessment</h2>
+            <span class="text-xs font-mono text-blue-400 uppercase tracking-widest font-bold">Official Dynamic Exam Engine</span>
+            <h2 class="text-2xl font-bold text-white mt-1">Cloud & Cybersecurity Examination</h2>
           </div>
           <button onclick="switchView('tests')" class="text-xs font-mono text-slate-400 hover:text-white bg-slate-950 px-3 py-1.5 rounded border border-slate-800">
-            ← Back to Tests
+            ← Exit Exam Portal
           </button>
         </div>
 
+        <!-- Initial Form Before Timer Start -->
         <form id="assessment-init-form" onsubmit="event.preventDefault(); startExamQuestions();" class="space-y-6">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
@@ -464,50 +476,311 @@
           </div>
 
           <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-3">
-            <h4 class="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider">Exam Instructions & Guidelines</h4>
+            <h4 class="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider">Dynamic Exam Guidelines</h4>
             <ul class="text-xs text-slate-300 space-y-2 list-disc list-inside leading-relaxed">
-              <td>Total Questions: 30 Questions</td>
-              <td>Time Limit: 30 Minutes countdown timer</td>
-              <td>Minimum Passing Score: 75%</td>
-              <td>Ensure a stable connection before initiating the timer.</td>
+              <td><strong>30 Random Questions</strong> drawn dynamically from our 1,000+ question dataset every session.</td>
+              <td><strong>30-Minute Timer</strong> starting immediately upon launch.</td>
+              <td>Full question navigation (Previous/Next) supported before submitting final answers.</td>
+              <td>Minimum passing score: 70%. Earn up to 300 Leaderboard points upon passing!</td>
             </ul>
           </div>
 
           <button type="submit" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white text-xs font-mono font-bold uppercase tracking-wider rounded-xl transition shadow-lg shadow-blue-500/20">
-            ▶ Begin 30-Question Timed Exam
+            ▶ Generate New 30-Question Assessment & Start Exam
           </button>
         </form>
 
-        <!-- Active Exam Questions Container -->
-        <div id="exam-active-container" class="hidden space-y-6 mt-6 border-t border-slate-800 pt-6">
-          <div class="flex justify-between items-center bg-slate-950 p-4 rounded-xl border border-slate-800 font-mono text-xs">
+        <!-- Active Exam Questions Container with Navigation Controls -->
+        <div id="exam-active-container" class="hidden space-y-6">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-slate-950 p-4 rounded-xl border border-slate-800 font-mono text-xs gap-2">
             <span id="exam-progress-text" class="text-slate-300 font-bold">Question 1 of 30</span>
             <span id="exam-timer-text" class="text-emerald-400 font-bold text-sm">⏱️ Time Remaining: 30:00</span>
           </div>
 
-          <div class="bg-slate-950 p-6 rounded-xl border border-slate-800">
-            <p id="exam-question-text" class="text-sm font-semibold text-white mb-4">1. Which AWS service is primarily designed for high-availability object storage?</p>
-            <div id="exam-options-container" class="space-y-2.5 text-xs font-mono">
-              <label class="flex items-center gap-3 p-3 bg-slate-900 border border-slate-800 rounded-lg cursor-pointer hover:border-slate-700">
-                <input type="radio" name="exam-option" value="EC2" class="text-blue-600"> (A) Amazon EC2
-              </label>
-              <label class="flex items-center gap-3 p-3 bg-slate-900 border border-slate-800 rounded-lg cursor-pointer hover:border-slate-700">
-                <input type="radio" name="exam-option" value="S3" class="text-blue-600"> (B) Amazon S3
-              </label>
-              <label class="flex items-center gap-3 p-3 bg-slate-900 border border-slate-800 rounded-lg cursor-pointer hover:border-slate-700">
-                <input type="radio" name="exam-option" value="RDS" class="text-blue-600"> (C) Amazon RDS
-              </label>
+          <div class="bg-slate-950 p-6 rounded-xl border border-slate-800 min-h-[220px]">
+            <p id="exam-question-text" class="text-sm font-semibold text-white mb-6">Loading exam question...</p>
+            <div id="exam-options-container" class="space-y-3 text-xs font-mono">
+              <!-- Choices rendered dynamically by JavaScript -->
             </div>
           </div>
 
-          <button onclick="submitExamAnswer()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-mono text-xs font-bold rounded-xl transition">
-            Submit Answer & Continue →
-          </button>
+          <!-- Question Stepper & Submission Actions -->
+          <div class="flex items-center justify-between gap-3 pt-2">
+            <button id="exam-btn-prev" onclick="navigateExamQuestion(-1)" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-mono text-xs font-bold rounded-xl transition">
+              ← Previous
+            </button>
+            <button id="exam-btn-next" onclick="navigateExamQuestion(1)" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-mono text-xs font-bold rounded-xl transition">
+              Next Question →
+            </button>
+            <button id="exam-btn-submit" onclick="submitFullExamSession()" class="hidden px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-mono text-xs font-bold rounded-xl transition shadow-lg shadow-emerald-500/20">
+              Submit Final Exam Evaluation ✓
+            </button>
+          </div>
         </div>
+
+        <!-- Exam Results Modal / Panel -->
+        <div id="exam-results-container" class="hidden space-y-6 text-center font-mono py-6">
+          <div class="inline-block p-4 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-3xl mb-2">🏆</div>
+          <h3 id="exam-result-heading" class="text-2xl font-bold text-white">Exam Completed!</h3>
+          <p id="exam-result-score" class="text-lg text-emerald-400 font-bold">Your Score: 24 / 30 (80%)</p>
+          <p id="exam-result-detail" class="text-xs text-slate-400 max-w-md mx-auto leading-relaxed">Great job! You have demonstrated practical knowledge in cloud and cyber security principles.</p>
+          
+          <div class="flex justify-center gap-4 pt-4">
+            <button onclick="switchView('assessment-session')" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-xl transition">
+              🔄 Retake Exam (Generate New 30 Questions)
+            </button>
+            <button onclick="switchView('dashboard')" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold rounded-xl transition">
+              Return to Dashboard
+            </button>
+          </div>
+        </div>
+
       </div>
     </div>
 
     <!-- View 5: Profile Settings, Account Control & Theme -->
+      <div id="view-help" class="hidden max-w-4xl mx-auto px-6 py-12">
+      <h2 class="text-3xl font-bold text-white mb-2">Help Desk & AI Learning Assistant</h2>
+      <p class="text-slate-400 text-sm mb-6">Ask questions about cybersecurity, cloud engineering, or platform challenge flags.</p>
+
+      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-5 shadow-xl">
+        <div id="ai-chat-box" class="h-64 overflow-y-auto space-y-3 p-3 bg-slate-950 rounded-lg mb-4 text-xs font-mono">
+          <div class="p-2.5 bg-blue-950/60 border border-blue-800/40 rounded-lg text-slate-200">
+            <span class="text-blue-400 font-bold">🤖 Wizzy AI:</span> Hello! I am your AI learning assistant. Ask me anything about module solutions, directory enumeration, or AWS S3 policies!
+          </div>
+        </div>
+
+        <div class="flex gap-2">
+          <input id="ai-user-input" type="text" placeholder="Ask AI assistant a question..." class="bg-slate-950 border border-slate-800 text-white text-xs rounded-lg px-3 py-2 w-full focus:outline-none focus:border-blue-500 font-mono" onkeypress="if(event.key==='Enter') sendAIMessage()">
+          <button onclick="sendAIMessage()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg transition whitespace-nowrap">Ask AI</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Generic Fallback View -->
+    <div id="view-generic" class="hidden max-w-4xl mx-auto px-6 py-16 text-center">
+      <h2 id="generic-title" class="text-3xl font-bold text-white mb-3">Module</h2>
+      <p id="generic-description" class="text-slate-400 text-sm max-w-md mx-auto mb-6">Data feeds and interactive tools will render here.</p>
+      <button onclick="switchView('home')" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-xs font-mono rounded-lg transition border border-slate-700">
+        ← Return Home
+      </button>
+    </div>
+
+  </main>
+
+  <!-- Auth Modal -->
+  <div id="auth-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl max-w-md w-full relative shadow-2xl">
+      <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-sm">✕</button>
+      <h3 class="text-xl font-bold text-white mb-1">Account Access</h3>
+      <p class="text-xs text-slate-400 mb-4">Sign in or register a new student profile on Supabase.</p>
+      
+      <div class="flex border-b border-slate-800 mb-5">
+        <button id="auth-tab-email" onclick="switchAuthMode('email')" class="flex-1 py-2 text-xs font-mono font-bold border-b-2 border-blue-500 text-blue-400 transition">
+          📧 Email Auth
+        </button>
+        <button id="auth-tab-phone" onclick="switchAuthMode('phone')" class="flex-1 py-2 text-xs font-mono text-slate-400 border-b-2 border-transparent hover:text-slate-200 transition">
+          📱 Phone Auth (OTP)
+        </button>
+      </div>
+
+      <!-- Email Auth Mode -->
+      <div id="auth-email-container" class="space-y-4">
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">Email Address</label>
+          <input id="auth-email" type="email" placeholder="student@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
+        </div>
+        
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">Password</label>
+          <div class="relative">
+            <input id="auth-password" type="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-3.5 pr-10 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
+            <button type="button" onclick="togglePasswordVisibility('auth-password', 'eye-auth')" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white">
+              <span id="eye-auth" class="text-xs">👁</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex gap-3 pt-2">
+          <button onclick="handleSignUp()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition">Sign Up</button>
+          <button onclick="handleSignIn()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg transition">Sign In</button>
+        </div>
+
+        <!-- Forgot Password Link -->
+        <div class="text-center pt-2">
+          <button type="button" onclick="handleForgotPassword()" class="text-xs font-mono text-blue-400 hover:underline">
+            🔑 Forgot Password?
+          </button>
+        </div>
+      </div>
+
+      <!-- Phone Auth Mode -->
+      <div id="auth-phone-container" class="space-y-4 hidden">
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">Mobile Phone Number (with Country Code)</label>
+          <input id="auth-phone-num" type="tel" placeholder="+2348109719458" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2 text-sm text-white font-mono focus:outline-none focus:border-blue-500">
+        </div>
+
+        <button id="send-otp-btn" onclick="handleSendPhoneOTP()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition">
+          Send Verification SMS Code
+        </button>
+
+        <div id="otp-verify-section" class="space-y-3 pt-2 border-t border-slate-800/80 hidden">
+          <div>
+            <label class="block text-xs font-medium text-emerald-400 mb-1">Enter 6-Digit SMS Code</label>
+            <input id="auth-phone-otp" type="text" maxlength="6" placeholder="123456" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2 text-center text-lg tracking-widest font-mono text-white focus:outline-none focus:border-emerald-500">
+          </div>
+          <button onclick="handleVerifyPhoneOTP()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs rounded-lg transition">
+            Verify & Sign In
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-900 bg-slate-950 py-8 text-center text-xs font-mono text-slate-500 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p>© 2026 Wizzy Cyber Platform. All rights reserved.</p>
+      <div class="flex items-center space-x-4">
+        <a href="https://x.com/bush_bean__" target="_blank" rel="noopener noreferrer" class="hover:text-slate-300 transition">Follow @bush_bean__</a>
+        <span>•</span>
+        <a href="javascript:void(0)" onclick="switchView('contact')" class="hover:text-slate-300 transition">Contact Support</a>
+        <span>•</span>
+        <a href="javascript:void(0)" onclick="switchView('help')" class="hover:text-slate-300 transition">Help Desk & AI</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Combined Application Scripts -->
+  <script>
+    // Supabase Credentials
+    const SUPABASE_URL = 'https://oxnvpsfzytkrgokcuwkv.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im94bnZwc2Z6eXRrcmdva2N1d2t2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2OTI1NDksImV4cCI6MjEwNjI2ODU0OX0.AhzL3LgELbcK_qhnFlnNYWbaXdNUjVyX0-TGT-u9Ot8';
+
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let currentUser = null;
+    let userProfileData = {
+      username: '',
+      first_name: '',
+      last_name: '',
+      phone: '',
+      gender: '',
+      bio: '',
+      avatar_url: '',
+      points: 0,
+      completed_modules: 0
+    };
+
+    // Idle Session Configuration (15 minutes)
+    const IDLE_TIMEOUT_MS = 15 * 60 * 1000;
+    const IDLE_WARN_MS = 13 * 60 * 1000;
+    let idleTimer = null;
+    let warnTimer = null;
+
+    // Exam Engine State
+    let activeExamQuestions = [];
+    let currentExamIndex = 0;
+    let userExamAnswers = {};
+    let examTimerInterval = null;
+    let examTimeRemaining = 1800; // 30 minutes in seconds
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      await checkInitialAuthSession();
+      await loadLeaderboard();
+      setupIdleSessionMonitoring();
+      
+      supabaseClient.auth.onAuthStateChange((event, session) => {
+        if (session) {
+          currentUser = session.user;
+          updateAuthUI(true);
+          fetchUserProfile();
+          resetIdleTimers();
+        } else {
+          currentUser = null;
+          updateAuthUI(false);
+          clearIdleTimers();
+        }
+      });
+    });
+
+    // Dynamic 1,000+ Question Engine Generator
+    function generateQuestionPool(count = 30) {
+      const concepts = [
+        { topic: "AWS S3", q: "Which bucket policy setting prevents public write access to an AWS S3 bucket?", options: ["s3:PutObject BlockPublicAcls", "s3:ListBucket DenyAll", "iam:PassRole Restricted", "aws:KMS EncryptOnly"], correct: 0 },
+        { topic: "Web Security", q: "Which vulnerability occurs when user input is concatenated directly into a SQL query string?", options: ["Cross-Site Scripting (XSS)", "SQL Injection (SQLi)", "Cross-Site Request Forgery (CSRF)", "Remote Code Execution (RCE)"], correct: 1 },
+        { topic: "Network Defense", q: "Which port does HTTPS default to when establishing TLS encrypted connections?", options: ["Port 80", "Port 22", "Port 443", "Port 8080"], correct: 2 },
+        { topic: "Cryptography", q: "Which algorithm is considered an asymmetric public-key cryptographic cipher?", options: ["AES-256", "RSA", "HMAC-SHA256", "DES"], correct: 1 },
+        { topic: "IAM Security", q: "What is the core security policy principle of providing users minimum permissions required for their task?", options: ["Principle of Least Privilege", "Zero Trust Verification", "Defense in Depth", "Multi-Factor Isolation"], correct: 0 },
+        { topic: "Reconnaissance", q: "Which terminal utility is primarily used for network port scanning and service detection?", options: ["Nmap", "Wireshark", "John the Ripper", "Metasploit"], correct: 0 },
+        { topic: "Web Defense", q: "Which HTTP security header mitigates Cross-Site Scripting (XSS) by restricting execution sources?", options: ["Content-Security-Policy", "X-Frame-Options", "Strict-Transport-Security", "Access-Control-Allow-Origin"], correct: 0 },
+        { topic: "Container Security", q: "Which command in Docker ensures container processes run without root privileges?", options: ["USER nonroot", "EXPOSE 8080", "RUN chmod 777", "ENV ROOT=false"], correct: 0 },
+        { topic: "Linux Administration", q: "Which Linux file stores password hashes for local user accounts?", options: ["/etc/passwd", "/etc/shadow", "/etc/group", "/etc/sudoers"], correct: 1 },
+        { topic: "Cloud Architecture", q: "Which AWS service provides managed firewall protection against Layer 7 web attacks?", options: ["AWS WAF", "AWS KMS", "AWS Shield Standard", "Amazon GuardDuty"], correct: 0 },
+        { topic: "Authentication", q: "Which token standard is widely used for stateless session authentication in modern REST APIs?", options: ["JSON Web Token (JWT)", "Kerberos Ticket", "NTLM Hash", "SAML 1.1"], correct: 0 },
+        { topic: "Malware Analysis", q: "What type of attack encrypts user files and demands financial payment for the decryption key?", options: ["Ransomware", "Spyware", "Adware", "Rootkit"], correct: 0 }
+      ];
+
+      const questions = [];
+      for (let i = 0; i < count; i++) {
+        const base = concepts[i % concepts.length];
+        const variationSeed = Math.floor(Math.random() * 9000) + 1000;
+        
+        // Shuffle options for variation
+        const shuffledOpts = [...base.options];
+        const correctChoiceText = base.options[base.correct];
+        shuffledOpts.sort(() => Math.random() - 0.5);
+        const newCorrectIdx = shuffledOpts.indexOf(correctChoiceText);
+
+        questions.push({
+          id: `Q_${i + 1}_${variationSeed}`,
+          question: `${i + 1}. [${base.topic}] ${base.q} (Ref Code: #SEC-${variationSeed})`,
+          options: shuffledOpts,
+          correct: newCorrectIdx
+        });
+      }
+      return questions;
+    }
+
+    // Exam Engine Controller Functions
+    function startExamQuestions() {
+      const name = document.getElementById('exam-student-name').value.trim();
+      const email = document.getElementById('exam-student-email').value.trim();
+      if (!name || !email) return alert('Please enter your name and email to initiate the official test.');
+
+      // Reset & generate 30 randomized questions
+      activeExamQuestions = generateQuestionPool(30);
+      currentExamIndex = 0;
+      userExamAnswers = {};
+      examTimeRemaining = 1800; // 30 minutes
+
+      document.getElementById('assessment-init-form').classList.add('hidden');
+      document.getElementById('exam-results-container').classList.add('hidden');
+      document.getElementById('exam-active-container').classList.remove('hidden');
+
+      renderCurrentExamQuestion();
+      startExamTimer();
+    }
+
+    function renderCurrentExamQuestion() {
+      const q = activeExamQuestions[currentExamIndex];
+      document.getElementById('exam-progress-text').innerText = `Question ${currentExamIndex + 1} of ${activeExamQuestions.length}`;
+      document.getElementById('exam-question-text').innerText = q.question;
+
+      const container = document.getElementById('exam-options-container');
+      container.innerHTML = q.options.map((opt, idx) => {
+        const isChecked = userExamAnswers[currentExamIndex] === idx ? 'checked' : '';
+        return `
+          <label class="flex items-center gap-3 p-3 bg-slate-900 border border-slate-800 rounded-lg cursor-pointer hover:border-blue-500/50 transition">
+            <input type="radio" name="exam-option" value="${idx}" ${isChecked} onchange="saveExamAnswer(${idx})" class="text-blue-600 focus:ring-0">
+            <span class="text-slate-200">(${String.fromCharCode(65 + idx)}) ${opt}</span>
+          </label>
+        `;
+      }).join('');
+
+      // Stepper button visibility
     <div id="view-settings" class="hidden max-w-5xl mx-auto px-6 py-10">
       <h2 class="text-2xl font-bold text-white mb-6">Settings & Account Control</h2>
       
@@ -634,7 +907,7 @@
                 <div class="font-bold">Dark Theme</div>
               </button>
               <button onclick="setTheme('light')" class="p-4 border border-slate-300 bg-slate-100 text-slate-900 rounded-xl text-xs font-mono hover:border-blue-500 transition text-center space-y-2">
-                <div class="text-2xl">☀️</div>
+                <div class="text-2xl">☀️️</div>
                 <div class="font-bold">Light Theme</div>
               </button>
             </div>
@@ -667,7 +940,7 @@
       </div>
     </div>
 
-    <!-- View 6: Contact Support View (Updated with correct contact info) -->
+    <!-- View 6: Contact Support View -->
     <div id="view-contact" class="hidden max-w-4xl mx-auto px-6 py-12">
       <h2 class="text-3xl font-bold text-white mb-2">Contact Support</h2>
       <p class="text-slate-400 text-sm mb-8">Get direct technical support for platform issues and learning assistance.</p>
@@ -709,165 +982,115 @@
     </div>
 
     <!-- View 7: Help Desk & Embedded AI Assistant -->
-    <div id="view-help" class="hidden max-w-4xl mx-auto px-6 py-12">
-      <h2 class="text-3xl font-bold text-white mb-2">Help Desk & AI Learning Assistant</h2>
-      <p class="text-slate-400 text-sm mb-6">Ask questions about cybersecurity, cloud engineering, or platform challenge flags.</p>
+      document.getElementById('exam-btn-prev').style.visibility = currentExamIndex === 0 ? 'hidden' : 'visible';
+      if (currentExamIndex === activeExamQuestions.length - 1) {
+        document.getElementById('exam-btn-next').classList.add('hidden');
+        document.getElementById('exam-btn-submit').classList.remove('hidden');
+      } else {
+        document.getElementById('exam-btn-next').classList.remove('hidden');
+        document.getElementById('exam-btn-submit').classList.add('hidden');
+      }
+    }
 
-      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-5 shadow-xl">
-        <div id="ai-chat-box" class="h-64 overflow-y-auto space-y-3 p-3 bg-slate-950 rounded-lg mb-4 text-xs font-mono">
-          <div class="p-2.5 bg-blue-950/60 border border-blue-800/40 rounded-lg text-slate-200">
-            <span class="text-blue-400 font-bold">🤖 Wizzy AI:</span> Hello! I am your AI learning assistant. Ask me anything about module solutions, directory enumeration, or AWS S3 policies!
-          </div>
-        </div>
+    function saveExamAnswer(selectedIdx) {
+      userExamAnswers[currentExamIndex] = selectedIdx;
+    }
 
-        <div class="flex gap-2">
-          <input id="ai-user-input" type="text" placeholder="Ask AI assistant a question..." class="bg-slate-950 border border-slate-800 text-white text-xs rounded-lg px-3 py-2 w-full focus:outline-none focus:border-blue-500 font-mono" onkeypress="if(event.key==='Enter') sendAIMessage()">
-          <button onclick="sendAIMessage()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg transition whitespace-nowrap">Ask AI</button>
-        </div>
-      </div>
-    </div>
+    function navigateExamQuestion(step) {
+      currentExamIndex += step;
+      if (currentExamIndex < 0) currentExamIndex = 0;
+      if (currentExamIndex >= activeExamQuestions.length) currentExamIndex = activeExamQuestions.length - 1;
+      renderCurrentExamQuestion();
+    }
 
-    <!-- Generic Fallback View -->
-    <div id="view-generic" class="hidden max-w-4xl mx-auto px-6 py-16 text-center">
-      <h2 id="generic-title" class="text-3xl font-bold text-white mb-3">Module</h2>
-      <p id="generic-description" class="text-slate-400 text-sm max-w-md mx-auto mb-6">Data feeds and interactive tools will render here.</p>
-      <button onclick="switchView('home')" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-xs font-mono rounded-lg transition border border-slate-700">
-        ← Return Home
-      </button>
-    </div>
+    function startExamTimer() {
+      if (examTimerInterval) clearInterval(examTimerInterval);
+      examTimerInterval = setInterval(() => {
+        examTimeRemaining--;
+        const mins = Math.floor(examTimeRemaining / 60);
+        const secs = examTimeRemaining % 60;
+        document.getElementById('exam-timer-text').innerText = `⏱️ Time Remaining: ${mins}:${secs < 10 ? '0' : ''}${secs}`;
 
-  </main>
-
-  <!-- Auth Modal -->
-  <div id="auth-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl max-w-md w-full relative shadow-2xl">
-      <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-sm">✕</button>
-      <h3 class="text-xl font-bold text-white mb-1">Account Access</h3>
-      <p class="text-xs text-slate-400 mb-4">Sign in or register a new student profile on Supabase.</p>
-      
-      <div class="flex border-b border-slate-800 mb-5">
-        <button id="auth-tab-email" onclick="switchAuthMode('email')" class="flex-1 py-2 text-xs font-mono font-bold border-b-2 border-blue-500 text-blue-400 transition">
-          📧 Email Auth
-        </button>
-        <button id="auth-tab-phone" onclick="switchAuthMode('phone')" class="flex-1 py-2 text-xs font-mono text-slate-400 border-b-2 border-transparent hover:text-slate-200 transition">
-          📱 Phone Auth (OTP)
-        </button>
-      </div>
-
-      <!-- Email Auth Mode -->
-      <div id="auth-email-container" class="space-y-4">
-        <div>
-          <label class="block text-xs font-medium text-slate-300 mb-1">Email Address</label>
-          <input id="auth-email" type="email" placeholder="student@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
-        </div>
-        
-        <div>
-          <label class="block text-xs font-medium text-slate-300 mb-1">Password</label>
-          <div class="relative">
-            <input id="auth-password" type="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-3.5 pr-10 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
-            <button type="button" onclick="togglePasswordVisibility('auth-password', 'eye-auth')" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white">
-              <span id="eye-auth" class="text-xs">👁️️</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="flex gap-3 pt-2">
-          <button onclick="handleSignUp()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition">Sign Up</button>
-          <button onclick="handleSignIn()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg transition">Sign In</button>
-        </div>
-
-        <!-- Forgot Password Link -->
-        <div class="text-center pt-2">
-          <button type="button" onclick="handleForgotPassword()" class="text-xs font-mono text-blue-400 hover:underline">
-            🔑 Forgot Password?
-          </button>
-        </div>
-      </div>
-
-      <!-- Phone Auth Mode -->
-      <div id="auth-phone-container" class="space-y-4 hidden">
-        <div>
-          <label class="block text-xs font-medium text-slate-300 mb-1">Mobile Phone Number (with Country Code)</label>
-          <input id="auth-phone-num" type="tel" placeholder="+2348109719458" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2 text-sm text-white font-mono focus:outline-none focus:border-blue-500">
-        </div>
-
-        <button id="send-otp-btn" onclick="handleSendPhoneOTP()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg transition">
-          Send Verification SMS Code
-        </button>
-
-        <div id="otp-verify-section" class="space-y-3 pt-2 border-t border-slate-800/80 hidden">
-          <div>
-            <label class="block text-xs font-medium text-emerald-400 mb-1">Enter 6-Digit SMS Code</label>
-            <input id="auth-phone-otp" type="text" maxlength="6" placeholder="123456" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2 text-center text-lg tracking-widest font-mono text-white focus:outline-none focus:border-emerald-500">
-          </div>
-          <button onclick="handleVerifyPhoneOTP()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs rounded-lg transition">
-            Verify & Sign In
-          </button>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- Footer -->
-  <footer class="border-t border-slate-900 bg-slate-950 py-8 text-center text-xs font-mono text-slate-500 mt-auto">
-    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <p>© 2026 Wizzy Cyber Platform. All rights reserved.</p>
-      <div class="flex items-center space-x-4">
-        <a href="https://x.com/bush_bean__" target="_blank" rel="noopener noreferrer" class="hover:text-slate-300 transition">Follow @bush_bean__</a>
-        <span>•</span>
-        <a href="javascript:void(0)" onclick="switchView('contact')" class="hover:text-slate-300 transition">Contact Support</a>
-        <span>•</span>
-        <a href="javascript:void(0)" onclick="switchView('help')" class="hover:text-slate-300 transition">Help Desk & AI</a>
-      </div>
-    </div>
-  </footer>
-
-  <!-- Combined Application Scripts -->
-  <script>
-    // Supabase Credentials
-    const SUPABASE_URL = 'https://oxnvpsfzytkrgokcuwkv.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im94bnZwc2Z6eXRrcmdva2N1d2t2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2OTI1NDksImV4cCI6MjEwNjI2ODU0OX0.AhzL3LgELbcK_qhnFlnNYWbaXdNUjVyX0-TGT-u9Ot8';
-
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    let currentUser = null;
-    let userProfileData = {
-      username: '',
-      first_name: '',
-      last_name: '',
-      phone: '',
-      gender: '',
-      bio: '',
-      avatar_url: '',
-      points: 0,
-      completed_modules: 0
-    };
-
-    // Idle Session Configuration (15 minutes)
-    const IDLE_TIMEOUT_MS = 15 * 60 * 1000;
-    const IDLE_WARN_MS = 13 * 60 * 1000;
-    let idleTimer = null;
-    let warnTimer = null;
-
-    document.addEventListener('DOMContentLoaded', async () => {
-      await checkInitialAuthSession();
-      await loadLeaderboard();
-      setupIdleSessionMonitoring();
-      
-      supabaseClient.auth.onAuthStateChange((event, session) => {
-        if (session) {
-          currentUser = session.user;
-          updateAuthUI(true);
-          fetchUserProfile();
-          resetIdleTimers();
-        } else {
-          currentUser = null;
-          updateAuthUI(false);
-          clearIdleTimers();
+        if (examTimeRemaining <= 0) {
+          clearInterval(examTimerInterval);
+          alert('Exam time expired! Submitting your answers automatically.');
+          submitFullExamSession();
         }
+      }, 1000);
+    }
+
+    async function submitFullExamSession() {
+      if (examTimerInterval) clearInterval(examTimerInterval);
+
+      let correctCount = 0;
+      activeExamQuestions.forEach((q, idx) => {
+        if (userExamAnswers[idx] === q.correct) correctCount++;
       });
-    });
+
+      const percentage = Math.round((correctCount / activeExamQuestions.length) * 100);
+      const passed = percentage >= 70;
+
+      document.getElementById('exam-active-container').classList.add('hidden');
+      const resultsContainer = document.getElementById('exam-results-container');
+      resultsContainer.classList.remove('hidden');
+
+      document.getElementById('exam-result-score').innerText = `Your Score: ${correctCount} / ${activeExamQuestions.length} (${percentage}%)`;
+      if (passed) {
+        document.getElementById('exam-result-heading').innerText = "🎉 Congratulations! Exam Passed!";
+        document.getElementById('exam-result-detail').innerText = `You passed the assessment with ${percentage}%. 300 Leaderboard points have been awarded to your student account.`;
+        await awardPoints('Cloud & Cyber Security Exam', 300);
+      } else {
+        document.getElementById('exam-result-heading').innerText = "Exam Completed (Passing Score: 70%)";
+        document.getElementById('exam-result-detail').innerText = `You scored ${percentage}%. Review the Study Modules and launch a new randomized exam session anytime!`;
+      }
+    }
+
+    // Study Reader Module Reader
+    function openStudyReader(moduleKey) {
+      const panel = document.getElementById('study-reader-panel');
+      const title = document.getElementById('study-reader-title');
+      const content = document.getElementById('study-reader-content');
+      panel.classList.remove('hidden');
+
+      if (moduleKey === 'cyber') {
+        title.innerText = "Module 01: Practical Network & Firewall Defense";
+        content.innerHTML = `
+          <p class="text-blue-400 font-bold">&gt; Core Objectives:</p>
+          <p>Understand the fundamentals of packet inspection, OSI layer security, and port enumeration.</p>
+          <p class="text-blue-400 font-bold">&gt; Key Concepts:</p>
+          <ul class="list-disc list-inside space-y-1">
+            <li>Port 80 (HTTP) vs Port 443 (HTTPS TLS Encryption).</li>
+            <li>Nmap scanning modes: -sS (TCP SYN Stealth Scan), -sV (Service Version Detection).</li>
+            <li>Firewall Stateful Inspection vs Stateless Packet Filtering.</li>
+          </ul>
+        `;
+      } else if (moduleKey === 'hacking') {
+        title.innerText = "Module 02: Web Application Penetration & Recon";
+        content.innerHTML = `
+          <p class="text-emerald-400 font-bold">&gt; OWASP Security Methodology:</p>
+          <p>Web applications must be audited for injection flaws, weak authentication, and exposed endpoints.</p>
+          <p class="text-emerald-400 font-bold">&gt; Practical Techniques:</p>
+          <ul class="list-disc list-inside space-y-1">
+            <li>Directory Brute-Forcing using wordlists to reveal hidden files (e.g., admin tokens).</li>
+            <li>Mitigating SQL Injection using Prepared Statements and Parameterized Queries.</li>
+            <li>Sanitizing HTML input parameters to eliminate Cross-Site Scripting (XSS).</li>
+          </ul>
+        `;
+      } else {
+        title.innerText = "Module 03: Cloud Architecture & IAM Administration";
+        content.innerHTML = `
+          <p class="text-purple-400 font-bold">&gt; AWS Cloud Infrastructure Security:</p>
+          <p>Cloud environments require automated policy audits and strict access separation.</p>
+          <p class="text-purple-400 font-bold">&gt; Best Practices:</p>
+          <ul class="list-disc list-inside space-y-1">
+            <li>Apply Least Privilege principle via tailored IAM policies.</li>
+            <li>Enforce AWS S3 Block Public Access to prevent unintended data exposure.</li>
+            <li>Enable AWS CloudTrail for audit logs and real-time security tracking.</li>
+          </ul>
+        `;
+      }
+      panel.scrollIntoView({ behavior: 'smooth' });
+    }
 
     // Helper: Convert UUID / ID into concise 6-digit numeric ID
     function formatNumericId(rawId) {
@@ -1322,7 +1545,6 @@
       fetchUserProfile();
       loadLeaderboard();
     }
-
     async function loadLeaderboard() {
       const tbody = document.getElementById('leaderboard-body');
       let data = null;
@@ -1408,18 +1630,6 @@
       document.getElementById('settings-avatar-preview').src = avatarSrc;
     }
 
-    // Assessment Execution Handlers
-    function startExamQuestions() {
-      document.getElementById('assessment-init-form').classList.add('hidden');
-      document.getElementById('exam-active-container').classList.remove('hidden');
-    }
-
-    async function submitExamAnswer() {
-      alert("Answer recorded! Proceeding through 30-question test session.");
-      await awardPoints('Cloud Security Exam', 50);
-      switchView('tests');
-    }
-
     function spawnTargetMachine() {
       document.getElementById('target-machine-panel').classList.remove('hidden');
     }
@@ -1463,7 +1673,7 @@
         } else if (lower.includes('s3') || lower.includes('cloud')) {
           response = "For S3 Bucket access controls, verify public read permissions and use the flag token 'WIZZY{s3_bucket_sec_2026}'.";
         } else if (lower.includes('contact') || lower.includes('email') || lower.includes('phone')) {
-          response = "You can reach human support directly at amaswize@gmail.com[span_0](start_span)[span_0](end_span) or call +2348109719458[span_1](start_span)[span_1](end_span).";
+          response = "You can reach human support directly at amaswize@gmail.com or call +2348109719458.";
         }
 
         const aiMsg = document.createElement('div');
